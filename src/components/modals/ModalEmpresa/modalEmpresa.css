@@ -1,0 +1,37 @@
+.modals{
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100vw; 
+    height: 100vh; 
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000; 
+}
+
+.card{
+    text-align: center;
+    z-index: 1000;
+    box-shadow: 0px 0px 10px black;
+}
+
+.card-body{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.mb-3-main{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.buttons{
+    display: flex;
+    justify-content: space-around;
+}
+
+

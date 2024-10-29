@@ -1,0 +1,21 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    border-radius: 5px;
+}
+
+.img-buttons{
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.container-sucursal{
+    border: solid 1px grey;
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
