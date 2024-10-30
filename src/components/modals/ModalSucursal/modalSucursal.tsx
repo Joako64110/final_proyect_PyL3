@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaImage } from "react-icons/fa";
-import './modalSucursal.css'
+import '../../styles/modalsStyles/ModalsStyles.css';
 
 
 
@@ -27,7 +27,7 @@ export const ModalSucursal: React.FC = () => {
 
     return (
         <div className="modals">
-            <div className="card" style={{backgroundColor:"rgba(212, 224, 242, 1)", width:"55%"}}>
+            <div className="card">
                 <div className="card-body">
                     <h5 className="card-title">Crear una Sucursal</h5>
                     <div className="container-sucursal">
@@ -37,7 +37,7 @@ export const ModalSucursal: React.FC = () => {
                                     key={index}
                                     placeholder={placeholder} 
                                     className="form-control"
-                                    style={{ marginBottom: "10px" }}
+                                    style={{ marginBottom: "10px", textAlign:"center" }}
                                 />
                             ))}
                         </div>

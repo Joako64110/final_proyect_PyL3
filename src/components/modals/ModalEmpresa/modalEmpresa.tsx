@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaImage } from "react-icons/fa";
-import './modalEmpresa.css'
+import '../../styles/modalsStyles/ModalsStyles.css';
 
 
 export const ModalEmpresa: React.FC = () => {
@@ -14,21 +14,25 @@ export const ModalEmpresa: React.FC = () => {
 
     return (
         <div className="modals">
-            <div className="card" style={{backgroundColor:"rgba(212, 224, 242, 1)", width:"50%"}}>
+            <div className="card" style={{maxWidth:"550px"}}>
                 <div className="card-body">
                     <h5 className="card-title">Crear una Empresa</h5>
-                    <div className="mb-3-main" style={{ border: "solid 1px grey", borderRadius: "5px", padding: "10px" }}>
+                    <div className="mb-3-main">
                         <input 
+                            type="text"
+                            
                             className="form-control mb-2" 
                             id="FormEmpresa1" 
                             placeholder="Ingrese un nombre:" 
                         />
                         <input
+                            type="text"
                             placeholder="Ingrese la razon social:" 
                             className="form-control mb-2" 
                             id="FormEmpresa2" 
                         />
                         <input
+                            type="text"
                             placeholder="Ingrese el CUIT:" 
                             className="form-control mb-2" 
                             id="FormEmpresa3" 

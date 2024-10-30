@@ -1,9 +1,9 @@
 import React from 'react';
-
+import '../../styles/modalsStyles/ModalsStyles.css';
 export const ModalMostrarSucursal: React.FC = () => {
     return (
         <div className="modals">
-            <div className="card">
+            <div className="card" style={{backgroundColor:"aliceblue", width:"400px"}}>
                 <div className="card-body">
                     <h5 className="card-title">Sucursal</h5>
                     <div className="cardContent">

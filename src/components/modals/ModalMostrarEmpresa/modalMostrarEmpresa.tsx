@@ -1,10 +1,10 @@
 import React from 'react';
-import './mostrarEmpresa.css'
+import '../../styles/modalsStyles/ModalsStyles.css';
 
 export const ModalMostrarEmpresa: React.FC = () => {
     return (
         <div className="modals">
-            <div className="card">
+            <div className="card" style={{backgroundColor:"aliceblue", width:"400px"}}>
                 <div className="card-body">
                     <h5 className="card-title">Empresa</h5>
                     <div className='cardContent'>
@@ -17,7 +17,7 @@ export const ModalMostrarEmpresa: React.FC = () => {
                             <img src="ruta-del-logo.png" alt="Logo de la empresa" style={{ width: "100px", height: "100px" }} />
                         </div>
 
-                        <button type="button" className="btn btn-dark">Cerrar</button>
+                        <button type="button" className="btn btn-dark" style={{width:"7rem"}}>Cerrar</button>
                     </div>
                 </div>
             </div>
