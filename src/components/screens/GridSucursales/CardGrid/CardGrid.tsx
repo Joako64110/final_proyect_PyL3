@@ -2,7 +2,7 @@ import { FC } from "react";
 import { IHeroes } from "../../../../types/IHeroes"
 import { Card } from "react-bootstrap"
 import { useNavigate } from "react-router-dom";
-import styles from "./CardHero.module.css";
+import styles from "./CardGrid.module.css";
 
 interface ICardHero{
     hero: IHeroes;
