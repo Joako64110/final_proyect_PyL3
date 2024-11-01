@@ -1,9 +1,35 @@
-.card{
-    transition: 0.2s ease-in;
+.containerSucPage{
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    gap: 2vh;
+    height: 100%;
+    grid-template-columns: repeat(3,1fr);
+    padding: 1rem;
+    flex-grow: 1;
+
+}
+.containerSuc{
+    background-color: #71c4ed;
+    border-radius: 1rem;
+    border: 1px solid #121212;
+    box-shadow: 5px 4px 10px 2px black;
+
 }
 
-.card:hover{
-    cursor: pointer;
-    transform: scale(1.02);
-    filter: grayscale(80%);
+.containerTextSucPage{
+    padding: 0.5rem;
+    margin-top: 0.5rem;
 }
+
+.containerImgSucPage{
+    padding: 0.4rem;
+    height: 15rem;
+}
+
+.containerImgSucPage Img{
+    width: 10rem; /* Ajusta el ancho al 100% del contenedor */
+    height: auto; /* Mantiene la relación de aspecto */
+    border-radius: 0.4rem;
+}
+

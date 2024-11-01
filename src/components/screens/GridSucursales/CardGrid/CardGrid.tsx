@@ -1,39 +1,41 @@
-import { FC } from "react";
-import { IHeroes } from "../../../../types/IHeroes"
+import React from 'react';
 import { Card } from "react-bootstrap"
-import { useNavigate } from "react-router-dom";
-import styles from "./CardGrid.module.css";
+import styles from "./CardGrid.module.css"
+import { ISucursal } from '../../../../types/ISucursal';
 
-interface ICardHero{
-    hero: IHeroes;
+interface SucursalesGridProps {
+    sucursales: ISucursal[];
+    ciudad: string;
 }
 
-export const CardHero: FC<ICardHero> = ({hero}) => {
-    const navigate = useNavigate()
-    const handleNavigateHero = ()=>{
-        navigate(`/hero/${hero.id}`);
-    }
+const SucursalesGrid: React.FC<SucursalesGridProps> = ({ sucursales, ciudad }) => {
     return (
-        <Card 
-            className={styles.card} 
-            onClick={handleNavigateHero} 
-            style={{ width: "100%" }}
-        >
-            <Card.Img variant="top" src={`/assets/heroes/${hero.id}.jpg`} />
-            <Card.Body>
-                <Card.Title>{hero.superhero}</Card.Title>
-                <Card.Text>
-                    <p>
-                        <b>Alter Ego:</b> {hero.alter_ego}
-                    </p>
-                    <p>
-                        <b>Publicadore:</b> {hero.publisher}
-                    </p>
-                    <p>
-                        <b>Primera aparicion:</b> {hero.first_appearance}
-                    </p>
-                </Card.Text>
-            </Card.Body>
-        </Card>
+        <div className={styles.containerSucPage}>
+            {sucursales.map((sucursal) => (
+                <div key={sucursal.id} className={styles.containerSuc}>
+                    <Card.Title className={styles.containerTextSucPage}>
+                        <h3>{sucursal.nombre}</h3>
+                    </Card.Title>
+                    <div className={styles.containerImgSucPage}>
+                        <Card.Img variant="top" src={`/assets/heroes/${sucursal.id}.jpg`} />
+                    </div>
+                    <div className={styles.containerTextSucPage}>
+                        <Card.Text>
+                                <p>
+                                    <b>Apertura:</b> {sucursal.apertura}
+                                </p>
+                                <p>
+                                    <b>Dirección:</b> {sucursal.direccion}
+                                </p>
+                                <p>
+                                    <b>Ciudad:</b> {ciudad}
+                                </p>
+                        </Card.Text>
+                    </div>
+                </div>
+            ))}
+        </div>
     );
 };
+
+export default SucursalesGrid;
