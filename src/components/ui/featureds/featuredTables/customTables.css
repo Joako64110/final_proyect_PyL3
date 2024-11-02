@@ -1,0 +1,26 @@
+.mi-clase-tabla {
+    width: 100%; /* Ancho completo de la tabla */
+    border-collapse: collapse; /* Colapsar bordes */
+    margin: 20px 0; /* Margen superior e inferior */
+    color: black; /* Color de texto por defecto */
+    border-radius: 8px;
+}
+
+.mi-clase-thead {
+    text-align: center;
+    border-bottom: 1px solid black;
+}
+
+.mi-clase-th{
+    padding: 10px;
+}
+
+.mi-clase-td {
+    text-align: center;
+    padding: 10px;
+    border-bottom: 1px solid rgba(205, 205, 205, 1);
+}
+
+.mi-clase-tr:hover {
+    background-color: rgb(240, 240, 240);
+}
