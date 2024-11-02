@@ -1,3 +1,4 @@
+import EmpresasApp from './components/EmpresasApp';
 import { ModalEmpresa } from "./components/modals/ModalEmpresa/modalEmpresa"
 import { ModalMostrarEmpresa } from "./components/modals/ModalMostrarEmpresa/modalMostrarEmpresa"
 import { ModalMostrarSucursal } from "./components/modals/ModalMostrarSucursal/modalMostrarSucursal"
@@ -10,10 +11,11 @@ function App() {
   return (
     <>
       <AppRouter/>
-    {/* <ModalEmpresa/> */}
-    {/* <ModalSucursal/> */}
-    {/* <ModalMostrarEmpresa/> */}
-    {/* <ModalMostrarSucursal/> */}
+      {/*<EmpresasApp /> */}
+      {/*<ModalEmpresa/> */}
+      {/* <ModalSucursal/> */}
+      {/* <ModalMostrarEmpresa/> */}
+      {/* <ModalMostrarSucursal/> */}
     </>
   )
 }
