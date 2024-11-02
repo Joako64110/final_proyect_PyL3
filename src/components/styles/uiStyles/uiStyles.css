@@ -26,7 +26,14 @@
     border-radius: 5px;
 }
 
-.icon{
+.social .bi{
+    font-size: 1.7rem;
     color: black;
     cursor: pointer;
+    transition: color 0.5s, transform 0.5s;
+}
+
+.social .bi:hover{
+    color: #0056b3;
+    transform: rotate(360deg);
 }
