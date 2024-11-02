@@ -1,7 +1,23 @@
 import EmpresasApp from './components/EmpresasApp';
+import { ModalEmpresa } from "./components/modals/ModalEmpresa/modalEmpresa"
+import { ModalMostrarEmpresa } from "./components/modals/ModalMostrarEmpresa/modalMostrarEmpresa"
+import { ModalMostrarSucursal } from "./components/modals/ModalMostrarSucursal/modalMostrarSucursal"
+import { ModalSucursal } from "./components/modals/ModalSucursal/modalSucursal"
+import { Footer } from "./components/ui/Footer/Footer"
+import { AppRouter } from "./routes/AppRouter"
+
 
 function App() {
-  return <EmpresasApp />;
+  return (
+    <>
+      <AppRouter/>
+      {/*<EmpresasApp /> */}
+      {/*<ModalEmpresa/> */}
+      {/* <ModalSucursal/> */}
+      {/* <ModalMostrarEmpresa/> */}
+      {/* <ModalMostrarSucursal/> */}
+    </>
+  )
 }
 
-export default App;
+export default App
