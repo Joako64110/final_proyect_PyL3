@@ -1,30 +1,21 @@
-import { useState } from "react";
+import React, { useState } from 'react';
 import CustomTable from "../../ui/featureds/featuredTables/customTables";
 import TopBar from "../../ui/featureds/topBar/topBar";
 import Actions from "../../ui/Actions/actions";
-
+import CrearCategoriaPadre from "../../modals/CrearCategoriaPadre/CrearCategoriaPadre"
 
 export const Categorias = () => {
   const columns = ["Nombre", "Acciones"];
 
-  // Estado inicial de la tabla vacío
   const [data, setData] = useState<Array<{ Nombre: string; Acciones: JSX.Element }>>([]);
+  const [isCategoriaPadreOpen, setIsCategoriaPadreOpen] = useState(false);
 
   const handleAddCategory = () => {
-    // Lógica para agregar una nueva categoría
-    const newCategory = {
-      Nombre: `Categoría ${data.length + 1}`,
-      Acciones: (
-        <Actions
-          nombre={`Categoría ${data.length + 1}`}
-          actions={["desplegar", "editar", "agregar"]}
-          onDesplegar={() => console.log("Desplegar")}
-          onEditar={() => console.log("Editar")}
-          onAgregar={() => console.log("Agregar")}
-        />
-      ),
-    };
-    setData((prevData) => [...prevData, newCategory]); // Agrega la nueva categoría al estado
+    setIsCategoriaPadreOpen(true);
+  };
+
+  const closeCategoriaPadreModal = () => {
+    setIsCategoriaPadreOpen(false);
   };
 
   return (
@@ -33,10 +24,11 @@ export const Categorias = () => {
       <TopBar
         nombre="Masco Mida - Palmares"
         placeholder="Filtrar... "
-        onAddBranch={handleAddCategory} // Asocia la función al botón en TopBar
+        onAddBranch={handleAddCategory}
         tareaBoton="Agregar Categoría"
       />
       <CustomTable columns={columns} data={data} />
+      {isCategoriaPadreOpen && <CrearCategoriaPadre onClose={closeCategoriaPadreModal} />}
     </div>
   );
 };

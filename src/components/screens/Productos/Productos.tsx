@@ -1,32 +1,43 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import CustomTable from "../../ui/featureds/featuredTables/customTables";
 import TopBar from "../../ui/featureds/topBar/topBar";
 import Actions from "../../ui/Actions/actions";
-
+import CrearArticulo from "../../modals/CrearArticulo/CrearArticulo";
 
 export const Productos = () => {
     const columns = ["Nombre", "Precio", "Descripción", "Categoría", "Habilitado", "Acciones"];
 
     const [data, setData] = useState<Array<{
         Nombre: string;
-        Precio: number; // Mantener como número
+        Precio: number;
         Descripción: string;
         Categoría: string;
         Habilitado: boolean;
         Acciones: JSX.Element;
     }>>([]);
 
+    const [isArticuloOpen, setIsArticuloOpen] = useState(false);
+
     const handleAddProduct = () => {
-        // Lógica para agregar un nuevo producto
+        setIsArticuloOpen(true);
+    };
+
+    const closeArticuloModal = () => {
+        setIsArticuloOpen(false);
+    };
+
+    const addProductToList = (product: {
+        Nombre: string;
+        Precio: number;
+        Descripción: string;
+        Categoría: string;
+        Habilitado: boolean;
+    }) => {
         const newProduct = {
-            Nombre: `Producto ${data.length + 1}`,
-            Precio: parseFloat((Math.random() * 100).toFixed(2)), // Precio aleatorio como número
-            Descripción: `Descripción del producto ${data.length + 1}`,
-            Categoría: `Categoría ${Math.floor(Math.random() * 5) + 1}`, // Categoría aleatoria
-            Habilitado: true, // Puedes cambiar esto según la lógica que necesites
+            ...product,
             Acciones: (
                 <Actions
-                    nombre={`Producto ${data.length + 1}`}
+                    nombre={product.Nombre}
                     actions={["ver", "editar", "eliminar"]}
                     onVer={() => console.log("Ver")}
                     onEditar={() => console.log("Editar")}
@@ -35,7 +46,7 @@ export const Productos = () => {
             ),
         };
 
-        setData((prevData) => [...prevData, newProduct]); // Agrega el nuevo producto al estado
+        setData((prevData) => [...prevData, newProduct]);
     };
 
     return (
@@ -44,9 +55,10 @@ export const Productos = () => {
             <TopBar 
                 nombre="Masco Mida - Palmares"
                 placeholder="Seleccione una Categoría..."
-                onAddBranch={handleAddProduct} // Asocia la función para agregar un producto
+                onAddBranch={handleAddProduct} // Asocia la función para abrir el modal
                 tareaBoton="Agregar Producto"/>
             <CustomTable columns={columns} data={data} />
+            {isArticuloOpen && <CrearArticulo onClose={closeArticuloModal} onAddProduct={addProductToList} />}
         </div>
     );
 };

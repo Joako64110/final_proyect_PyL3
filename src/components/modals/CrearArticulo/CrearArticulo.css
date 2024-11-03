@@ -1,0 +1,79 @@
+.modal-overlayCrearArticulo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-contentCrearArticulo {
+    background: #f0f4ff; /* Fondo claro */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada */
+    width: 90vw; /* Ancho flexible */
+    max-width: 500px;
+    height: 90vh; /* Alto flexible */
+    max-height: 90vh;
+    position: relative;
+    text-align: center; /* Centramos el texto */
+    overflow-y: auto; /* Añade barra de desplazamiento vertical */
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+.modal-contentCrearArticulo h2 {
+    margin-top: 0;
+    font-family: Arial, sans-serif; /* Fuente similar */
+    font-weight: bold;
+    margin-bottom: 20px; /* Espacio debajo del título */
+}
+
+.modal-contentCrearArticulo label {
+    display: block;
+    margin-bottom: 10px;
+    font-family: Arial, sans-serif;
+}
+
+.modal-contentCrearArticulo input[type="text"],
+.modal-contentCrearArticulo textarea,
+.modal-contentCrearArticulo select {
+    width: calc(100% - 20px); /* Menos ancho para espacio interno */
+    padding: 10px;
+    margin-bottom: 20px; /* Más espacio debajo */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.modal-contentCrearArticulo button {
+    padding: 15px 20px; /* Botones más grandes */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px;
+    font-size: 1em; /* Texto más grande */
+}
+
+.confirm {
+    background-color: black;
+    color: white;
+}
+
+.cancel {
+    background-color: red;
+    color: white;
+}
