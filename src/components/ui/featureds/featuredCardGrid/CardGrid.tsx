@@ -1,11 +1,17 @@
 import React from 'react';
 import { Card } from "react-bootstrap"
 import styles from "./CardGrid.module.css"
-import { ISucursal } from '../../../../types/ISucursal';
 
 interface SucursalesGridProps {
     sucursales: ISucursal[];
     ciudad: string;
+}
+
+interface ISucursal {
+    id: string;
+    nombre: string;
+    direccion: string;
+    apertura: string;
 }
 
 const SucursalesGrid: React.FC<SucursalesGridProps> = ({ sucursales, ciudad }) => {
