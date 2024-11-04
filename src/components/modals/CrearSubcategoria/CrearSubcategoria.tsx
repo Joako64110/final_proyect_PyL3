@@ -20,6 +20,7 @@ const CrearSubcategoria: React.FC<PopupFormProps> = ({ onClose }) => {
                 <label>Ingrese una denominación:</label>
                 <input
                     type="text"
+                    className='inputCategoria'
                     value={subcategoryName}
                     onChange={(e) => setSubcategoryName(e.target.value)}
                     placeholder="Ingrese una denominación"

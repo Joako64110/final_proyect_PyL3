@@ -20,6 +20,7 @@ const CrearCategoriaPadre: React.FC<PopupFormProps> = ({ onClose }) => {
                 <label>Ingrese una denominación:</label>
                 <input
                     type="text"
+                    className='inputCategoriaPadre'
                     value={categoryName}
                     onChange={(e) => setCategoryName(e.target.value)}
                 />

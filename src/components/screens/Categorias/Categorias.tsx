@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import CustomTable from "../../ui/featureds/featuredTables/customTables";
 import TopBar from "../../ui/featureds/topBar/topBar";
-import Actions from "../../ui/Actions/actions";
 import CrearCategoriaPadre from "../../modals/CrearCategoriaPadre/CrearCategoriaPadre"
 
 export const Categorias = () => {
   const columns = ["Nombre", "Acciones"];
 
-  const [data, setData] = useState<Array<{ Nombre: string; Acciones: JSX.Element }>>([]);
   const [isCategoriaPadreOpen, setIsCategoriaPadreOpen] = useState(false);
+  const [data, setData] = useState<Array<{ Nombre: string; Acciones: JSX.Element }>>([]);
 
   const handleAddCategory = () => {
     setIsCategoriaPadreOpen(true);

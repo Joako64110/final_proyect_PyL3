@@ -4,7 +4,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background-color: rgba(54, 54, 54, 0.3);
+    backdrop-filter: blur(2px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,7 +13,7 @@
 }
 
 .modal-contentSubCategoria {
-    background: #e0f7fa; 
+    background: rgba(212, 224, 242, 1); 
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
@@ -45,7 +46,7 @@
     font-family: Arial, sans-serif;
 }
 
-.modal-contentSubCategoria input[type="text"] {
+.inputCategoria{
     width: calc(100% - 20px);
     padding: 10px;
     margin-bottom: 20px;

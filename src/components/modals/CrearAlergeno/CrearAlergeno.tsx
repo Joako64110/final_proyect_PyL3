@@ -20,6 +20,7 @@ const CrearAlergeno: React.FC<PopupFormProps> = ({ onClose, onCreate }) => {
                 <h2>Crear un Alérgeno</h2>
                 <label>Ingrese una denominación:</label>
                 <input
+                    className='inputAlergeno'
                     type="text"
                     value={alergenoName}
                     onChange={(e) => setAlergenoName(e.target.value)}

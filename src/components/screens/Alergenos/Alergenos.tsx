@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Actions from '../../ui/Actions/actions';
 import CustomTable from '../../ui/featureds/featuredTables/customTables';
 import TopBar from '../../ui/featureds/topBar/topBar';
