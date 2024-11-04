@@ -1,12 +1,12 @@
 import React from 'react';
-import '../../styles/modalsStyles/ModalsStyles.css';
-export const ModalMostrarSucursal: React.FC = () => {
+import './MostrarSucursal.css';
+export const MostrarSucursal: React.FC = () => {
     return (
         <div className="modals">
-            <div className="card" style={{backgroundColor:"aliceblue", width:"400px"}}>
-                <div className="card-body">
-                    <h5 className="card-title">Sucursal</h5>
-                    <div className="cardContent">
+            <div className="card-suc" style={{backgroundColor:"aliceblue", width:"400px"}}>
+                <div className="card-body-suc">
+                    <h5 className="card-title-suc">Sucursal</h5>
+                    <div className="cardContent-suc">
                         <p className="card-text">Nombre: </p>
                         <p className="card-text">Empresa: </p>
                         <p className="card-text">Domicilio: </p>

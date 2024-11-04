@@ -10,8 +10,14 @@ interface SucursalesGridProps {
 interface ISucursal {
     id: string;
     nombre: string;
-    direccion: string;
-    apertura: string;
+    apertura: Date;
+    cierre: Date;
+    pais: string;
+    provincia: string;
+    localidad: string;
+    calle: string;
+    numero: string;
+    codigoPostal: string;
 }
 
 const SucursalesGrid: React.FC<SucursalesGridProps> = ({ sucursales, ciudad }) => {
@@ -28,10 +34,10 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ sucursales, ciudad }) =
                     <div className={styles.containerTextSucPage}>
                         <Card.Text>
                                 <p>
-                                    <b>Apertura:</b> {sucursal.apertura}
+                                    <b>Apertura:</b> {new Date(sucursal.apertura).toLocaleTimeString()} - {new Date(sucursal.cierre).toLocaleTimeString()}
                                 </p>
                                 <p>
-                                    <b>Dirección:</b> {sucursal.direccion}
+                                    <b>Dirección:</b> {sucursal.calle}{sucursal.numero}
                                 </p>
                                 <p>
                                     <b>Ciudad:</b> {ciudad}

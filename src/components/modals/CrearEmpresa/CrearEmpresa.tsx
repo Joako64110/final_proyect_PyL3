@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { FaImage } from "react-icons/fa";
-import '../../styles/modalsStyles/ModalsStyles.css';
+import './/CrearEmpresa.css';
 
 
-export const ModalEmpresa: React.FC = () => {
+export const CrearEmpresa: React.FC = () => {
     const [fileName, setFileName] = useState<string>("");
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {

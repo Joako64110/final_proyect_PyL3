@@ -1,13 +1,13 @@
 import React from 'react';
-import '../../styles/modalsStyles/ModalsStyles.css';
+import './MostrarEmpresa.css';
 
-export const ModalMostrarEmpresa: React.FC = () => {
+export const MostrarEmpresa: React.FC = () => {
     return (
         <div className="modals">
-            <div className="card" style={{backgroundColor:"aliceblue", width:"400px"}}>
-                <div className="card-body">
-                    <h5 className="card-title">Empresa</h5>
-                    <div className='cardContent'>
+            <div className="card-em" style={{backgroundColor:"aliceblue", width:"400px"}}>
+                <div className="card-body-em">
+                    <h5 className="card-title-em">Empresa</h5>
+                    <div className='cardContent-em'>
                         <p className="card-text">Nombre de la Empresa: Ejemplo S.A.</p>
                         <p className="card-text">Razón Social: Empresa Ejemplo</p>
                         <p className="card-text">CUIT: 30-12345678-9</p>

@@ -27,6 +27,11 @@
     max-height: 450px;
 }
 
+.containerSuc:hover{
+    background-color: rgb(202, 230, 255);
+    cursor: pointer;
+}
+
 .containerImgSucPage{
     width: 90%;
     height: 250px;
