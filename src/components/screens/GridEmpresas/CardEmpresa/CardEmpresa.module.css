@@ -1,0 +1,30 @@
+.tarjetaEmpresa {
+    background-color: #fff;
+    width: 90%;
+    height: 10%;
+    color: black;
+    gap: 5%;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.tarjetaEmpresa:hover {
+    background-color: rgb(136, 146, 161);
+}
+.tarjetaEmpresa p {
+    color: black;
+}
+
+.botones {
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+}
+/* .tarjetaEmpresa button {
+
+} */
