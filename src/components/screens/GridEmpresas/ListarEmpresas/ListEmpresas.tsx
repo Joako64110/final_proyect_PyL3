@@ -1,8 +1,8 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '../../../redux/store';
-import { seleccionarEmpresa, agregarEmpresa } from '../../../redux/slices/empresasSlice';
-import CardEmpresa from './CardEmpresa';
+import { RootState, AppDispatch } from '../../../../redux/store';
+import { seleccionarEmpresa, agregarEmpresa } from '../../../../redux/slices/empresasSlice';
+import CardEmpresa from '../CardEmpresa/CardEmpresa';
 import styles from './ListEmpresas.module.css'
 
 const ListaEmpresas: React.FC = () => {
@@ -19,6 +19,7 @@ const ListaEmpresas: React.FC = () => {
     return (
         
         <div className={styles.listaEmpresas}>
+            <h3>Empresas:</h3>
             <button onClick={handleAgregarEmpresa}>Agregar Empresa</button>
             {empresas.map((empresa) => (
                 <CardEmpresa

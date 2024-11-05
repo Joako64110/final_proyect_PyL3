@@ -1,5 +1,4 @@
-import React from 'react';
-import styles from './CardEmpresa.module.css'
+import styles from "./CardEmpresa.module.css"
 
 interface Props {
     empresa: {
@@ -10,17 +9,20 @@ interface Props {
     onSelect: () => void;
 }
 
-const TarjetaEmpresa: React.FC<Props> = ({ empresa, onSelect }) => {
+export const CardEmpresa: React.FC<Props> = ({ empresa, onSelect }) => {
+    
     return (
         <div
             className={styles.tarjetaEmpresa}
             onClick={onSelect}
         >
             <p>{empresa.nombre}</p>
+            <div className={styles.botones}>
                 <button>👁️</button>
                 <button>✏️</button>
+            </div>
         </div>
-    );
-};
+    )
+}
 
-export default TarjetaEmpresa;
+export default CardEmpresa;
