@@ -1,0 +1,39 @@
+.navBar{
+    background-color: black;
+    height: 3.2rem;
+}
+
+.footer {
+    height: 3.2rem; 
+    background-color: black;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: white;
+}
+
+.social{
+    height: 60%;
+    width: 25%;
+    max-width: 300px;
+    background-color: aliceblue;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border-radius: 5px;
+}
+
+.social .bi{
+    font-size: 1.7rem;
+    color: black;
+    cursor: pointer;
+    transition: color 0.5s, transform 0.5s;
+}
+
+.social .bi:hover{
+    color: #0056b3;
+    transform: rotate(360deg);
+}

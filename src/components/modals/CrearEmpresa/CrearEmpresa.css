@@ -1,0 +1,97 @@
+.modals{
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100vw; 
+    height: 100vh; 
+    background-color: rgba(54, 54, 54, 0.3);
+    backdrop-filter: blur(2px);
+    z-index: 1000; 
+}
+
+.card{
+    text-align: center;
+    z-index: 1000;
+    box-shadow: 0px 0px 10px black;
+    background-color: rgba(212, 224, 242, 1);
+    width: 70%;
+    max-width: 650px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.card-title{
+    font-size:2rem;
+}
+
+.card-body{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.mb-3-main{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border: solid 1px grey;
+    border-radius: 5px;
+    padding: 10px;
+    align-items: center;
+}
+
+.input-group{
+    display: flex;
+    justify-content: center;
+}
+
+.img-buttons {
+    align-items: center;
+}
+
+.buttons{
+    width: 90%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.cardContent{
+    border: solid 1px rgb(189, 189, 189);
+    border-radius: 8px;
+    align-items: center;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-control{
+    text-align: center;
+    max-width: 400px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    border-radius: 5px;
+}
+
+.img-buttons{
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.container-sucursal{
+    border: solid 1px grey;
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}

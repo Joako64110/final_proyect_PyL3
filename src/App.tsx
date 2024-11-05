@@ -1,17 +1,20 @@
-import { Provider } from 'react-redux';
-import store from './redux/store';
-import ListEmpresas from './components/screens/GridEmpresas/ListarEmpresas/ListEmpresas';
+import { CrearEmpresa} from "./components/modals/CrearEmpresa/CrearEmpresa"
+import { CrearSucursal } from "./components/modals/CrearSucursal/CrearSucursal"
+import { MostrarEmpresa } from "./components/modals/MostrarEmpresa/MostrarEmpresa"
+import { MostrarSucursal } from "./components/modals/MostrarSucursal/MostrarSucursal"
+import { AppRouter } from "./routes/AppRouter"
+
 
 function App() {
-
-
   return (
-    <Provider store={store}>
-      <div className="App">
-        <ListEmpresas />
-      </div>
-    </Provider>
-  );
+    <>
+      <AppRouter/>
+      {/* <CrearEmpresa/> */}
+      {/* <CrearSucursal/> */}
+      {/* <MostrarEmpresa/> */}
+      {/* <MostrarSucursal/> */}
+    </>
+  )
 }
 
 export default App
