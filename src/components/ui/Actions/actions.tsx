@@ -11,9 +11,10 @@ interface ActionsProps {
   onDesplegar?: (nombre: string) => void;
   onAgregar?: (nombre: string) => void;
   onAbrirSuc?: (nombre: string) => void;
+  isExpanded?: boolean;
 }
 
-const Actions: React.FC<ActionsProps> = ({ nombre, actions, onVer, onEditar, onEliminar, onDesplegar, onAgregar, onAbrirSuc }) => {
+const Actions: React.FC<ActionsProps> = ({ nombre, actions, onVer, onEditar, onEliminar, onDesplegar, onAgregar, onAbrirSuc, isExpanded = false }) => {
   const renderIcon = (action: ActionType) => {
     switch (action) {
       case "ver":
@@ -23,7 +24,10 @@ const Actions: React.FC<ActionsProps> = ({ nombre, actions, onVer, onEditar, onE
       case "eliminar":
         return <i className="bi bi-trash-fill icono-accion" style={{color:"rgba(228, 31, 31, 1)"}} onClick={() => onEliminar && onEliminar(nombre)} />; // Eliminar
       case "desplegar":
-        return <i className="bi bi-chevron-down icono-accion" onClick={() => onDesplegar && onDesplegar(nombre)} />; // Desplegar
+        return <i 
+        className={`bi ${isExpanded ? "bi-chevron-up" : "bi-chevron-down"} icono-accion`} 
+        onClick={() => onDesplegar && onDesplegar(nombre)} 
+        />; // Desplegar
       case "agregar":
         return <i className="bi bi-plus-square-fill icono-accion" style={{color:"rgba(31, 228, 38, 1)"}} onClick={() => onAgregar && onAgregar(nombre)} />; // Agregar
       case "abrirSuc":

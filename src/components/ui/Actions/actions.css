@@ -6,5 +6,5 @@
 .icono-accion {
     font-size: 1.6rem;
     cursor: pointer;
-    transition: color 0.3s; /* Transición suave para el color */
+    transition: color 0.3s;
 }
