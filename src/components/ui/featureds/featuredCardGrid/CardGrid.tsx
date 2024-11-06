@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from "react-bootstrap"
 import styles from "./CardGrid.module.css"
+import Actions from '../../Actions/actions';
+import { useNavigate } from 'react-router-dom';
+import { MostrarSucursal } from '../../../modals/MostrarSucursal/MostrarSucursal';
 
 interface SucursalesGridProps {
     sucursales: ISucursal[];
     ciudad: string;
 }
 
-interface ISucursal {
+export interface ISucursal {
     id: string;
     nombre: string;
-    apertura: Date;
-    cierre: Date;
+    apertura: string;
+    cierre: string;
     pais: string;
     provincia: string;
     localidad: string;
@@ -21,6 +24,27 @@ interface ISucursal {
 }
 
 const SucursalesGrid: React.FC<SucursalesGridProps> = ({ sucursales, ciudad }) => {
+    const navigate = useNavigate();
+    
+    const handleAbrirSuc = (id: string) => {
+        // Redirige a la página de categorías de la sucursal específica
+        navigate(`/sucursales/${id}/Categorias`);
+        navigate(`Categorias`);
+    };
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedSucursal, setSelectedSucursal] = useState<ISucursal | null>(null);
+
+    const handleVer = (sucursal: ISucursal) => {
+        setSelectedSucursal(sucursal);
+        setModalVisible(true);
+    };
+
+    const handleCloseModal = () => {
+        setModalVisible(false);
+        setSelectedSucursal(null);
+    };
+
     return (
         <div className={styles.containerSucPage}>
             {sucursales.map((sucursal) => (
@@ -34,18 +58,28 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ sucursales, ciudad }) =
                     <div className={styles.containerTextSucPage}>
                         <Card.Text>
                                 <p>
-                                    <b>Apertura:</b> {new Date(sucursal.apertura).toLocaleTimeString()} - {new Date(sucursal.cierre).toLocaleTimeString()}
+                                    <b>Apertura:</b> {sucursal.apertura} - {sucursal.cierre}
                                 </p>
                                 <p>
-                                    <b>Dirección:</b> {sucursal.calle}{sucursal.numero}
+                                    <b>Dirección:</b> {sucursal.calle} {sucursal.numero}
                                 </p>
                                 <p>
                                     <b>Ciudad:</b> {ciudad}
                                 </p>
                         </Card.Text>
+                        <Actions
+                            nombre={sucursal.id}
+                            actions={["abrirSuc", "editar", "ver"]}
+                            onAbrirSuc={() => handleAbrirSuc(sucursal.id)}
+                            onVer={() => handleVer(sucursal)}
+                            onEditar={() => console.log("Editar")}
+                />
                     </div>
                 </div>
             ))}
+            {modalVisible && selectedSucursal && (
+                <MostrarSucursal sucursal={selectedSucursal} onClose={handleCloseModal} />
+            )}
         </div>
     );
 };

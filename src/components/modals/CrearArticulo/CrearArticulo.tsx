@@ -39,55 +39,60 @@ const CrearArticulo: React.FC<PopupFormProps> = ({ onClose, onAddProduct }) => {
                 <div className='content1'>
                     <div className='content2'>
                         <div className='content3'>
-                            <label>Ingrese una denominación:</label>
-                            <input
-                                className='inputCrearArticulo'
-                                type="text"
-                                value={nombre}
-                                onChange={(e) => setNombre(e.target.value)}
-                                placeholder="Ingrese una denominación"
-                            />
-                            <label>Categoría:</label>
-                            <select value={categoria} onChange={(e) => setCategoria(e.target.value)}>
-                                <option value="">Seleccionar categoría</option>
-                                <option value="Categoria 1">Categoría 1</option>
-                                <option value="Categoria 2">Categoría 2</option>
-                                <option value="Categoria 3">Categoría 3</option>
-                            </select>
-                            <label>Alergenos:</label>
-                            <select value={alergenos} onChange={(e) => setAlergenos(e.target.value)}>
-                                <option value="">Seleccionar alérgenos</option>
-                                <option value="Alergeno 1">Alérgeno 1</option>
-                                <option value="Alergeno 2">Alérgeno 2</option>
-                                <option value="Alergeno 3">Alérgeno 3</option>
-                            </select>
-                            <label>Ingresa un precio de venta:</label>
-                            <input
-                                className='inputCrearArticulo'
-                                type="text"
-                                value={precioVenta}
-                                onChange={(e) => setPrecioVenta(e.target.value)}
-                                placeholder="Ingresa un precio de venta"
-                            />
-                            <label>Ingresa un código:</label>
-                            <input
-                                type="text"
-                                value={codigo}
-                                onChange={(e) => setCodigo(e.target.value)}
-                                placeholder="Ingresa un código"
-                            />
-                            <label>
+                            <div>
                                 <input
                                     className='inputCrearArticulo'
+                                    type="text"
+                                    value={nombre}
+                                    onChange={(e) => setNombre(e.target.value)}
+                                    placeholder="Ingrese una denominación"
+                                />
+                            </div>
+                            <div>
+                                <select value={categoria} onChange={(e) => setCategoria(e.target.value)}>
+                                    <option value="">Seleccionar categoría</option>
+                                    <option value="Categoria 1">Categoría 1</option>
+                                    <option value="Categoria 2">Categoría 2</option>
+                                    <option value="Categoria 3">Categoría 3</option>
+                                </select>
+                            </div>
+                            <div>
+                                <select value={alergenos} onChange={(e) => setAlergenos(e.target.value)}>
+                                    <option value="">Seleccionar alérgenos</option>
+                                    <option value="Alergeno 1">Alérgeno 1</option>
+                                    <option value="Alergeno 2">Alérgeno 2</option>
+                                    <option value="Alergeno 3">Alérgeno 3</option>
+                                </select>
+                            </div>
+                            <div>
+                                <input
+                                    className='inputCrearArticulo'
+                                    type="text"
+                                    value={precioVenta}
+                                    onChange={(e) => setPrecioVenta(e.target.value)}
+                                    placeholder="Ingresa un precio de venta"
+                                />
+                            </div>
+                            <div>
+                                <input
+                                    className='inputCrearArticulo'
+                                    type="text"
+                                    value={codigo}
+                                    onChange={(e) => setCodigo(e.target.value)}
+                                    placeholder="Ingresa un código"
+                                />
+                            </div>    
+                            <label className='label-check'>
+                                <p>Habilitado</p>
+                                <input
                                     type="checkbox"
                                     checked={habilitado}
                                     onChange={(e) => setHabilitado(e.target.checked)}
                                 />
-                                Habilitado
                             </label>
                         </div>
                         <div className='content4'>
-                            <textarea style={{height:'60%'}}
+                            <textarea style={{height:'50%'}}
                                 value={descripcion}
                                 onChange={(e) => setDescripcion(e.target.value)}
                                 placeholder="Ingrese una descripción"

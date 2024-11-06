@@ -1,10 +1,11 @@
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../../../redux/store';
 import { seleccionarEmpresa, agregarEmpresa } from '../../../../redux/slices/empresasSlice';
 import CardEmpresa from '../CardEmpresa/CardEmpresa';
+import styles from './SideBar.module.css'
 
-export const AdderViewer: React.FC = () => {
-    
+const SideBar: React.FC = () => {
     const empresas = useSelector((state: RootState) => state.empresas.empresas);
     const dispatch = useDispatch<AppDispatch>();
 
@@ -14,19 +15,21 @@ export const AdderViewer: React.FC = () => {
             dispatch(agregarEmpresa(nombre));
         }
     };
-    
-    return (
-        <div className="lista-empresas">
-        <button onClick={handleAgregarEmpresa}>Agregar Empresa</button>
-        {empresas.map((empresa) => (
-            <CardEmpresa
-                key={empresa.id}
-                empresa={empresa}
-                onSelect={() => dispatch(seleccionarEmpresa(empresa.id))}
-            />
-        ))}
-    </div>
-    )
-}
 
-export default AdderViewer;
+    return (
+        
+        <div className={styles.listaEmpresas}>
+            <h3>Empresas:</h3>
+            <button onClick={handleAgregarEmpresa}>Agregar Empresa</button>
+            {empresas.map((empresa) => (
+                <CardEmpresa
+                    key={empresa.id}
+                    empresa={empresa}
+                    onSelect={() => dispatch(seleccionarEmpresa(empresa.id))}
+                />
+            ))}
+        </div>
+    );
+};
+
+export default SideBar;

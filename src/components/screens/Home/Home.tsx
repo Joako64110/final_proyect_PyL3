@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { empresas } from '../../../data/empresa';
-import EmpresaSidebar from '../../EmpresaSidebar';
 import SucursalesGrid from '../../ui/featureds/featuredCardGrid/CardGrid';
-import TopBar from '../../ui/featureds/topBar/topBar';
+import TopBar from '../../ui/topBar/topBar';
 import { CrearSucursal } from '../../modals/CrearSucursal/CrearSucursal';
 import '../screen.css'
+import SideBar from '../../ui/SideBarr/SideBar/SideBar';
+import EmpresaSidebar from '../../EmpresaSidebar';
 
 interface ISucursal {
     id: string;
     nombre: string;
-    apertura: Date;
-    cierre: Date;
+    apertura: string;
+    cierre: string;
     pais: string;
     provincia: string;
     localidad: string;
@@ -25,6 +26,7 @@ interface IEmpresa {
     ciudad: string;
     sucursales: ISucursal[];
 }
+
 
 export const Home: React.FC = () => {
     const [empresaSeleccionada, setEmpresaSeleccionada] = useState<IEmpresa | null>(null);
@@ -56,8 +58,9 @@ export const Home: React.FC = () => {
 
     return (
         <div className="container-screen">
-            <EmpresaSidebar empresas={empresas} onEmpresaSelect={handleEmpresaSelect} />
-            <div className="featured-home">
+            <SideBar/>
+            {/* <EmpresaSidebar empresas={empresas} onEmpresaSelect={handleEmpresaSelect} /> */}
+            <div className="featured">
                 <TopBar
                     nombre={empresaSeleccionada?.nombre || 'Seleccione una empresa'}
                     placeholder="Buscar..."

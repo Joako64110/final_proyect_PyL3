@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import CustomTable from "../../ui/featureds/featuredTables/customTables";
-import TopBar from "../../ui/featureds/topBar/topBar";
+import TopBar from "../../ui/topBar/topBar";
 import Actions from "../../ui/Actions/actions";
 import CrearArticulo from "../../modals/CrearArticulo/CrearArticulo";
+import SideBar from "../../ui/SideBarr/SideBar/SideBar";
 
 export const Productos = () => {
     const columns = ["Nombre", "Precio", "Descripción", "Categoría", "Habilitado", "Acciones"];
@@ -50,15 +51,17 @@ export const Productos = () => {
     };
 
     return (
-        <div>
-            <h3>Productos</h3>
-            <TopBar 
-                nombre="Masco Mida - Palmares"
-                placeholder="Seleccione una Categoría..."
-                onAddBranch={handleAddProduct} // Asocia la función para abrir el modal
-                tareaBoton="Agregar Producto"/>
-            <CustomTable columns={columns} data={data} />
-            {isArticuloOpen && <CrearArticulo onClose={closeArticuloModal} onAddProduct={addProductToList} />}
+        <div className="container-screen"> 
+            <SideBar/>
+            <div className="featured">
+                <TopBar 
+                    nombre="Masco Mida - Palmares"
+                    placeholder="Seleccione una Categoría..."
+                    onAddBranch={handleAddProduct} // Asocia la función para abrir el modal
+                    tareaBoton="Agregar Producto"/>
+                <CustomTable columns={columns} data={data} />
+                {isArticuloOpen && <CrearArticulo onClose={closeArticuloModal} onAddProduct={addProductToList} />}
+            </div>
         </div>
     );
 };

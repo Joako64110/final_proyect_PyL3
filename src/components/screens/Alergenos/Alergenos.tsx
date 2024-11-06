@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import Actions from '../../ui/Actions/actions';
 import CustomTable from '../../ui/featureds/featuredTables/customTables';
-import TopBar from '../../ui/featureds/topBar/topBar';
+import TopBar from '../../ui/topBar/topBar';
 import CrearAlergeno from "../../modals/CrearAlergeno/CrearAlergeno";
+import SideBar from '../../ui/SideBarr/SideBar/SideBar';
 
 export const Alergenos = () => {
     const columns = ["Nombre", "Acciones"];
@@ -36,16 +37,18 @@ export const Alergenos = () => {
     };
 
     return (
-        <div>
-            Alergenos
-            <TopBar 
-                nombre="Masco Mida - Palmares"
-                placeholder="Buscar..."
-                onAddBranch={handleAddAllergen}
-                tareaBoton="Agregar un Alergeno"
-            />
-            <CustomTable columns={columns} data={data} />
-            {isAlergenoOpen && <CrearAlergeno onClose={closeAlergenoModal} onCreate={handleCreateAllergen} />}
+        <div className='container-screen'>
+            <SideBar/>
+            <div className='featured'>
+                <TopBar 
+                    nombre="Masco Mida - Palmares"
+                    placeholder="Buscar..."
+                    onAddBranch={handleAddAllergen}
+                    tareaBoton="Agregar un Alergeno"
+                />
+                <CustomTable columns={columns} data={data} />
+                {isAlergenoOpen && <CrearAlergeno onClose={closeAlergenoModal} onCreate={handleCreateAllergen} />}
+            </div>
         </div>
     );
 };

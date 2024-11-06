@@ -5,8 +5,8 @@ import './CrearSucursal.css';
 interface ISucursal {
     id: string;
     nombre: string;
-    apertura: Date;
-    cierre: Date;
+    apertura: string;
+    cierre: string;
     pais: string;
     provincia: string;
     localidad: string;
@@ -24,8 +24,8 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
     const [sucursalData, setSucursalData] = useState<ISucursal>({
         id: Date.now().toString(), // ID único basado en el timestamp
         nombre: "",
-        apertura: new Date(),
-        cierre: new Date(),
+        apertura: "",
+        cierre: "",
         pais: "",
         provincia: "",
         localidad: "",
@@ -51,17 +51,10 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
     };
 
     const handleConfirm = () => {
-        // Verificar si todos los campos están completos
         const allFieldsFilled = Object.values(sucursalData).every(field => field !== "") && imageSelected;
     
-        // Verificar que las fechas sean válidas
-        const aperturaDate = new Date(sucursalData.apertura);
-        const cierreDate = new Date(sucursalData.cierre);
-        const isAperturaValid = !isNaN(aperturaDate.getTime());
-        const isCierreValid = !isNaN(cierreDate.getTime());
-    
-        if (!allFieldsFilled || !isAperturaValid || !isCierreValid) {
-            setWarningMessage("Por favor, asegúrate de completar todos los campos y en el formato correcto."); // Actualizar el mensaje de advertencia
+        if (!allFieldsFilled) {
+            setWarningMessage("Por favor, asegúrate de completar todos los campos.");
         } else {
             setWarningMessage(""); // Limpiar el mensaje de advertencia
             onAddSucursal(sucursalData);

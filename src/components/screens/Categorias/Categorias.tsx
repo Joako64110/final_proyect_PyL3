@@ -1,10 +1,10 @@
 // Categorias.tsx
 import React, { useState } from 'react';
-import CustomTable from "../../ui/featureds/featuredTables/customTables";
-import TopBar from "../../ui/featureds/topBar/topBar";
+import TopBar from "../../ui/topBar/topBar";
 import CrearCategoriaPadre from "../../modals/CrearCategoriaPadre/CrearCategoriaPadre";
 import CrearSubcategoria from "../../modals/CrearSubcategoria/CrearSubcategoria";
 import Actions from "../../ui/Actions/actions";
+import SideBar from '../../ui/SideBarr/SideBar/SideBar';
 
 interface Category {
   Nombre: string;
@@ -122,59 +122,61 @@ export const Categorias = () => {
   };
 
   return (
-    <div>
-      <h3>Categorias</h3>
-      <TopBar
-        nombre="Masco Mida - Palmares"
-        placeholder="Filtrar... "
-        onAddBranch={handleAddCategory}
-        tareaBoton="Agregar Categoría"
-      />
-      <table className="mi-clase-tabla">
-        <thead className="mi-clase-thead">
-          <tr>
-            {columns.map((col, index) => (
-              <th key={index} className="mi-clase-th">{col}</th>
+    <div className="container-screen">
+      <SideBar/>
+      <div className="featured">
+        <TopBar
+          nombre="Masco Mida - Palmares"
+          placeholder="Filtrar... "
+          onAddBranch={handleAddCategory}
+          tareaBoton="Agregar Categoría"
+        />
+        <table className="mi-clase-tabla">
+          <thead className="mi-clase-thead">
+            <tr>
+              {columns.map((col, index) => (
+                <th key={index} className="mi-clase-th">{col}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="mi-clase-tbody">
+            {data.map((row, rowIndex) => (
+              <React.Fragment key={rowIndex}>
+                <tr className="mi-clase-tr">
+                  <td className="mi-clase-td">{row.Nombre}</td>
+                  <td className="mi-clase-td">{row.Acciones}</td>
+                </tr>
+                {expandedCategories.includes(row.Nombre) &&
+                  row.Subcategorias.map((sub, subIndex) => (
+                    <tr key={subIndex} className="mi-clase-tr">
+                      <td className="mi-clase-td" style={{ paddingLeft: "20px" }}>
+                        - {sub}
+                      </td>
+                      <td className="mi-clase-td"></td>
+                    </tr>
+                  ))}
+              </React.Fragment>
             ))}
-          </tr>
-        </thead>
-        <tbody className="mi-clase-tbody">
-          {data.map((row, rowIndex) => (
-            <React.Fragment key={rowIndex}>
-              <tr className="mi-clase-tr">
-                <td className="mi-clase-td">{row.Nombre}</td>
-                <td className="mi-clase-td">{row.Acciones}</td>
-              </tr>
-              {expandedCategories.includes(row.Nombre) &&
-                row.Subcategorias.map((sub, subIndex) => (
-                  <tr key={subIndex} className="mi-clase-tr">
-                    <td className="mi-clase-td" style={{ paddingLeft: "20px" }}>
-                      - {sub}
-                    </td>
-                    <td className="mi-clase-td"></td>
-                  </tr>
-                ))}
-            </React.Fragment>
-          ))}
-        </tbody>
-      </table>
-      {isCategoriaPadreOpen && (
-        <CrearCategoriaPadre
-          onClose={closeCategoriaPadreModal}
-          onSubmit={addCategory}
-          initialValue="" 
-        />
-      )}
-      {isEditModalOpen && categoryToEdit && (
-        <CrearCategoriaPadre
-          onClose={closeEditModal}
-          onSubmit={editCategory}
-          initialValue={categoryToEdit.name} 
-        />
-      )}
-      {isSubcategoriaOpen && (
-        <CrearSubcategoria onClose={closeSubcategoriaModal} onSubmit={addSubcategory} />
-      )}
+          </tbody>
+        </table>
+        {isCategoriaPadreOpen && (
+          <CrearCategoriaPadre
+            onClose={closeCategoriaPadreModal}
+            onSubmit={addCategory}
+            initialValue="" 
+          />
+        )}
+        {isEditModalOpen && categoryToEdit && (
+          <CrearCategoriaPadre
+            onClose={closeEditModal}
+            onSubmit={editCategory}
+            initialValue={categoryToEdit.name} 
+          />
+        )}
+        {isSubcategoriaOpen && (
+          <CrearSubcategoria onClose={closeSubcategoriaModal} onSubmit={addSubcategory} />
+        )}
+      </div>
     </div>
   );
 };

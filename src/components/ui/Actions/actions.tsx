@@ -1,6 +1,6 @@
 import './actions.css'
 
-type ActionType = "ver" | "editar" | "eliminar" | "desplegar" | "agregar";
+type ActionType = "ver" | "editar" | "eliminar" | "desplegar" | "agregar"| "abrirSuc";
 
 interface ActionsProps {
   nombre: string;
@@ -10,9 +10,10 @@ interface ActionsProps {
   onEliminar?: (nombre: string) => void;
   onDesplegar?: (nombre: string) => void;
   onAgregar?: (nombre: string) => void;
+  onAbrirSuc?: (nombre: string) => void;
 }
 
-const Actions: React.FC<ActionsProps> = ({ nombre, actions, onVer, onEditar, onEliminar, onDesplegar, onAgregar }) => {
+const Actions: React.FC<ActionsProps> = ({ nombre, actions, onVer, onEditar, onEliminar, onDesplegar, onAgregar, onAbrirSuc }) => {
   const renderIcon = (action: ActionType) => {
     switch (action) {
       case "ver":
@@ -25,6 +26,8 @@ const Actions: React.FC<ActionsProps> = ({ nombre, actions, onVer, onEditar, onE
         return <i className="bi bi-chevron-down icono-accion" onClick={() => onDesplegar && onDesplegar(nombre)} />; // Desplegar
       case "agregar":
         return <i className="bi bi-plus-square-fill icono-accion" style={{color:"rgba(31, 228, 38, 1)"}} onClick={() => onAgregar && onAgregar(nombre)} />; // Agregar
+      case "abrirSuc":
+        return <i className="bi bi-building-fill icono-accion" style={{color:"green"}} onClick={() => onAbrirSuc && onAbrirSuc(nombre)} />; // abrirSuc
       default:
         return null;
     }

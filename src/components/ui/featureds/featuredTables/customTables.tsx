@@ -11,24 +11,26 @@ interface CustomTableProps {
 
 const CustomTable: React.FC<CustomTableProps> = ({ columns, data}) => {
   return (
-    <table className="mi-clase-tabla">
-      <thead className="mi-clase-thead">
-        <tr>
-          {columns.map((col, index) => (
-            <th key={index} className="mi-clase-th">{col}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody className="mi-clase-tbody">
-        {data.map((row, rowIndex) => (
-          <tr key={rowIndex} className="mi-clase-tr">
-            {columns.map((col, colIndex) => (
-              <td key={colIndex} className="mi-clase-td">{row[col] ?? "-"}</td> // Uso de "??" para evitar errores
+    <div className='table-container'>
+      <table className="mi-clase-tabla">
+        <thead className="mi-clase-thead">
+          <tr>
+            {columns.map((col, index) => (
+              <th key={index} className="mi-clase-th">{col}</th>
             ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody className="mi-clase-tbody">
+          {data.map((row, rowIndex) => (
+            <tr key={rowIndex} className="mi-clase-tr">
+              {columns.map((col, colIndex) => (
+                <td key={colIndex} className="mi-clase-td">{row[col] ?? "-"}</td> // Uso de "??" para evitar errores
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

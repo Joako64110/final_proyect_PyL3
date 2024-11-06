@@ -6,11 +6,11 @@
     overflow: auto;
 }
 
-.featured-home{
-    padding: 2px;
+.featured{
+    padding: 5px;
     height: 100%;
     width: 100%;
     border: solid 1px rgba(217, 217, 217, 1);
     border-radius: 8px;
-    padding-bottom: 80px;
+    padding-bottom: 70px;
 }
