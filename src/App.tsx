@@ -1,8 +1,7 @@
-import { ModalEmpresa } from "./components/modals/ModalEmpresa/modalEmpresa"
-import { ModalMostrarEmpresa } from "./components/modals/ModalMostrarEmpresa/modalMostrarEmpresa"
-import { ModalMostrarSucursal } from "./components/modals/ModalMostrarSucursal/modalMostrarSucursal"
-import { ModalSucursal } from "./components/modals/ModalSucursal/modalSucursal"
-import { Footer } from "./components/ui/Footer/Footer"
+import { CrearEmpresa} from "./components/modals/CrearEmpresa/CrearEmpresa"
+import { CrearSucursal } from "./components/modals/CrearSucursal/CrearSucursal"
+import { MostrarEmpresa } from "./components/modals/MostrarEmpresa/MostrarEmpresa"
+import { MostrarSucursal } from "./components/modals/MostrarSucursal/MostrarSucursal"
 import { AppRouter } from "./routes/AppRouter"
 
 
@@ -10,10 +9,10 @@ function App() {
   return (
     <>
       <AppRouter/>
-    {/* <ModalEmpresa/> */}
-    {/* <ModalSucursal/> */}
-    {/* <ModalMostrarEmpresa/> */}
-    {/* <ModalMostrarSucursal/> */}
+      {/* <CrearEmpresa/> */}
+      {/* <CrearSucursal/> */}
+      {/* <MostrarEmpresa/> */}
+      {/* <MostrarSucursal/> */}
     </>
   )
 }

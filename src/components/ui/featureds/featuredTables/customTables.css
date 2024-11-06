@@ -1,8 +1,13 @@
+.table-container{
+    width: 100%;
+    border: solid 1px rgba(217, 217, 217, 1);
+    height: 100%;
+    border-radius: 8px;
+}
 .mi-clase-tabla {
-    width: 100%; /* Ancho completo de la tabla */
-    border-collapse: collapse; /* Colapsar bordes */
-    margin: 20px 0; /* Margen superior e inferior */
-    color: black; /* Color de texto por defecto */
+    width: 100%; 
+    border-collapse: collapse; 
+    color: black; 
     border-radius: 8px;
 }
 

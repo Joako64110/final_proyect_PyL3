@@ -1,4 +1,4 @@
-import '../../styles/uiStyles/uiStyles.css';
+import './Footer.css';
 
 
 export const Footer = () => {
