@@ -4,7 +4,7 @@ import SucursalesGrid from '../../ui/featureds/featuredCardGrid/CardGrid';
 import TopBar from '../../ui/topBar/topBar';
 import { CrearSucursal } from '../../modals/CrearSucursal/CrearSucursal';
 import '../screen.css'
-import SideBar from '../../ui/SideBarr/SideBar/SideBar';
+import SideBar from '../../ui/SideBarr/SideBarHome/SideBar';
 import EmpresaSidebar from '../../EmpresaSidebar';
 
 interface ISucursal {

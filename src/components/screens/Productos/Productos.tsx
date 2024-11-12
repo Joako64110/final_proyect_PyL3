@@ -3,7 +3,7 @@ import CustomTable from "../../ui/featureds/featuredTables/customTables";
 import TopBar from "../../ui/topBar/topBar";
 import Actions from "../../ui/Actions/actions";
 import CrearArticulo from "../../modals/CrearArticulo/CrearArticulo";
-import SideBar from "../../ui/SideBarr/SideBar/SideBar";
+import SideBar from "../../ui/SideBarr/SideBarHome/SideBar";
 
 export const Productos = () => {
     const columns = ["Nombre", "Precio", "Descripción", "Categoría", "Habilitado", "Acciones"];

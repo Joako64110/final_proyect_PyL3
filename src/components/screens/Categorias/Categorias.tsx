@@ -3,7 +3,7 @@ import TopBar from "../../ui/topBar/topBar";
 import CrearCategoriaPadre from "../../modals/CrearCategoriaPadre/CrearCategoriaPadre";
 import CrearSubcategoria from "../../modals/CrearSubcategoria/CrearSubcategoria";
 import Actions from "../../ui/Actions/actions";
-import SideBar from '../../ui/SideBarr/SideBar/SideBar';
+import SideBar from '../../ui/SideBarr/SideBarHome/SideBar';
 import CategoriaTable from '../../ui/featureds/featuredCategoriaTable/CategoriaTable';
 
 interface Category {

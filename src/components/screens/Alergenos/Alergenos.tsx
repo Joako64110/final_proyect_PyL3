@@ -3,7 +3,7 @@ import Actions from '../../ui/Actions/actions';
 import CustomTable from '../../ui/featureds/featuredTables/customTables';
 import TopBar from '../../ui/topBar/topBar';
 import CrearAlergeno from "../../modals/CrearAlergeno/CrearAlergeno";
-import SideBar from '../../ui/SideBarr/SideBar/SideBar';
+import SideBar from '../../ui/SideBarr/SideBarHome/SideBar';
 
 export const Alergenos = () => {
     const columns = ["Nombre", "Acciones"];
