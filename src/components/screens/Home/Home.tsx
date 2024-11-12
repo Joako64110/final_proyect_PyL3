@@ -57,7 +57,7 @@ export const Home: React.FC = () => {
     };
 
     return (
-        <div className="container-screen">
+        <div  className="container-screen">
             <SideBar/>
             {/* <EmpresaSidebar empresas={empresas} onEmpresaSelect={handleEmpresaSelect} /> */}
             <div className="featured">
