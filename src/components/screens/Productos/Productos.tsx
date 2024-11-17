@@ -4,6 +4,7 @@ import TopBar from "../../ui/topBar/topBar";
 import Actions from "../../ui/Actions/actions";
 import CrearArticulo from "../../modals/CrearArticulo/CrearArticulo";
 import SideBar from "../../ui/SideBarr/SideBarHome/SideBar";
+import SideBarFunc from "../../ui/SideBarr/SideBarSuc/SideBarFun";
 
 export const Productos = () => {
     const columns = ["Nombre", "Precio", "Descripción", "Categoría", "Habilitado", "Acciones"];
@@ -38,7 +39,7 @@ export const Productos = () => {
             ...product,
             Acciones: (
                 <Actions
-                    nombre={product.Nombre}
+                    id={1}
                     actions={["ver", "editar", "eliminar"]}
                     onVer={() => console.log("Ver")}
                     onEditar={() => console.log("Editar")}
@@ -52,7 +53,7 @@ export const Productos = () => {
 
     return (
         <div className="container-screen"> 
-            <SideBar/>
+            <SideBarFunc/>
             <div className="featured">
                 <TopBar 
                     nombre="Masco Mida - Palmares"

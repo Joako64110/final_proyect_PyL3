@@ -5,6 +5,7 @@ import CrearSubcategoria from "../../modals/CrearSubcategoria/CrearSubcategoria"
 import Actions from "../../ui/Actions/actions";
 import SideBar from '../../ui/SideBarr/SideBarHome/SideBar';
 import CategoriaTable from '../../ui/featureds/featuredCategoriaTable/CategoriaTable';
+import SideBarFunc from '../../ui/SideBarr/SideBarSuc/SideBarFun';
 
 interface Category {
   Nombre: string;
@@ -38,7 +39,7 @@ export const Categorias = () => {
       Subcategorias: [],
       Acciones: (
         <Actions
-          nombre={categoryName}
+          id={1}
           actions={["desplegar", "editar", "eliminar", "agregar"]}
           onDesplegar={() => toggleExpandCategory(categoryName)}
           onEditar={() => openEditModal(categoryName)}
@@ -111,7 +112,7 @@ export const Categorias = () => {
 
   return (
     <div className="container-screen">
-      <SideBar />
+      <SideBarFunc />
       <div className="featured">
         <TopBar
           nombre="Masco Mida - Palmares"

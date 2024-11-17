@@ -47,7 +47,7 @@ const CategoriaTable: React.FC<CategoriaTableProps> = ({
                         <td className="mi-clase-td-1">{row.Nombre}</td>
                         <td className="mi-clase-td-2">
                             <Actions
-                            nombre={row.Nombre}
+                            id={1}
                             actions={["desplegar", "editar", "eliminar", "agregar"]}
                             onDesplegar={() => toggleExpandCategory(row.Nombre)}
                             onEditar={() => onEditCategory(row.Nombre)}
@@ -65,7 +65,7 @@ const CategoriaTable: React.FC<CategoriaTableProps> = ({
                                 </td>
                                 <td className="mi-clase-td-4">
                                     <Actions
-                                    nombre={row.Nombre}
+                                    id={1}
                                     actions={["editar", "eliminar"]}
                                     onEditar={() => onEditCategory(row.Nombre)}
                                     onEliminar={() => onDeleteSubcategory(row.Nombre, sub)}

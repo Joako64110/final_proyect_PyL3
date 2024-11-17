@@ -1,0 +1,92 @@
+.sidebarFun {
+    background-color: rgba(56, 56, 56, 1);
+    width: 14rem;
+    border-radius: 0.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px;
+    padding-top: 15px;
+    overflow-x:hidden;
+    align-items: center;
+}
+
+.titulo{
+    font-size: 1.5rem;
+    color: aliceblue;
+    text-decoration: underline;
+}
+
+.link{
+    width: 100%;
+    background-color: rgba(135, 176, 241, 1);
+    border-radius: 5px;
+    box-shadow: 0px 0px 8px 1px black;
+}
+
+.boton{
+    width: 100%;
+    border: none;
+    height: 45px;
+    border-radius: 5px;
+    background-color: inherit;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.boton p{
+    margin: 0;
+    margin-bottom: 3px;
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
+.cards{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 90%;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 400;  
+}
+
+.card{
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    background-color: aliceblue;
+    height: 3.2rem;
+    text-decoration: none;
+    color: black;
+    box-shadow: 0px 0px 8px 1px;
+}
+
+.card p{
+    margin: 0;
+}
+
+.card:hover{
+    background-color: rgb(182, 182, 182);
+}
+
+.link{
+    text-decoration: none;
+}
+
+.card.active {
+    background-color: rgba(206, 225, 255, 0.53);
+    cursor: default;
+    font-size: 1.5rem;
+}
+
+.card.active:hover {
+    background-color: rgba(206, 225, 255, 0.53);
+}
+
+.card.active p{
+    margin-bottom: 3px;
+}

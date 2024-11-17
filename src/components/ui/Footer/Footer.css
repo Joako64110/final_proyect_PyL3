@@ -1,9 +1,9 @@
 
 .footer {
+    position: absolute;
     height: 3.2rem; 
     background-color: black;
     width: 100%;
-    bottom: 0;
     display: flex;
     justify-content: space-around;
     align-items: center;

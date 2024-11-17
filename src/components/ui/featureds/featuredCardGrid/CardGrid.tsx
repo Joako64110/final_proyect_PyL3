@@ -1,39 +1,37 @@
-import React, { useState } from 'react';
-import { Card } from "react-bootstrap"
-import styles from "./CardGrid.module.css"
+import React, { useEffect, useState } from 'react';
+import { Card } from "react-bootstrap";
+import styles from "./CardGrid.module.css";
 import Actions from '../../Actions/actions';
 import { useNavigate } from 'react-router-dom';
 import { MostrarSucursal } from '../../../modals/MostrarSucursal/MostrarSucursal';
+import sucursalesService from '../../../../services/SucursalService';
+import { ISucursal } from '../../../../types/ISucursal';
 
-interface SucursalesGridProps {
-    sucursales: ISucursal[];
-    ciudad: string;
-}
-
-export interface ISucursal {
-    id: string;
-    nombre: string;
-    apertura: string;
-    cierre: string;
-    pais: string;
-    provincia: string;
-    localidad: string;
-    calle: string;
-    numero: string;
-    codigoPostal: string;
-}
-
-const SucursalesGrid: React.FC<SucursalesGridProps> = ({ sucursales, ciudad }) => {
-    const navigate = useNavigate();
-    
-    const handleAbrirSuc = (id: string) => {
-        // Redirige a la página de categorías de la sucursal específica
-        navigate(`/sucursales/${id}/Categorias`);
-        navigate(`Categorias`);
-    };
-
+const SucursalesGrid: React.FC = () => {
+    const [sucursales, setSucursales] = useState<ISucursal[]>([]);
+    const [loading, setLoading] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedSucursal, setSelectedSucursal] = useState<ISucursal | null>(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchSucursales = async () => {
+            try {
+                const data = await sucursalesService.getAll();
+                setSucursales(data);
+            } catch (error) {
+                console.error("Error al obtener las sucursales:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchSucursales();
+    }, []);
+
+    const handleAbrirSuc = (id: number) => {
+        navigate(`/Categorias`);
+    };
 
     const handleVer = (sucursal: ISucursal) => {
         setSelectedSucursal(sucursal);
@@ -45,6 +43,11 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ sucursales, ciudad }) =
         setSelectedSucursal(null);
     };
 
+    if (loading) {
+        return <p>Cargando sucursales...</p>;
+    }
+
+
     return (
         <div className={styles.containerSucPage}>
             {sucursales.map((sucursal) => (
@@ -53,27 +56,25 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ sucursales, ciudad }) =
                         <h3>{sucursal.nombre}</h3>
                     </Card.Title>
                     <div className={styles.containerImgSucPage}>
-                        <Card.Img variant="top" src={`/assets/heroes/${sucursal.id}.jpg`} />
+                        <Card.Img/>
                     </div>
                     <div className={styles.containerTextSucPage}>
-                        <Card.Text>
-                                <p>
-                                    <b>Apertura:</b> {sucursal.apertura} - {sucursal.cierre}
-                                </p>
-                                <p>
-                                    <b>Dirección:</b> {sucursal.calle} {sucursal.numero}
-                                </p>
-                                <p>
-                                    <b>Ciudad:</b> {ciudad}
-                                </p>
-                        </Card.Text>
+                            <p>
+                                <b>Apertura:</b> {sucursal.horarioApertura} - {sucursal.horarioCierre}
+                            </p>
+                            <p>
+                                <b>Dirección:</b> {sucursal.calle} {sucursal.latitud}
+                            </p>
+                            <p>
+                                <b>Ciudad:</b> {sucursal.domicilio.localidad.nombre}
+                            </p>
                         <Actions
-                            nombre={sucursal.id}
+                            id={sucursal.id}
                             actions={["abrirSuc", "editar", "ver"]}
                             onAbrirSuc={() => handleAbrirSuc(sucursal.id)}
                             onVer={() => handleVer(sucursal)}
                             onEditar={() => console.log("Editar")}
-                />
+                        />
                     </div>
                 </div>
             ))}
