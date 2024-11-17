@@ -1,10 +1,11 @@
-// Categorias.tsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import TopBar from "../../ui/topBar/topBar";
 import CrearCategoriaPadre from "../../modals/CrearCategoriaPadre/CrearCategoriaPadre";
 import CrearSubcategoria from "../../modals/CrearSubcategoria/CrearSubcategoria";
 import Actions from "../../ui/Actions/actions";
-import SideBar from '../../ui/SideBarr/SideBar/SideBar';
+import SideBar from '../../ui/SideBarr/SideBarHome/SideBar';
+import CategoriaTable from '../../ui/featureds/featuredCategoriaTable/CategoriaTable';
+import SideBarFunc from '../../ui/SideBarr/SideBarSuc/SideBarFun';
 
 interface Category {
   Nombre: string;
@@ -13,30 +14,32 @@ interface Category {
 }
 
 export const Categorias = () => {
-  const columns = ["Nombre", "Acciones"];
   const [isCategoriaPadreOpen, setIsCategoriaPadreOpen] = useState(false);
   const [isSubcategoriaOpen, setIsSubcategoriaOpen] = useState(false);
   const [data, setData] = useState<Array<Category>>([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [categoryToEdit, setCategoryToEdit] = useState<{ name: string; index: number } | null>(null); 
+  const [categoryToEdit, setCategoryToEdit] = useState<{ name: string; index: number } | null>(null);
   const [parentCategory, setParentCategory] = useState<string | null>(null);
-  const [expandedCategories, setExpandedCategories] = useState<Array<string>>([]); // Estado para manejar las categorías desplegadas
+  const [expandedCategories, setExpandedCategories] = useState<Array<string>>([]);
 
-  const handleAddCategory = () => {
-    setIsCategoriaPadreOpen(true);
-  };
+  const handleAddCategory = () => setIsCategoriaPadreOpen(true);
+  const closeCategoriaPadreModal = () => setIsCategoriaPadreOpen(false);
 
-  const closeCategoriaPadreModal = () => {
-    setIsCategoriaPadreOpen(false);
-  };
+  const toggleExpandCategory = (categoryName: string) => {
+    setExpandedCategories((prevExpanded) =>
+    prevExpanded.includes(categoryName)
+        ? prevExpanded.filter((name) => name !== categoryName)
+        : [...prevExpanded, categoryName]
+    );
+};
 
   const addCategory = (categoryName: string) => {
-    const newCategory = {
+    const newCategory: Category = {
       Nombre: categoryName,
       Subcategorias: [],
       Acciones: (
         <Actions
-          nombre={categoryName}
+          id={1}
           actions={["desplegar", "editar", "eliminar", "agregar"]}
           onDesplegar={() => toggleExpandCategory(categoryName)}
           onEditar={() => openEditModal(categoryName)}
@@ -45,13 +48,23 @@ export const Categorias = () => {
         />
       ),
     };
-
+  
     setData((prevData) => [...prevData, newCategory]);
-    closeCategoriaPadreModal(); 
+    closeCategoriaPadreModal();
   };
 
   const deleteCategory = (categoryName: string) => {
     setData((prevData) => prevData.filter((item) => item.Nombre !== categoryName));
+  };
+
+  const onDeleteSubcategory = (categoryName: string, subcategoryName: string) => {
+    setData((prevData) =>
+      prevData.map((category) =>
+        category.Nombre === categoryName
+          ? { ...category, Subcategorias: category.Subcategorias.filter((sub) => sub !== subcategoryName) }
+          : category
+      )
+    );
   };
 
   const openEditModal = (categoryName: string) => {
@@ -68,20 +81,7 @@ export const Categorias = () => {
   const editCategory = (newName: string) => {
     if (categoryToEdit) {
       const updatedData = [...data];
-      updatedData[categoryToEdit.index] = {
-        ...updatedData[categoryToEdit.index],
-        Nombre: newName,
-        Acciones: (
-          <Actions
-            nombre={newName}
-            actions={["desplegar", "editar", "eliminar", "agregar"]}
-            onDesplegar={() => toggleExpandCategory(newName)}
-            onEditar={() => openEditModal(newName)}
-            onEliminar={() => deleteCategory(newName)}
-            onAgregar={() => openSubcategoriaModal(newName)}
-          />
-        ),
-      };
+      updatedData[categoryToEdit.index] = { ...updatedData[categoryToEdit.index], Nombre: newName };
       setData(updatedData);
       closeEditModal();
     }
@@ -91,24 +91,13 @@ export const Categorias = () => {
     if (parentCategory) {
       const updatedData = data.map((category) => {
         if (category.Nombre === parentCategory) {
-          return {
-            ...category,
-            Subcategorias: [...category.Subcategorias, subcategoryName],
-          };
+          return { ...category, Subcategorias: [...category.Subcategorias, subcategoryName] };
         }
         return category;
       });
       setData(updatedData);
       closeSubcategoriaModal();
     }
-  };
-
-  const toggleExpandCategory = (categoryName: string) => {
-    setExpandedCategories((prevExpanded) =>
-      prevExpanded.includes(categoryName)
-        ? prevExpanded.filter((name) => name !== categoryName)
-        : [...prevExpanded, categoryName]
-    );
   };
 
   const openSubcategoriaModal = (parentCategoryName: string) => {
@@ -123,7 +112,7 @@ export const Categorias = () => {
 
   return (
     <div className="container-screen">
-      <SideBar/>
+      <SideBarFunc />
       <div className="featured">
         <TopBar
           nombre="Masco Mida - Palmares"
@@ -131,50 +120,39 @@ export const Categorias = () => {
           onAddBranch={handleAddCategory}
           tareaBoton="Agregar Categoría"
         />
-        <table className="mi-clase-tabla">
-          <thead className="mi-clase-thead">
-            <tr>
-              {columns.map((col, index) => (
-                <th key={index} className="mi-clase-th">{col}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="mi-clase-tbody">
-            {data.map((row, rowIndex) => (
-              <React.Fragment key={rowIndex}>
-                <tr className="mi-clase-tr">
-                  <td className="mi-clase-td">{row.Nombre}</td>
-                  <td className="mi-clase-td">{row.Acciones}</td>
-                </tr>
-                {expandedCategories.includes(row.Nombre) &&
-                  row.Subcategorias.map((sub, subIndex) => (
-                    <tr key={subIndex} className="mi-clase-tr">
-                      <td className="mi-clase-td" style={{ paddingLeft: "20px" }}>
-                        - {sub}
-                      </td>
-                      <td className="mi-clase-td"></td>
-                    </tr>
-                  ))}
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
+        <CategoriaTable
+          data={data.map(category => ({
+            Nombre: category.Nombre,
+            Subcategorias: category.Subcategorias,
+            Acciones: <></>,
+          }))}
+          onAddSubcategory={openSubcategoriaModal}
+          onEditCategory={openEditModal}
+          onDeleteCategory={deleteCategory}
+          onDeleteSubcategory={onDeleteSubcategory}
+        />
+        
         {isCategoriaPadreOpen && (
           <CrearCategoriaPadre
             onClose={closeCategoriaPadreModal}
             onSubmit={addCategory}
-            initialValue="" 
+            initialValue=""
           />
         )}
+        
         {isEditModalOpen && categoryToEdit && (
           <CrearCategoriaPadre
             onClose={closeEditModal}
             onSubmit={editCategory}
-            initialValue={categoryToEdit.name} 
+            initialValue={categoryToEdit.name}
           />
         )}
+        
         {isSubcategoriaOpen && (
-          <CrearSubcategoria onClose={closeSubcategoriaModal} onSubmit={addSubcategory} />
+          <CrearSubcategoria
+            onClose={closeSubcategoriaModal}
+            onSubmit={addSubcategory}
+          />
         )}
       </div>
     </div>

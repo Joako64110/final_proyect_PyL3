@@ -1,4 +1,4 @@
-// CrearCategoriaPadre.tsx
+
 import React, { useState, useEffect } from 'react';
 import './CrearCategoriaPadre.css';
 
@@ -27,7 +27,7 @@ const CrearCategoriaPadre: React.FC<PopupFormProps> = ({ onClose, onSubmit, init
     return (
         <div className="modal-overlayCategoriaPadre">
             <div className="categoria-padre"> 
-                <h2>{initialValue ? "Editar Categoría" : "Crear Categoría Padre"}</h2>
+                <h2>{initialValue ? "Editar Categoría" : "Crear Categoría"}</h2>
                 <label>Ingrese una denominación:</label>
                 <input
                     type="text"

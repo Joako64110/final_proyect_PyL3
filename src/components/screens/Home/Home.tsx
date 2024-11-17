@@ -1,42 +1,17 @@
 import React, { useState } from 'react';
-import { empresas } from '../../../data/empresa';
 import SucursalesGrid from '../../ui/featureds/featuredCardGrid/CardGrid';
 import TopBar from '../../ui/topBar/topBar';
 import { CrearSucursal } from '../../modals/CrearSucursal/CrearSucursal';
 import '../screen.css'
-import SideBar from '../../ui/SideBarr/SideBar/SideBar';
-import EmpresaSidebar from '../../EmpresaSidebar';
-
-interface ISucursal {
-    id: string;
-    nombre: string;
-    apertura: string;
-    cierre: string;
-    pais: string;
-    provincia: string;
-    localidad: string;
-    calle: string;
-    numero: string;
-    codigoPostal: string;
-}
-
-interface IEmpresa {
-    id: number;
-    nombre: string;
-    ciudad: string;
-    sucursales: ISucursal[];
-}
+import SideBar from '../../ui/SideBarr/SideBarHome/SideBar';
+import { ISucursal } from '../../../types/ISucursal';
+import { IEmpresa } from '../../../types/IEmpresa';
 
 
 export const Home: React.FC = () => {
     const [empresaSeleccionada, setEmpresaSeleccionada] = useState<IEmpresa | null>(null);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-
-    const handleEmpresaSelect = (empresaId: number) => {
-        const empresa = empresas.find((emp) => emp.id === empresaId) || null;
-        setEmpresaSeleccionada(empresa);
-    };
 
      // Función para abrir el modal
     const handleAddBranch = () => {
@@ -57,9 +32,8 @@ export const Home: React.FC = () => {
     };
 
     return (
-        <div className="container-screen">
+        <div  className="container-screen">
             <SideBar/>
-            {/* <EmpresaSidebar empresas={empresas} onEmpresaSelect={handleEmpresaSelect} /> */}
             <div className="featured">
                 <TopBar
                     nombre={empresaSeleccionada?.nombre || 'Seleccione una empresa'}
@@ -67,7 +41,7 @@ export const Home: React.FC = () => {
                     onAddBranch={handleAddBranch}
                     tareaBoton="Agregar Sucursal"
                 />
-                <SucursalesGrid sucursales={empresaSeleccionada?.sucursales || []} ciudad={empresaSeleccionada?.ciudad || ''} />
+                <SucursalesGrid/>
 
                 {/* Renderizar el modal cuando isModalOpen es true */}
                 {isModalOpen && <CrearSucursal onClose={handleCloseModal} onAddSucursal={handleAddSucursal} />}

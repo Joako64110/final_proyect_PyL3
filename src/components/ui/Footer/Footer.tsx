@@ -11,7 +11,7 @@ export const Footer = () => {
                 <i className="bi bi-linkedin"></i>
             </div>
             <div>
-                <p style={{marginTop:"15px"}}>© 20204. Enterprise Control AG.</p>
+                <p style={{margin:"0"}}>© 2024. Enterprise Control AG.</p>
             </div>
         </footer>
         

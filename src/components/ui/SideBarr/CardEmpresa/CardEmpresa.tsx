@@ -1,31 +1,28 @@
+import { IEmpresa } from "../../../../types/IEmpresa";
 import Actions from "../../Actions/actions";
-import styles from "./CardEmpresa.module.css"
+import styles from "./CardEmpresa.module.css";
 
 interface Props {
-    empresa: {
-        id: number;
-        nombre: string;
-        seleccionado: boolean;
-    };
+    empresa: IEmpresa;
     onSelect: () => void;
+    isSeleccionada: boolean
 }
 
-export const CardEmpresa: React.FC<Props> = ({ empresa, onSelect }) => {
-    
+export const CardEmpresa: React.FC<Props> = ({ empresa, onSelect, isSeleccionada }) => {
     return (
         <div
-            className={styles.tarjetaEmpresa}
+            className={`${styles.tarjetaEmpresa} ${isSeleccionada ? styles.selected : ''}`}
             onClick={onSelect}
         >
             <p>{empresa.nombre}</p>
             <Actions
-                    nombre={empresa.nombre}
-                    actions={["ver", "editar"]}
-                    onVer={() => console.log("Ver")}
-                    onEditar={() => console.log("Editar")}
-                />
+                id={empresa.id}
+                actions={["ver", "editar"]}
+                onVer={() => console.log("Ver")}
+                onEditar={() => console.log("Editar")}
+            />
         </div>
-    )
-}
+    );
+};
 
 export default CardEmpresa;

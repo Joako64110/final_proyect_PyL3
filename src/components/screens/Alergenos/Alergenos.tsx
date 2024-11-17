@@ -3,7 +3,7 @@ import Actions from '../../ui/Actions/actions';
 import CustomTable from '../../ui/featureds/featuredTables/customTables';
 import TopBar from '../../ui/topBar/topBar';
 import CrearAlergeno from "../../modals/CrearAlergeno/CrearAlergeno";
-import SideBar from '../../ui/SideBarr/SideBar/SideBar';
+import SideBarFunc from '../../ui/SideBarr/SideBarSuc/SideBarFun';
 
 export const Alergenos = () => {
     const columns = ["Nombre", "Acciones"];
@@ -23,7 +23,7 @@ export const Alergenos = () => {
             Nombre: alergenoName,
             Acciones: (
                 <Actions
-                    nombre={alergenoName}
+                    id={1}
                     actions={["ver", "editar", "eliminar"]}
                     onVer={() => console.log("Ver")}
                     onEditar={() => console.log("Editar")}
@@ -38,7 +38,7 @@ export const Alergenos = () => {
 
     return (
         <div className='container-screen'>
-            <SideBar/>
+            <SideBarFunc/>
             <div className='featured'>
                 <TopBar 
                     nombre="Masco Mida - Palmares"
