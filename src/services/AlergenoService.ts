@@ -24,7 +24,7 @@ export class AlergenoService extends BackendClient<IAlergenos | ICreateAlergeno 
         const data = await response.json();
         return data as IAlergenos[];
     }
-    
+
 	async updateAllergen(id: number, allergenData: IUpdateAlergeno): Promise<IAlergenos> {
 		const response = await fetch(`${this.baseUrl}/${id}`, {
 			method: "PUT",
@@ -38,7 +38,7 @@ export class AlergenoService extends BackendClient<IAlergenos | ICreateAlergeno 
 		}
 		return await response.json();
 	}
-	
+
 	async deleteAllergen(id: number): Promise<void> {
 		const response = await fetch(`${this.baseUrl}/${id}`, {
 			method: "DELETE",
@@ -47,5 +47,4 @@ export class AlergenoService extends BackendClient<IAlergenos | ICreateAlergeno 
 			throw new Error(`Error al eliminar el alérgeno con ID ${id}`);
 		}
 	}
-	
 }

@@ -60,7 +60,7 @@ export const Alergenos = () => {
     const handleCreateAllergen = async (alergenoName: string) => {
         const newAllergen = {
             denominacion: alergenoName,
-            imagen: null, // Aquí puedes añadir la lógica para agregar la imagen si es necesario
+            imagen: null,
         };
     
         try {
@@ -86,7 +86,6 @@ export const Alergenos = () => {
             console.error("Error al crear el alérgeno:", error);
         }
     };
-    
 
     const openEditModal = (allergenName: string) => {
         const index = data.findIndex((item) => item.Nombre === allergenName);
@@ -104,7 +103,7 @@ export const Alergenos = () => {
             const updatedAllergen = {
                 id: data[allergenToEdit.index].id,
                 denominacion: newName,
-                imagen: null, // Aquí también puedes agregar la lógica para actualizar la imagen
+                imagen: null,
             };
             try {
                 const updated = await allergensService.updateAllergen(updatedAllergen.id, updatedAllergen);
