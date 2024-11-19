@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import './CrearArticulo.css';
+import React, { useState, useEffect } from "react";
 
-interface PopupFormProps {
+interface CrearArticuloProps {
     onClose: () => void;
     onAddProduct: (product: {
         Nombre: string;
@@ -9,103 +8,106 @@ interface PopupFormProps {
         Descripción: string;
         Categoría: string;
         Habilitado: boolean;
-    }) => void;
+    }) => Promise<void>;
+    onUpdateProduct: (id: number, updatedProduct: any) => void;
+    editingProduct: any;
 }
 
-const CrearArticulo: React.FC<PopupFormProps> = ({ onClose, onAddProduct }) => {
-    const [nombre, setNombre] = useState('');
-    const [categoria, setCategoria] = useState('');
-    const [alergenos, setAlergenos] = useState('');
-    const [precioVenta, setPrecioVenta] = useState('');
-    const [codigo, setCodigo] = useState('');
-    const [descripcion, setDescripcion] = useState('');
-    const [habilitado, setHabilitado] = useState(false);
+const CrearArticulo: React.FC<CrearArticuloProps> = ({
+    onClose,
+    onAddProduct,
+    onUpdateProduct,
+    editingProduct,
+}) => {
+    // Inicializar el estado de los campos con valores predeterminados
+    const [nombre, setNombre] = useState<string>(editingProduct?.Nombre || "");
+    const [precio, setPrecio] = useState<number>(editingProduct?.Precio || 0);
+    const [descripcion, setDescripcion] = useState<string>(editingProduct?.Descripción || "");
+    const [categoria, setCategoria] = useState<string>(editingProduct?.Categoría || "");
+    const [habilitado, setHabilitado] = useState<boolean>(editingProduct?.Habilitado || false);
 
-    const handleSubmit = () => {
-        onAddProduct({
+    // Actualizar los campos si el producto está en edición
+    useEffect(() => {
+        if (editingProduct) {
+            setNombre(editingProduct.Nombre || "");
+            setPrecio(editingProduct.Precio || 0);
+            setDescripcion(editingProduct.Descripción || "");
+            setCategoria(editingProduct.Categoría || "");
+            setHabilitado(editingProduct.Habilitado || false);
+        }
+    }, [editingProduct]);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const product = {
             Nombre: nombre,
-            Precio: parseFloat(precioVenta),
+            Precio: precio,
             Descripción: descripcion,
             Categoría: categoria,
             Habilitado: habilitado,
-        });
-        onClose();
+        };
+
+        if (editingProduct) {
+            // Actualizar producto si está editando
+            onUpdateProduct(editingProduct.id, product);
+        } else {
+            // Agregar nuevo producto si no está editando
+            await onAddProduct(product);
+        }
+
+        onClose(); // Cerrar el modal después de agregar o actualizar el producto
     };
 
     return (
-        <div className="modal-overlayCrearArticulo">
-            <div className="modal-contentCrearArticulo">
-                <h2>Crear un artículo</h2>
-                <div className='content1'>
-                    <div className='content2'>
-                        <div className='content3'>
-                            <div>
-                                <input
-                                    className='inputCrearArticulo'
-                                    type="text"
-                                    value={nombre}
-                                    onChange={(e) => setNombre(e.target.value)}
-                                    placeholder="Ingrese una denominación"
-                                />
-                            </div>
-                            <div>
-                                <select value={categoria} onChange={(e) => setCategoria(e.target.value)}>
-                                    <option value="">Seleccionar categoría</option>
-                                    <option value="Categoria 1">Categoría 1</option>
-                                    <option value="Categoria 2">Categoría 2</option>
-                                    <option value="Categoria 3">Categoría 3</option>
-                                </select>
-                            </div>
-                            <div>
-                                <select value={alergenos} onChange={(e) => setAlergenos(e.target.value)}>
-                                    <option value="">Seleccionar alérgenos</option>
-                                    <option value="Alergeno 1">Alérgeno 1</option>
-                                    <option value="Alergeno 2">Alérgeno 2</option>
-                                    <option value="Alergeno 3">Alérgeno 3</option>
-                                </select>
-                            </div>
-                            <div>
-                                <input
-                                    className='inputCrearArticulo'
-                                    type="text"
-                                    value={precioVenta}
-                                    onChange={(e) => setPrecioVenta(e.target.value)}
-                                    placeholder="Ingresa un precio de venta"
-                                />
-                            </div>
-                            <div>
-                                <input
-                                    className='inputCrearArticulo'
-                                    type="text"
-                                    value={codigo}
-                                    onChange={(e) => setCodigo(e.target.value)}
-                                    placeholder="Ingresa un código"
-                                />
-                            </div>    
-                            <label className='label-check'>
-                                <p>Habilitado</p>
-                                <input
-                                    type="checkbox"
-                                    checked={habilitado}
-                                    onChange={(e) => setHabilitado(e.target.checked)}
-                                />
-                            </label>
-                        </div>
-                        <div className='content4'>
-                            <textarea style={{height:'50%'}}
-                                value={descripcion}
-                                onChange={(e) => setDescripcion(e.target.value)}
-                                placeholder="Ingrese una descripción"
-                            ></textarea>
-                            <button className="confirm">Ingresar una Imagen</button>
-                        </div>
-                    </div>
-                    <div>
-                        <button onClick={handleSubmit} className="confirm">Confirmar</button>
-                        <button onClick={onClose} className="cancel">Cancelar</button>
-                    </div>
+        <div className="modal">
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <label>Nombre</label>
+                    <input
+                        type="text"
+                        value={nombre}
+                        onChange={(e) => setNombre(e.target.value)}
+                        required
+                    />
                 </div>
-            </div>
+                <div>
+                    <label>Precio</label>
+                    <input
+                        type="number"
+                        value={precio}
+                        onChange={(e) => setPrecio(Number(e.target.value))}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Descripción</label>
+                    <input
+                        type="text"
+                        value={descripcion}
+                        onChange={(e) => setDescripcion(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label>Categoría</label>
+                    <input
+                        type="text"
+                        value={categoria}
+                        onChange={(e) => setCategoria(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Habilitado</label>
+                    <input
+                        type="checkbox"
+                        checked={habilitado}
+                        onChange={(e) => setHabilitado(e.target.checked)}
+                    />
+                </div>
+                <button type="submit">{editingProduct ? "Actualizar" : "Agregar"} Producto</button>
+                <button type="button" onClick={onClose}>Cancelar</button>
+            </form>
         </div>
     );
 };
