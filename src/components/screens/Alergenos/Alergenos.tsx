@@ -19,7 +19,10 @@ export const Alergenos = () => {
     const [isAlergenoOpen, setIsAlergenoOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [allergenToEdit, setAllergenToEdit] = useState<{ name: string; index: number } | null>(null);
-
+    const [searchQuery, setSearchQuery] = useState("");
+    const filteredData = data.filter((allergen) =>
+        allergen.Nombre.toLowerCase().includes(searchQuery.toLowerCase())
+    );
     const allergensService = new AlergenoService('http://190.221.207.224:8090/alergenos');
 
     useEffect(() => {
@@ -136,19 +139,20 @@ export const Alergenos = () => {
         <div className="container-screen">
             <SideBarFunc />
             <div className="featured">
-                <TopBar
-                    nombre="Masco Mida - Palmares"
-                    placeholder="Buscar..."
-                    onAddBranch={handleAddAllergen}
-                    tareaBoton="Agregar un Alergeno"
-                />
-                <CustomTable
-                    columns={columns}
-                    data={data.map((allergen) => ({
-                        Nombre: allergen.Nombre,
-                        Acciones: allergen.Acciones,
-                    }))}
-                />
+            <TopBar
+                nombre="Masco Mida - Palmares"
+                placeholder="Buscar..."
+                onAddBranch={handleAddAllergen}
+                tareaBoton="Agregar un Alergeno"
+                setSearchQuery={setSearchQuery}
+            />
+            <CustomTable
+                columns={columns}
+                data={filteredData.map((allergen) => ({
+                    Nombre: allergen.Nombre,
+                    Acciones: allergen.Acciones,
+                }))}
+            />
                 {isAlergenoOpen && (
                     <CrearAlergeno
                         onClose={closeAlergenoModal}
