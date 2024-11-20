@@ -1,4 +1,5 @@
-.modals{
+/* Modal principal */
+.modal-crear-empresa {
     display: flex;
     justify-content: center;
     align-items: center; 
@@ -12,29 +13,32 @@
     z-index: 1000; 
 }
 
-.card{
+/* Tarjeta dentro del modal */
+.card-crear-empresa {
     text-align: center;
     z-index: 1000;
     box-shadow: 0px 0px 10px black;
     background-color: rgba(212, 224, 242, 1);
     width: 70%;
-    max-width: 650px;
-    text-align: center;
+    max-width: 550px;
     padding: 10px;
     border-radius: 8px;
 }
 
-.card-title{
-    font-size:2rem;
+/* Título de la tarjeta */
+.card-title-crear-empresa {
+    font-size: 2rem;
 }
 
-.card-body{
+/* Cuerpo de la tarjeta */
+.card-body-crear-empresa {
     display: flex;
     flex-direction: column;
     gap: 30px;
 }
 
-.mb-3-main{
+/* Contenedor principal */
+.mb-3-main-crear-empresa {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -44,22 +48,22 @@
     align-items: center;
 }
 
-.input-group{
+/* Grupo de entrada */
+.input-group-crear-empresa {
     display: flex;
     justify-content: center;
-}
-
-.img-buttons {
     align-items: center;
 }
 
-.buttons{
+/* Botones */
+.buttons-crear-empresa {
     width: 90%;
     display: flex;
     justify-content: space-around;
 }
 
-.cardContent{
+/* Contenido de la tarjeta */
+.card-content-crear-empresa {
     border: solid 1px rgb(189, 189, 189);
     border-radius: 8px;
     align-items: center;
@@ -69,25 +73,30 @@
     gap: 10px;
 }
 
-.form-control{
+/* Campos del formulario */
+.form-control-crear-empresa {
     text-align: center;
     max-width: 400px;
 }
 
-.grid-container {
+/* Contenedor de la cuadrícula */
+.grid-container-crear-empresa {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 25px;
     border-radius: 5px;
 }
 
-.img-buttons{
+/* Contenedor de botones e imagen */
+.img-buttons-crear-empresa {
     display: flex;
     flex-direction: column;
     gap: 25px;
+    align-items: center;
 }
 
-.container-sucursal{
+/* Contenedor principal de la sucursal */
+.container-sucursal-crear-empresa {
     border: solid 1px grey;
     border-radius: 5px;
     padding: 10px;
