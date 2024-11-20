@@ -10,7 +10,10 @@ export const Productos = () => {
     const columns = ["Nombre", "Precio", "Descripción", "Categoría", "Habilitado", "Acciones"];
     const [data, setData] = useState<Array<{ id: number; Nombre: string; Precio: number; Descripción: string; Categoría: string; Habilitado: boolean; Acciones: JSX.Element; }>>([]);
     const [isArticuloOpen, setIsArticuloOpen] = useState(false); // Control del modal
+    const [isProductViewOpen, setIsProductViewOpen] = useState(false); // Control del modal de ver producto
     const [editingProduct, setEditingProduct] = useState<any>(null); // Producto en edición
+    const [searchQuery, setSearchQuery] = useState(""); // Estado para la búsqueda
+    const [viewingProduct, setViewingProduct] = useState<any>(null); // Producto a ver
     const sucursalId = 1; // Cambia esto a la sucursal seleccionada dinámicamente.
 
     // Obtener artículos desde la API
@@ -46,13 +49,24 @@ export const Productos = () => {
 
     // Abre el modal para agregar un nuevo producto
     const handleAddProduct = () => {
-        setEditingProduct(null); // No hay producto en edición
-        setIsArticuloOpen(true); // Abre el modal
+        setEditingProduct(null);
+        setIsArticuloOpen(true);
     };
 
-    // Cierra el modal
+    // Cierra el modal de edición/creación
     const closeArticuloModal = () => {
-        setIsArticuloOpen(false); // Cierra el modal
+        setIsArticuloOpen(false);
+    };
+
+    // Abre el modal para ver los detalles del producto
+    const handleViewProduct = (product: any) => {
+        setViewingProduct(product);
+        setIsProductViewOpen(true);
+    };
+
+    // Cierra el modal de ver producto
+    const closeProductViewModal = () => {
+        setIsProductViewOpen(false);
     };
 
     // Agrega el producto a la lista
@@ -93,36 +107,20 @@ export const Productos = () => {
 
     // Editar un producto
     const handleEditProduct = (product: any) => {
-        setEditingProduct(product); // Configura el producto en edición
-        setIsArticuloOpen(true); // Abre el modal
+        setEditingProduct(product);
+        setIsArticuloOpen(true);
     };
 
     // Actualiza un producto
     const handleUpdateProduct = async (id: number, updatedProduct: any) => {
         try {
             const updatedArticulo = await updateArticulo(id, updatedProduct);
-            setData((prevData) =>
-                prevData.map((articulo) =>
-                    articulo.id === id
-                        ? {
-                              ...articulo,
-                              Nombre: updatedArticulo.denominacion,
-                              Precio: updatedArticulo.precioVenta,
-                              Descripción: updatedArticulo.descripcion,
-                              Categoría: updatedArticulo.categoria?.nombre || "Sin categoría",
-                              Habilitado: updatedArticulo.habilitado,
-                          }
-                        : articulo
-                )
-            );
+            // Volver a cargar los productos actualizados
+            const articulos = await fetchArticulosBySucursal(sucursalId);
+            setData(articulos);
         } catch (error) {
             console.error("Error al actualizar el artículo:", error);
         }
-    };
-
-    // Ver un producto
-    const handleViewProduct = (product: any) => {
-        console.log(product);
     };
 
     // Eliminar un producto
@@ -138,24 +136,45 @@ export const Productos = () => {
         }
     };
 
+    // Filtrar los productos basados en la consulta de búsqueda
+    const filteredData = data.filter((product) =>
+        product.Nombre.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return (
         <div className="container-screen">
             <SideBarFunc />
             <div className="featured">
                 <TopBar
                     nombre="Masco Mida - Palmares"
-                    placeholder="Seleccione una Categoría..."
-                    onAddBranch={handleAddProduct} // Abre el modal al hacer clic en el botón
-                    tareaBoton="Agregar Producto"
+                    placeholder="Filtrar..."
+                    onAddBranch={handleAddProduct}
+                    tareaBoton="Agregar Artículo"
+                    setSearchQuery={setSearchQuery} // Pasar el setter de búsqueda
                 />
-                <CustomTable columns={columns} data={data} />
+
+                <CustomTable columns={columns} data={filteredData} />
+
                 {isArticuloOpen && (
                     <CrearArticulo
-                        onClose={closeArticuloModal} // Cierra el modal
-                        onAddProduct={addProductToList} // Agrega un nuevo producto
-                        onUpdateProduct={handleUpdateProduct} // Actualiza el producto
-                        editingProduct={editingProduct} // Producto que se está editando
+                        onClose={closeArticuloModal}
+                        onAddProduct={addProductToList}
+                        onUpdateProduct={handleUpdateProduct}
+                        editingProduct={editingProduct}
                     />
+                )}
+
+                {isProductViewOpen && viewingProduct && (
+                    <div className="view-product-modal">
+                        <div className="modal-content">
+                            <h2>{viewingProduct.Nombre}</h2>
+                            <p><strong>Precio:</strong> {viewingProduct.Precio}</p>
+                            <p><strong>Descripción:</strong> {viewingProduct.Descripción}</p>
+                            <p><strong>Categoría:</strong> {viewingProduct.Categoría}</p>
+                            <p><strong>Habilitado:</strong> {viewingProduct.Habilitado ? "Sí" : "No"}</p>
+                            <button onClick={closeProductViewModal}>Cerrar</button>
+                        </div>
+                    </div>
                 )}
             </div>
         </div>
