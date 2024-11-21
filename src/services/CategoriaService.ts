@@ -1,7 +1,6 @@
 import { ICreateCategoria } from "../types/dtos/categorias/ICreateCategoria";
 import { IUpdateCategoria } from "../types/dtos/categorias/IUpdateCategoria";
 import { ICategorias } from "../types/ICategorias";
-import { ISucursal } from "../types/ISucursal";
 
 class CategoriaService {
     private baseUrl: string;
