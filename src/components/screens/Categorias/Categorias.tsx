@@ -7,7 +7,6 @@ import SideBarFunc from '../../ui/SideBarr/SideBarSuc/SideBarFun';
 import CategoriaTable from '../../ui/featureds/featuredCategoriaTable/CategoriaTable';
 import CategoriaService from '../../../services/CategoriaService';
 import { ICategorias } from '../../../types/ICategorias';
-import { ISucursal } from '../../../types/ISucursal';
 import { useParams } from 'react-router-dom';
 
 interface Category {
@@ -17,7 +16,7 @@ interface Category {
   Acciones: JSX.Element;
 }
 
-export const Categorias = (idSucursal: string) => {
+export const Categorias = () => {
   const [isCategoriaPadreOpen, setIsCategoriaPadreOpen] = useState(false);
   const [isSubcategoriaOpen, setIsSubcategoriaOpen] = useState(false);
   const [data, setData] = useState<Array<Category>>([]);

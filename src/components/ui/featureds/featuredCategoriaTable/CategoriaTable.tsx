@@ -60,21 +60,22 @@ const CategoriaTable: React.FC<CategoriaTableProps> = ({
                     </tr>
                     {expandedCategories.includes(row.Nombre) &&
                         row.Subcategorias.map((sub, subIndex) => (
-                            <tr key={subIndex} className="mi-clase-tr">
+                            <tr key={`${rowIndex}-${subIndex}`} className="mi-clase-tr">
                                 <td className="mi-clase-td-3">
-                                    {sub.denominacion} {/* Acceder a la propiedad denominacion */}
+                                    {sub.denominacion}
                                 </td>
                                 <td className="mi-clase-td-4">
                                     <Actions
-                                    id={1}
-                                    actions={["editar", "eliminar"]}
-                                    onEditar={() => onEditCategory(row.Nombre)}
-                                    onEliminar={() => onDeleteSubcategory(row.Nombre, sub.denominacion)}
-                                    />
+                                        id={1}
+                                        actions={["editar", "eliminar"]}
+                                        onEditar={() => onEditCategory(sub.denominacion)} // Pasar el nombre de la subcategoría.
+                                        onEliminar={() => onDeleteSubcategory(row.Nombre, sub.denominacion)} // Asociar con la categoría padre.
+                                        />
                                 </td>
                             </tr>
                         ))
                     }
+
                 </React.Fragment>
                 ))}
             </tbody>
