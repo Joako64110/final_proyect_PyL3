@@ -1,5 +1,4 @@
-/* Modal principal */
-.modal-crear-empresa {
+.modals-CE{
     display: flex;
     justify-content: center;
     align-items: center; 
@@ -13,10 +12,8 @@
     z-index: 1000; 
 }
 
-/* Tarjeta dentro del modal */
-.card-crear-empresa {
+.card-CE{
     text-align: center;
-    z-index: 1000;
     box-shadow: 0px 0px 10px black;
     background-color: rgba(212, 224, 242, 1);
     width: 70%;
@@ -25,20 +22,18 @@
     border-radius: 8px;
 }
 
-/* Título de la tarjeta */
-.card-title-crear-empresa {
-    font-size: 2rem;
+.card-title-CE{
+    font-size:2rem;
+    margin-top: 1rem;
 }
 
-/* Cuerpo de la tarjeta */
-.card-body-crear-empresa {
+.card-body-CE{
     display: flex;
     flex-direction: column;
     gap: 30px;
 }
 
-/* Contenedor principal */
-.mb-3-main-crear-empresa {
+.mb-3-main-CE{
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -48,59 +43,20 @@
     align-items: center;
 }
 
-/* Grupo de entrada */
-.input-group-crear-empresa {
+.input-group-CE{
     display: flex;
     justify-content: center;
-    align-items: center;
 }
 
-/* Botones */
-.buttons-crear-empresa {
+
+.buttons-CE{
     width: 90%;
     display: flex;
     justify-content: space-around;
-}
-
-/* Contenido de la tarjeta */
-.card-content-crear-empresa {
-    border: solid 1px rgb(189, 189, 189);
-    border-radius: 8px;
-    align-items: center;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
 }
 
 /* Campos del formulario */
 .form-control-crear-empresa {
     text-align: center;
     max-width: 400px;
-}
-
-/* Contenedor de la cuadrícula */
-.grid-container-crear-empresa {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
-    border-radius: 5px;
-}
-
-/* Contenedor de botones e imagen */
-.img-buttons-crear-empresa {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    align-items: center;
-}
-
-/* Contenedor principal de la sucursal */
-.container-sucursal-crear-empresa {
-    border: solid 1px grey;
-    border-radius: 5px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
 }

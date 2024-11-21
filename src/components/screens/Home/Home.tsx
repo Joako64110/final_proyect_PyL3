@@ -1,53 +1,94 @@
-import React, { useState } from 'react';
-import SucursalesGrid from '../../ui/featureds/featuredCardGrid/CardGrid';
+import React, { useState, useEffect } from 'react';
+import SucursalesGrid from '../../ui/featureds/featuredSucursalesGrid/SucursalesGrid';
 import TopBar from '../../ui/topBar/topBar';
 import { CrearSucursal } from '../../modals/CrearSucursal/CrearSucursal';
-import '../screen.css'
+import '../screen.css';
 import SideBar from '../../ui/SideBarr/SideBarHome/SideBar';
+import empresaService from '../../../services/EmpresaService';
 import { ISucursal } from '../../../types/ISucursal';
-import { IEmpresa } from '../../../types/IEmpresa';
-
 
 export const Home: React.FC = () => {
-    const [empresaSeleccionada, setEmpresaSeleccionada] = useState<IEmpresa | null>(null);
+    const [empresaId, setEmpresaId] = useState<number | null>(null);
+    const [empresaNombre, setEmpresaNombre] = useState<string>('');
+    const [sucursales, setSucursales] = useState<ISucursal[]>([]);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [searchTerm, setSearchTerm] = useState<string>('');
 
 
-     // Función para abrir el modal
+    // Función para manejar la selección de una empresa desde el SideBar
+    const handleSelectEmpresa = (empresaId: number) => {
+        setEmpresaId(empresaId);
+    };
+
+    useEffect(() => {
+        const fetchEmpresaData = async () => {
+            if (empresaId) {
+                try {
+                    const empresa = await empresaService.getById(empresaId);
+                    if (empresa) {
+                        setEmpresaNombre(empresa.nombre);
+                    }
+                } catch (error) {
+                    console.error('Error al obtener los datos de la empresa:', error);
+                }
+            }
+        };
+
+        fetchEmpresaData();
+    }, [empresaId]);
+
+
+    // Función para abrir el modal
     const handleAddBranch = () => {
-        setIsModalOpen(true);
+        if (empresaId) {
+            setIsModalOpen(true); // Abre el modal solo si hay una empresa seleccionada
+        }
     };
 
     // Función para cerrar el modal
     const handleCloseModal = () => {
-        setIsModalOpen(false);
+        setIsModalOpen(false); // Establece isModalOpen en false para cerrar el modal
     };
 
-    const handleAddSucursal = (newSucursal: ISucursal) => {
-        if (empresaSeleccionada) {
-            const updatedSucursales = [...empresaSeleccionada.sucursales, newSucursal];
-            setEmpresaSeleccionada({ ...empresaSeleccionada, sucursales: updatedSucursales }); 
-        }
+    const handleAddSucursal = () => {
         setIsModalOpen(false);
     };
 
     return (
-        <div  className="container-screen">
-            <SideBar/>
+        <div className="container-screen">
+            <SideBar onSelectEmpresa={handleSelectEmpresa} />
             <div className="featured">
                 <TopBar
-                    nombre={empresaSeleccionada?.nombre || 'Seleccione una empresa'}
+                    nombre={empresaNombre || 'Seleccione una empresa'}
                     placeholder="Buscar..."
                     onAddBranch={handleAddBranch}
                     tareaBoton="Agregar Sucursal"
-                />
-                <SucursalesGrid/>
+                    onSearch={(value) => setSearchTerm(value)} // Actualiza el estado de búsqueda
 
-                {/* Renderizar el modal cuando isModalOpen es true */}
-                {isModalOpen && <CrearSucursal onClose={handleCloseModal} onAddSucursal={handleAddSucursal} />}
+                />
+                {empresaId && <SucursalesGrid 
+                                empresaId={empresaId}
+                                onAddSucursal={handleAddSucursal} // Pasa la función de actualización
+                                searchTerm={searchTerm} // Nueva prop
+                                />}
+                {/* Renderiza el modal solo cuando isModalOpen es true */}
+                {isModalOpen && empresaId && (
+                    <CrearSucursal
+                        idEmpresa={empresaId}
+                        onClose={handleCloseModal} // Se pasa handleCloseModal como prop
+                        onAddSucursal={handleAddSucursal} // Cierra el modal tras agregar sucursal
+                    />
+                )}
             </div>
         </div>
     );
 };
 
 export default Home;
+
+
+
+
+
+
+

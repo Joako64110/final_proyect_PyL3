@@ -50,6 +50,8 @@
 .containerTextSucPage{
     margin-top: 10px;
     font-size: 1rem;
-    line-height: 1.5;
+    white-space: normal;
+    word-break: break-word;
+
 }
 
