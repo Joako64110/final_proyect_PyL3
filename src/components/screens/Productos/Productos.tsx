@@ -9,14 +9,13 @@ import { fetchArticulosBySucursal, createArticulo, updateArticulo, deleteArticul
 export const Productos = () => {
     const columns = ["Nombre", "Precio", "Descripción", "Categoría", "Habilitado", "Acciones"];
     const [data, setData] = useState<Array<{ id: number; Nombre: string; Precio: number; Descripción: string; Categoría: string; Habilitado: boolean; Acciones: JSX.Element; }>>([]);
-    const [isArticuloOpen, setIsArticuloOpen] = useState(false); // Control del modal
-    const [isProductViewOpen, setIsProductViewOpen] = useState(false); // Control del modal de ver producto
-    const [editingProduct, setEditingProduct] = useState<any>(null); // Producto en edición
-    const [searchQuery, setSearchQuery] = useState(""); // Estado para la búsqueda
-    const [viewingProduct, setViewingProduct] = useState<any>(null); // Producto a ver
-    const sucursalId = 1; // Cambia esto a la sucursal seleccionada dinámicamente.
+    const [isArticuloOpen, setIsArticuloOpen] = useState(false);
+    const [isProductViewOpen, setIsProductViewOpen] = useState(false);
+    const [editingProduct, setEditingProduct] = useState<any>(null);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [viewingProduct, setViewingProduct] = useState<any>(null);
+    const sucursalId = 1;
 
-    // Obtener artículos desde la API
     useEffect(() => {
         const fetchArticulos = async () => {
             try {
@@ -47,29 +46,24 @@ export const Productos = () => {
         fetchArticulos();
     }, [sucursalId]);
 
-    // Abre el modal para agregar un nuevo producto
     const handleAddProduct = () => {
         setEditingProduct(null);
         setIsArticuloOpen(true);
     };
 
-    // Cierra el modal de edición/creación
     const closeArticuloModal = () => {
         setIsArticuloOpen(false);
     };
 
-    // Abre el modal para ver los detalles del producto
     const handleViewProduct = (product: any) => {
         setViewingProduct(product);
         setIsProductViewOpen(true);
     };
 
-    // Cierra el modal de ver producto
     const closeProductViewModal = () => {
         setIsProductViewOpen(false);
     };
 
-    // Agrega el producto a la lista
     const addProductToList = async (product: { Nombre: string; Precio: number; Descripción: string; Categoría: string; Habilitado: boolean; }) => {
         try {
             const newProduct = await createArticulo({
@@ -105,17 +99,14 @@ export const Productos = () => {
         }
     };
 
-    // Editar un producto
     const handleEditProduct = (product: any) => {
         setEditingProduct(product);
         setIsArticuloOpen(true);
     };
 
-    // Actualiza un producto
     const handleUpdateProduct = async (id: number, updatedProduct: any) => {
         try {
             const updatedArticulo = await updateArticulo(id, updatedProduct);
-            // Volver a cargar los productos actualizados
             const articulos = await fetchArticulosBySucursal(sucursalId);
             setData(articulos);
         } catch (error) {
@@ -123,7 +114,6 @@ export const Productos = () => {
         }
     };
 
-    // Eliminar un producto
     const handleDeleteProduct = async (id: number) => {
         const confirmation = window.confirm("¿Estás seguro de que deseas eliminar este producto?");
         if (confirmation) {
@@ -136,7 +126,6 @@ export const Productos = () => {
         }
     };
 
-    // Filtrar los productos basados en la consulta de búsqueda
     const filteredData = data.filter((product) =>
         product.Nombre.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -150,7 +139,7 @@ export const Productos = () => {
                     placeholder="Filtrar..."
                     onAddBranch={handleAddProduct}
                     tareaBoton="Agregar Artículo"
-                    setSearchQuery={setSearchQuery} // Pasar el setter de búsqueda
+                    setSearchQuery={setSearchQuery}
                 />
 
                 <CustomTable columns={columns} data={filteredData} />
