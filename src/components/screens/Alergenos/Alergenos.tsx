@@ -3,7 +3,7 @@ import Actions from '../../ui/Actions/actions';
 import CustomTable from '../../ui/featureds/featuredTables/customTables';
 import TopBar from '../../ui/topBar/topBar';
 import CrearAlergeno from "../../modals/CrearAlergeno/CrearAlergeno";
-import SideBarFunc from '../../ui/SideBarr/SideBarSuc/SideBarFun';
+import SideBarFunc from '../../ui/SideBarr/SideBarFun/SideBarFun';
 import { AlergenoService } from '../../../services/AlergenoService';
 
 interface Allergen {

@@ -3,7 +3,7 @@ import CustomTable from "../../ui/featureds/featuredTables/customTables";
 import TopBar from "../../ui/topBar/topBar";
 import Actions from "../../ui/Actions/actions";
 import CrearArticulo from "../../modals/CrearArticulo/CrearArticulo";
-import SideBarFunc from "../../ui/SideBarr/SideBarSuc/SideBarFun";
+import SideBarFunc from "../../../components/ui/SideBarr/SideBarFun/SideBarFun";
 import { fetchArticulosBySucursal, createArticulo, updateArticulo, deleteArticulo } from "../../../services/ProductoService";
 import { ICreateProducto } from "../../../types/dtos/productos/ICreateProducto";
 import { IUpdateProducto } from "../../../types/dtos/productos/IUpdateProducto"
