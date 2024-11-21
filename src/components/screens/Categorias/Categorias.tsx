@@ -5,7 +5,7 @@ import CrearSubcategoria from "../../modals/CrearSubcategoria/CrearSubcategoria"
 import Actions from "../../ui/Actions/actions";
 import SideBar from '../../ui/SideBarr/SideBarHome/SideBar';
 import CategoriaTable from '../../ui/featureds/featuredCategoriaTable/CategoriaTable';
-import SideBarFunc from '../../ui/SideBarr/SideBarSuc/SideBarFun';
+import SideBarFunc from '../../ui/SideBarr/SideBarFun/SideBarFun';
 
 interface Category {
   Nombre: string;

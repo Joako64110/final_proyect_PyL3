@@ -4,7 +4,7 @@ import TopBar from "../../ui/topBar/topBar";
 import Actions from "../../ui/Actions/actions";
 import CrearArticulo from "../../modals/CrearArticulo/CrearArticulo";
 import SideBar from "../../ui/SideBarr/SideBarHome/SideBar";
-import SideBarFunc from "../../ui/SideBarr/SideBarSuc/SideBarFun";
+import SideBarFunc from "../../ui/SideBarr/SideBarFun/SideBarFun";
 
 export const Productos = () => {
     const columns = ["Nombre", "Precio", "Descripción", "Categoría", "Habilitado", "Acciones"];

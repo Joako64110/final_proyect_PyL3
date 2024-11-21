@@ -7,9 +7,11 @@ interface TopBarProps {
     placeholder: string;
     onAddBranch: () => void;
     tareaBoton: string;
+    onSearch: (value: string) => void;
+
 }
 
-const TopBar: React.FC<TopBarProps> = ({ nombre, placeholder, onAddBranch, tareaBoton }) => {
+const TopBar: React.FC<TopBarProps> = ({ nombre, placeholder, onAddBranch, tareaBoton, onSearch  }) => {
     return (
         <div className="top-bar">
             <div className="company-name">{nombre}</div>
@@ -19,6 +21,7 @@ const TopBar: React.FC<TopBarProps> = ({ nombre, placeholder, onAddBranch, tarea
                     type="text"
                     placeholder={placeholder}
                     className="search-input"
+                    onChange={(e) => onSearch(e.target.value)} 
                 />
                 <i className="bi bi-search search-icon"></i>
             </div>
