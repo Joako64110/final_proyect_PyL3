@@ -29,7 +29,7 @@ class CategoriaService {
     }
 
     // Método para obtener todas las categorias padres por sucursal
-    async getAllCategoriasPadrePorSucursal(idSucursal: Partial<ISucursal>): Promise<ICategorias[]> {
+    async getAllCategoriasPadrePorSucursal(idSucursal: number): Promise<ICategorias[]> {
         const response = await fetch(`${this.baseUrl}/allCategoriasPadrePorSucursal/${idSucursal}`)
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -38,7 +38,7 @@ class CategoriaService {
     }
 
     // Método para obtener todas las categorias hija por id del padre
-    async getAllSubCategoriasPorCategoriaPadre(id: number, idSucursal: Partial<ISucursal>): Promise<ICategorias[]> {
+    async getAllSubCategoriasPorCategoriaPadre(id: number, idSucursal: number): Promise<ICategorias[]> {
         const response = await fetch(`${this.baseUrl}/allSubCategoriasPorCategoriaPadre/${id}/${idSucursal}`)
         if (!response.ok) {
             throw new Error('Network response was not ok');

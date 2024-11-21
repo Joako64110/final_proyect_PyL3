@@ -8,6 +8,7 @@ import CategoriaTable from '../../ui/featureds/featuredCategoriaTable/CategoriaT
 import CategoriaService from '../../../services/CategoriaService';
 import { ICategorias } from '../../../types/ICategorias';
 import { ISucursal } from '../../../types/ISucursal';
+import { useParams } from 'react-router-dom';
 
 interface Category {
   id: number;
@@ -16,7 +17,7 @@ interface Category {
   Acciones: JSX.Element;
 }
 
-export const Categorias = (idSucursal: Partial<ISucursal>) => {
+export const Categorias = (idSucursal: string) => {
   const [isCategoriaPadreOpen, setIsCategoriaPadreOpen] = useState(false);
   const [isSubcategoriaOpen, setIsSubcategoriaOpen] = useState(false);
   const [data, setData] = useState<Array<Category>>([]);
@@ -24,12 +25,15 @@ export const Categorias = (idSucursal: Partial<ISucursal>) => {
   const [categoryToEdit, setCategoryToEdit] = useState<{ id: number; denominacion: string } | null>(null);
   const [parentCategory, setParentCategory] = useState<string | null>(null);
   const [expandedCategories, setExpandedCategories] = useState<Array<string>>([]);
+  const params= useParams()
 
+
+  console.log(params)
   // Cargar categorías al montar el componente
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const categoriasPadre = await CategoriaService.getAllCategoriasPadrePorSucursal(idSucursal);
+        const categoriasPadre = await CategoriaService.getAllCategoriasPadrePorSucursal(parseInt(params.id as string));
         setData(categoriasPadre.map((categoria) => ({
           id: categoria.id,
           denominacion: categoria.denominacion,
@@ -40,7 +44,7 @@ export const Categorias = (idSucursal: Partial<ISucursal>) => {
               actions={["desplegar", "editar", "eliminar", "agregar"]}
               onDesplegar={() => {
                 if (categoria.subCategorias.length === 0) {
-                  fetchSubcategories(categoria.id, categoria.denominacion, idSucursal);
+                  fetchSubcategories(categoria.id, categoria.denominacion, parseInt(params.id as string));
                 } else {
                   toggleExpandCategory(categoria.denominacion);
                 }
@@ -59,7 +63,7 @@ export const Categorias = (idSucursal: Partial<ISucursal>) => {
     fetchCategories();
   }, []);
 
-  const fetchSubcategories = async (parentId: number, parentName: string, idSucursal: Partial<ISucursal>) => {
+  const fetchSubcategories = async (parentId: number, parentName: string, idSucursal: number) => {
     try {
       const subCategorias = await CategoriaService.getAllSubCategoriasPorCategoriaPadre(parentId, idSucursal);
       setData((prevData) =>

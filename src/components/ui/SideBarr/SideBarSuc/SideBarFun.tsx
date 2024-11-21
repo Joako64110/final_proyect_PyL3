@@ -31,7 +31,7 @@ const SideBarFun: React.FC = () => {
                 </button>
             </Link>
             <div className={styles.cards}>
-                <Link to="/Categorias" className={getLinkClass("/Categorias")}> <p> Categorias </p></Link>
+                <Link to={`/Categorias/allCategoriasPorSucursal/$`} className={getLinkClass("/Categorias")}> <p> Categorias </p></Link>
                 <Link to="/Productos" className={getLinkClass("/Productos")}> <p> Productos </p></Link>
                 <Link to="/Alergenos" className={getLinkClass("/Alergenos")}> <p> Alergenos </p></Link>
             </div>

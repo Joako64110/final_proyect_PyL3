@@ -30,7 +30,7 @@ const SucursalesGrid: React.FC = () => {
     }, []);
 
     const handleAbrirSuc = (id: number) => {
-        navigate(`/Categorias`);
+        navigate(`/categorias/allCategoriasPorSucursal/${id}`);
     };
 
     const handleVer = (sucursal: ISucursal) => {
