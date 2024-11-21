@@ -2,10 +2,12 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../../redux/store";
 import styles from "./SideBarFun.module.css";
 import Actions from "../../Actions/actions";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 const SideBarFuncionalidad: React.FC = () => {
     const location = useLocation(); // Obtén la ubicación actual
+    const params= useParams()
+    const paramsNumber= parseInt(params.id as string);
 
     const getLinkClass = (path: string) => {
         return location.pathname === path
@@ -31,7 +33,7 @@ const SideBarFuncionalidad: React.FC = () => {
                 </button>
             </Link>
             <div className={styles["cards-funcionalidad"]}>
-                <Link to="/Categorias" className={getLinkClass("/Categorias")}>
+                <Link to="/categorias/allCategoriasPorSucursal/1" className={getLinkClass("/Categorias")}>
                     {" "}
                     <p> Categorias </p>
                 </Link>

@@ -3,7 +3,7 @@ import TopBar from "../../ui/topBar/topBar";
 import CrearCategoriaPadre from "../../modals/CrearCategoriaPadre/CrearCategoriaPadre";
 import CrearSubcategoria from "../../modals/CrearSubcategoria/CrearSubcategoria";
 import Actions from "../../ui/Actions/actions";
-import SideBarFunc from '../../ui/SideBarr/SideBarSuc/SideBarFun';
+import SideBarFunc from '../../ui/SideBarr/SideBarFun/SideBarFun';
 import CategoriaTable from '../../ui/featureds/featuredCategoriaTable/CategoriaTable';
 import CategoriaService from '../../../services/CategoriaService';
 import { ICategorias } from '../../../types/ICategorias';
@@ -24,10 +24,9 @@ export const Categorias = () => {
   const [categoryToEdit, setCategoryToEdit] = useState<{ id: number; denominacion: string } | null>(null);
   const [parentCategory, setParentCategory] = useState<string | null>(null);
   const [expandedCategories, setExpandedCategories] = useState<Array<string>>([]);
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const params= useParams()
-
-
-  console.log(params)
+  
   // Cargar categorías al montar el componente
   useEffect(() => {
     const fetchCategories = async () => {
@@ -230,10 +229,11 @@ export const Categorias = () => {
       <div className="featured">
         <TopBar
           nombre="Masco Mida - Palmares"
-          placeholder="Filtrar... "
+          placeholder="Buscar..."
           onAddBranch={() => setIsCategoriaPadreOpen(true)}
-          tareaBoton="Agregar Categoría"
-        />
+          tareaBoton="Agregar Sucursal"
+          setSearchQuery={setSearchTerm}
+         />
         <CategoriaTable
           data={data.map(({ denominacion, subCategorias }) => ({
             Nombre: denominacion,
