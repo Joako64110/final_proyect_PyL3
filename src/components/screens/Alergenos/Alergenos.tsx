@@ -4,7 +4,6 @@ import CustomTable from '../../ui/featureds/featuredTables/customTables';
 import TopBar from '../../ui/topBar/topBar';
 import CrearAlergeno from "../../modals/CrearAlergeno/CrearAlergeno";
 import SideBarFunc from '../../ui/SideBarr/SideBarSuc/SideBarFun';
-//import { IAlergenos } from '../../../types/IAlergenos';
 import { AlergenoService } from '../../../services/AlergenoService';
 
 interface Allergen {
@@ -50,7 +49,7 @@ export const Alergenos = () => {
         };
 
         fetchAllergens();
-    }, []);
+    });
 
     const handleAddAllergen = () => {
         setIsAlergenoOpen(true);
