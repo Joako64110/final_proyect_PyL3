@@ -43,13 +43,15 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
         }
     }, [empresaId]);
 
-    // Efecto para filtrar las sucursales en base al término de búsqueda
+    // **2. Filtrar sucursales basado en el searchTerm**
     useEffect(() => {
         if (searchTerm.trim() === '') {
             setFilteredSucursales(sucursales); // Sin filtro
         } else {
             const filtered = sucursales.filter((sucursal) =>
-                sucursal.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+                sucursal.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                sucursal.domicilio.calle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                sucursal.domicilio.localidad.nombre.toLowerCase().includes(searchTerm.toLowerCase())
             );
             setFilteredSucursales(filtered);
         }
@@ -102,7 +104,7 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
     return (
         <div className={styles.containerSucPage}>
             {filteredSucursales.length === 0 ? (
-                <p style={{ position: "absolute", fontWeight: "bold", marginLeft: "30%", marginTop: '2rem' }}>
+                <p style={{ fontWeight: 'bold', textAlign: 'center', marginTop: '2rem' }}>
                     No se encontraron sucursales...
                 </p>
             ) : (

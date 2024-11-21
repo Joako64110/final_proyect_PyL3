@@ -58,14 +58,13 @@ export const Home: React.FC = () => {
         <div className="container-screen">
             <SideBar onSelectEmpresa={handleSelectEmpresa} />
             <div className="featured">
-                <TopBar
-                    nombre={empresaNombre || 'Seleccione una empresa'}
-                    placeholder="Buscar..."
-                    onAddBranch={handleAddBranch}
-                    tareaBoton="Agregar Sucursal"
-                    onSearch={(value) => setSearchTerm(value)} // Actualiza el estado de búsqueda
-
-                />
+            <TopBar
+                nombre={empresaNombre || 'Seleccione una empresa'}
+                placeholder="Buscar..."
+                onAddBranch={handleAddBranch} // Función para abrir el modal
+                tareaBoton="Agregar Sucursal" // Texto del botón
+                setSearchQuery={setSearchTerm} // Actualiza el estado de búsqueda
+            />
                 {empresaId && <SucursalesGrid 
                                 empresaId={empresaId}
                                 onAddSucursal={handleAddSucursal} // Pasa la función de actualización
