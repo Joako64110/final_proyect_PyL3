@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import './topBar.css'
+import './topBar.css';
 
 interface TopBarProps {
     nombre: string;

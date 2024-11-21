@@ -1,18 +1,3 @@
-export const fetchArticulosBySucursal = async (sucursalId: number) => {
-    try {
-        const response = await fetch(`http://190.221.207.224:8090/articulos/porSucursal/${sucursalId}`);
-        if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
-        }
-
-        const articulos = await response.json();
-        return articulos;
-    } catch (error) {
-        console.error("Error al obtener los artículos:", error);
-        throw error; // Re-lanzar el error para que el componente lo maneje si es necesario
-    }
-};
-
 export const createArticulo = async (articulo: any) => {
     try {
         const response = await fetch(`http://190.221.207.224:8090/articulos/create`, {

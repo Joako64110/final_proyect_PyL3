@@ -1,4 +1,4 @@
-.sidebarFun {
+.sidebar-funcionalidad {
     background-color: rgba(56, 56, 56, 1);
     width: 14rem;
     border-radius: 0.4rem;
@@ -7,24 +7,24 @@
     gap: 20px;
     padding: 10px;
     padding-top: 15px;
-    overflow-x:hidden;
+    overflow-x: hidden;
     align-items: center;
 }
 
-.titulo{
+.titulo-funcionalidad {
     font-size: 1.5rem;
     color: aliceblue;
     text-decoration: underline;
 }
 
-.link{
+.enlace-funcionalidad {
     width: 100%;
     background-color: rgba(135, 176, 241, 1);
     border-radius: 5px;
     box-shadow: 0px 0px 8px 1px black;
 }
 
-.boton{
+.boton-funcionalidad {
     width: 100%;
     border: none;
     height: 45px;
@@ -35,24 +35,24 @@
     align-items: center;
 }
 
-.boton p{
+.boton-funcionalidad p {
     margin: 0;
     margin-bottom: 3px;
     font-size: 1.3rem;
     font-weight: 500;
 }
 
-.cards{
+.cards-funcionalidad {
     display: flex;
     flex-direction: column;
     gap: 20px;
     width: 90%;
     text-align: center;
     font-size: 1.3rem;
-    font-weight: 400;  
+    font-weight: 400;
 }
 
-.card{
+.card-funcionalidad {
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -65,28 +65,28 @@
     box-shadow: 0px 0px 8px 1px;
 }
 
-.card p{
+.card-funcionalidad p {
     margin: 0;
 }
 
-.card:hover{
+.card-funcionalidad:hover {
     background-color: rgb(182, 182, 182);
 }
 
-.link{
+.enlace-funcionalidad {
     text-decoration: none;
 }
 
-.card.active {
+.card-funcionalidad.activo {
     background-color: rgba(206, 225, 255, 0.53);
     cursor: default;
     font-size: 1.5rem;
 }
 
-.card.active:hover {
+.card-funcionalidad.activo:hover {
     background-color: rgba(206, 225, 255, 0.53);
 }
 
-.card.active p{
+.card-funcionalidad.activo p {
     margin-bottom: 3px;
 }
