@@ -1,5 +1,8 @@
-const API_BASE_URL = "http://190.221.207.224:8090/articulos"; // Asegúrate de que este sea el endpoint correcto.
+import { IUpdateProducto } from "../types/dtos/productos/IUpdateProducto";
 
+const API_BASE_URL = "http://190.221.207.224:8090/articulos";
+
+// Función para obtener artículos por sucursal
 export const fetchArticulosBySucursal = async (sucursalId: number) => {
     try {
         const response = await fetch(`${API_BASE_URL}/porSucursal/${sucursalId}`, {
@@ -7,18 +10,17 @@ export const fetchArticulosBySucursal = async (sucursalId: number) => {
         });
 
         if (!response.ok) {
-
             throw new Error(`Error HTTP: ${response.status}`);
         }
 
-        const articulos = await response.json();
-        return articulos;
+        return await response.json(); // Devuelve los artículos
     } catch (error) {
         console.error("Error al obtener los artículos:", error);
-        throw error; // Lanzamos el error para manejarlo en el componente.
+        throw error; // Relanzamos el error para manejarlo en el componente
     }
 };
 
+// Función para crear un artículo
 export const createArticulo = async (articulo: any) => {
     try {
         const response = await fetch(`${API_BASE_URL}/create`, {
@@ -33,15 +35,15 @@ export const createArticulo = async (articulo: any) => {
             throw new Error(`Error HTTP: ${response.status}`);
         }
 
-        const newArticulo = await response.json();
-        return newArticulo;
+        return await response.json(); // Devuelve el artículo creado
     } catch (error) {
         console.error("Error al crear el artículo:", error);
         throw error;
     }
 };
 
-export const updateArticulo = async (id: number, articulo: any) => {
+// Función para actualizar un artículo
+export const updateArticulo = async (id: number, articulo: IUpdateProducto) => {
     try {
         const response = await fetch(`${API_BASE_URL}/update/${id}`, {
             method: "PUT",
@@ -55,14 +57,14 @@ export const updateArticulo = async (id: number, articulo: any) => {
             throw new Error(`Error HTTP: ${response.status}`);
         }
 
-        const updatedArticulo = await response.json();
-        return updatedArticulo;
+        return await response.json(); // Devuelve el artículo actualizado
     } catch (error) {
         console.error("Error al actualizar el artículo:", error);
         throw error;
     }
 };
 
+// Función para eliminar un artículo
 export const deleteArticulo = async (id: number) => {
     try {
         const response = await fetch(`${API_BASE_URL}/${id}`, {

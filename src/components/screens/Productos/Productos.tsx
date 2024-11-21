@@ -5,6 +5,8 @@ import Actions from "../../ui/Actions/actions";
 import CrearArticulo from "../../modals/CrearArticulo/CrearArticulo";
 import SideBarFunc from "../../ui/SideBarr/SideBarSuc/SideBarFun";
 import { fetchArticulosBySucursal, createArticulo, updateArticulo, deleteArticulo } from "../../../services/ProductoService";
+import { ICreateProducto } from "../../../types/dtos/productos/ICreateProducto";
+import { IUpdateProducto } from "../../../types/dtos/productos/IUpdateProducto"
 
 export const Productos = () => {
     const columns = ["Nombre", "Precio", "Descripción", "Categoría", "Habilitado", "Acciones"];
