@@ -78,7 +78,7 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
     }, [empresaId, previousSucursales]);
 
     const handleAbrirSuc = (id: number) => {
-        navigate('/Categorias');
+        navigate('/categorias');
     };
 
     const handleVer = (sucursal: ISucursal) => {
