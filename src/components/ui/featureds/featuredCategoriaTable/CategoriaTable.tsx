@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import Actions from '../../Actions/actions';
 import './CategoriaTable.css'
+import { ICategorias } from '../../../../types/ICategorias';
 
 interface CategoriaTableProps {
     data: Array<{
         Nombre: string;
-        Subcategorias: string[];
+        Subcategorias: ICategorias[];
         Acciones: JSX.Element;
     }>;
     onAddSubcategory: (parentCategoryName: string) => void;
@@ -61,14 +62,14 @@ const CategoriaTable: React.FC<CategoriaTableProps> = ({
                         row.Subcategorias.map((sub, subIndex) => (
                             <tr key={subIndex} className="mi-clase-tr">
                                 <td className="mi-clase-td-3">
-                                    {sub}
+                                    {sub.denominacion} {/* Acceder a la propiedad denominacion */}
                                 </td>
                                 <td className="mi-clase-td-4">
                                     <Actions
                                     id={1}
                                     actions={["editar", "eliminar"]}
                                     onEditar={() => onEditCategory(row.Nombre)}
-                                    onEliminar={() => onDeleteSubcategory(row.Nombre, sub)}
+                                    onEliminar={() => onDeleteSubcategory(row.Nombre, sub.denominacion)}
                                     />
                                 </td>
                             </tr>

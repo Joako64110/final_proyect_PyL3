@@ -1,102 +1,209 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TopBar from "../../ui/topBar/topBar";
 import CrearCategoriaPadre from "../../modals/CrearCategoriaPadre/CrearCategoriaPadre";
 import CrearSubcategoria from "../../modals/CrearSubcategoria/CrearSubcategoria";
 import Actions from "../../ui/Actions/actions";
-import SideBar from '../../ui/SideBarr/SideBarHome/SideBar';
-import CategoriaTable from '../../ui/featureds/featuredCategoriaTable/CategoriaTable';
 import SideBarFunc from '../../ui/SideBarr/SideBarSuc/SideBarFun';
+import CategoriaTable from '../../ui/featureds/featuredCategoriaTable/CategoriaTable';
+import CategoriaService from '../../../services/CategoriaService';
+import { ICategorias } from '../../../types/ICategorias';
+import { ISucursal } from '../../../types/ISucursal';
 
 interface Category {
-  Nombre: string;
-  Subcategorias: Array<string>;
+  id: number;
+  denominacion: string;
+  subCategorias: ICategorias[];
   Acciones: JSX.Element;
 }
 
-export const Categorias = () => {
+export const Categorias = (idSucursal: Partial<ISucursal>) => {
   const [isCategoriaPadreOpen, setIsCategoriaPadreOpen] = useState(false);
   const [isSubcategoriaOpen, setIsSubcategoriaOpen] = useState(false);
   const [data, setData] = useState<Array<Category>>([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [categoryToEdit, setCategoryToEdit] = useState<{ name: string; index: number } | null>(null);
+  const [categoryToEdit, setCategoryToEdit] = useState<{ id: number; denominacion: string } | null>(null);
   const [parentCategory, setParentCategory] = useState<string | null>(null);
   const [expandedCategories, setExpandedCategories] = useState<Array<string>>([]);
 
-  const handleAddCategory = () => setIsCategoriaPadreOpen(true);
-  const closeCategoriaPadreModal = () => setIsCategoriaPadreOpen(false);
+  // Cargar categorías al montar el componente
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categoriasPadre = await CategoriaService.getAllCategoriasPadrePorSucursal(idSucursal);
+        setData(categoriasPadre.map((categoria) => ({
+          id: categoria.id,
+          denominacion: categoria.denominacion,
+          subCategorias: [],
+          Acciones: (
+            <Actions
+              id={categoria.id}
+              actions={["desplegar", "editar", "eliminar", "agregar"]}
+              onDesplegar={() => {
+                if (categoria.subCategorias.length === 0) {
+                  fetchSubcategories(categoria.id, categoria.denominacion, idSucursal);
+                } else {
+                  toggleExpandCategory(categoria.denominacion);
+                }
+              }}
+              onEditar={() => openEditModal((categoria.id).toString())}
+              onEliminar={() => deleteCategory((categoria.id).toString())}
+              onAgregar={() => openSubcategoriaModal(categoria.denominacion)}
+            />
+          ),
+        })));
+      } catch (error) {
+        console.error('Error al cargar las categorías padre:', error);
+      }
+    };
+  
+    fetchCategories();
+  }, []);
+
+  const fetchSubcategories = async (parentId: number, parentName: string, idSucursal: Partial<ISucursal>) => {
+    try {
+      const subCategorias = await CategoriaService.getAllSubCategoriasPorCategoriaPadre(parentId, idSucursal);
+      setData((prevData) =>
+        prevData.map((categoria) =>
+          categoria.denominacion === parentName
+            ? { ...categoria, subCategorias }
+            : categoria
+        )
+      );
+      toggleExpandCategory(parentName);
+    } catch (error) {
+      console.error('Error al cargar las subcategorías:', error);
+    }
+  };
 
   const toggleExpandCategory = (categoryName: string) => {
     setExpandedCategories((prevExpanded) =>
-    prevExpanded.includes(categoryName)
+      prevExpanded.includes(categoryName)
         ? prevExpanded.filter((name) => name !== categoryName)
         : [...prevExpanded, categoryName]
     );
+  };
+
+  const addCategory = async (categoryName: string) => {
+    try {
+      const newCategory = await CategoriaService.create({
+        denominacion: categoryName,
+        idEmpresa: 0,
+        idCategoriaPadre: null
+      });
+      setData((prevData) => [
+        ...prevData,
+        {
+          id: newCategory.id,
+          denominacion: newCategory.denominacion,
+          subCategorias: [],
+          Acciones: (
+            <Actions
+              id={newCategory.id}
+              actions={["desplegar", "editar", "eliminar", "agregar"]}
+              onDesplegar={() => toggleExpandCategory(newCategory.denominacion)}
+              onEditar={() => openEditModal((newCategory.id).toString())}
+              onEliminar={() => deleteCategory((newCategory.id).toString())}
+              onAgregar={() => openSubcategoriaModal(newCategory.denominacion)}
+            />
+          ),
+        },
+      ]);
+      closeSubcategoriaModal();
+    } catch (error) {
+      console.error('Error al agregar la categoría:', error);
+    }
+  };
+
+  const deleteCategory = async (categoryName: string) => {
+    const category = data.find(cat => cat.denominacion === categoryName);
+    if (category) {
+        try {
+            await CategoriaService.delete(category.id);
+            setData((prevData) => prevData.filter((item) => item.id !== category.id));
+        } catch (error) {
+            console.error('Error al eliminar la categoría:', error);
+        }
+    }
 };
 
-  const addCategory = (categoryName: string) => {
-    const newCategory: Category = {
-      Nombre: categoryName,
-      Subcategorias: [],
-      Acciones: (
-        <Actions
-          id={1}
-          actions={["desplegar", "editar", "eliminar", "agregar"]}
-          onDesplegar={() => toggleExpandCategory(categoryName)}
-          onEditar={() => openEditModal(categoryName)}
-          onEliminar={() => deleteCategory(categoryName)}
-          onAgregar={() => openSubcategoriaModal(categoryName)}
-        />
-      ),
-    };
-  
-    setData((prevData) => [...prevData, newCategory]);
-    closeCategoriaPadreModal();
-  };
-
-  const deleteCategory = (categoryName: string) => {
-    setData((prevData) => prevData.filter((item) => item.Nombre !== categoryName));
-  };
-
-  const onDeleteSubcategory = (categoryName: string, subcategoryName: string) => {
-    setData((prevData) =>
-      prevData.map((category) =>
-        category.Nombre === categoryName
-          ? { ...category, Subcategorias: category.Subcategorias.filter((sub) => sub !== subcategoryName) }
-          : category
-      )
-    );
-  };
-
   const openEditModal = (categoryName: string) => {
-    const index = data.findIndex(item => item.Nombre === categoryName);
-    setCategoryToEdit({ name: categoryName, index });
-    setIsEditModalOpen(true);
-  };
+    const category = data.find(cat => cat.denominacion === categoryName);
+    if (category) {
+        setCategoryToEdit({ id: category.id, denominacion: category.denominacion });
+        setIsEditModalOpen(true);
+    }
+};
 
   const closeEditModal = () => {
     setIsEditModalOpen(false);
     setCategoryToEdit(null);
   };
 
-  const editCategory = (newName: string) => {
+  const editCategory = async (newName: string) => {
     if (categoryToEdit) {
-      const updatedData = [...data];
-      updatedData[categoryToEdit.index] = { ...updatedData[categoryToEdit.index], Nombre: newName };
-      setData(updatedData);
-      closeEditModal();
+      try {
+        const updatedCategory = await CategoriaService.update(categoryToEdit.id, {
+          denominacion: newName,
+          id: 0,
+          eliminado: false,
+          idEmpresa: 0,
+          idSucursales: []
+        });
+        setData((prevData) =>
+          prevData.map((category) =>
+            category.id === updatedCategory.id
+              ? { ...category, denominacion: updatedCategory.denominacion }
+              : category
+          )
+        );
+        closeEditModal();
+      } catch (error) {
+        console.error('Error al editar la categoría:', error);
+      }
     }
   };
 
-  const addSubcategory = (subcategoryName: string) => {
+  const addSubcategory = async (subcategoryName: string) => {
     if (parentCategory) {
-      const updatedData = data.map((category) => {
-        if (category.Nombre === parentCategory) {
-          return { ...category, Subcategorias: [...category.Subcategorias, subcategoryName] };
+      try {
+        // Encuentra el ID de la categoría padre seleccionada
+        const parentCategoryData = data.find(cat => cat.denominacion === parentCategory);
+        if (!parentCategoryData) {
+          console.error('No se encontró la categoría padre.');
+          return;
         }
-        return category;
-      });
-      setData(updatedData);
-      closeSubcategoriaModal();
+  
+        const newSubcategory = await CategoriaService.create({
+          denominacion: subcategoryName,
+          idEmpresa: 0,
+          idCategoriaPadre: parentCategoryData.id,
+        });
+
+        setData((prevData) => [
+          ...prevData,
+          {
+            id: newSubcategory.id,
+            denominacion: newSubcategory.denominacion,
+            subCategorias: [],
+            Acciones: (
+              <Actions
+                id={newSubcategory.id}
+                actions={["desplegar", "editar", "eliminar", "agregar"]}
+                onDesplegar={() => toggleExpandCategory(newSubcategory.denominacion)}
+                onEditar={() => openEditModal((newSubcategory.id).toString())}
+                onEliminar={() => deleteCategory((newSubcategory.id).toString())}
+                onAgregar={() => openSubcategoriaModal(newSubcategory.denominacion)}
+              />
+            ),
+          },
+        ]);
+  
+        closeSubcategoriaModal();
+      } catch (error) {
+        console.error('Error al agregar la subcategoría:', error);
+      }
+    } else {
+      console.error('No se seleccionó una categoría padre.');
     }
   };
 
@@ -110,6 +217,10 @@ export const Categorias = () => {
     setParentCategory(null);
   };
 
+  const closeCategoriaPadreModal = () => {
+    setIsCategoriaPadreOpen(false);
+  };
+
   return (
     <div className="container-screen">
       <SideBarFunc />
@@ -117,43 +228,26 @@ export const Categorias = () => {
         <TopBar
           nombre="Masco Mida - Palmares"
           placeholder="Filtrar... "
-          onAddBranch={handleAddCategory}
+          onAddBranch={() => setIsCategoriaPadreOpen(true)}
           tareaBoton="Agregar Categoría"
         />
         <CategoriaTable
-          data={data.map(category => ({
-            Nombre: category.Nombre,
-            Subcategorias: category.Subcategorias,
+          data={data.map(({ denominacion, subCategorias }) => ({
+            Nombre: denominacion,
+            Subcategorias: subCategorias,
             Acciones: <></>,
           }))}
           onAddSubcategory={openSubcategoriaModal}
           onEditCategory={openEditModal}
-          onDeleteCategory={deleteCategory}
-          onDeleteSubcategory={onDeleteSubcategory}
+          onDeleteCategory={deleteCategory} onDeleteSubcategory={deleteCategory}
         />
-        
         {isCategoriaPadreOpen && (
-          <CrearCategoriaPadre
-            onClose={closeCategoriaPadreModal}
-            onSubmit={addCategory}
-            initialValue=""
-          />
+          <CrearCategoriaPadre onClose={closeCategoriaPadreModal} onSubmit={addCategory} initialValue="" />
         )}
-        
         {isEditModalOpen && categoryToEdit && (
-          <CrearCategoriaPadre
-            onClose={closeEditModal}
-            onSubmit={editCategory}
-            initialValue={categoryToEdit.name}
-          />
+          <CrearCategoriaPadre onClose={closeEditModal} onSubmit={editCategory} initialValue={categoryToEdit.denominacion} />
         )}
-        
-        {isSubcategoriaOpen && (
-          <CrearSubcategoria
-            onClose={closeSubcategoriaModal}
-            onSubmit={addSubcategory}
-          />
-        )}
+        {isSubcategoriaOpen && <CrearSubcategoria onClose={closeSubcategoriaModal} onSubmit={addSubcategory} />}
       </div>
     </div>
   );
