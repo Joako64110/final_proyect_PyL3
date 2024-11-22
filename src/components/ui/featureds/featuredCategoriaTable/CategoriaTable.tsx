@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Actions from '../../Actions/actions';
-import './CategoriaTable.css'
+import './CategoriaTable.css';
 import { ICategorias } from '../../../../types/ICategorias';
 
 interface CategoriaTableProps {
@@ -21,64 +21,60 @@ const CategoriaTable: React.FC<CategoriaTableProps> = ({
     onEditCategory,
     onDeleteCategory,
     onDeleteSubcategory,
-    }) => {
+}) => {
     const [expandedCategories, setExpandedCategories] = useState<Array<string>>([]);
 
     const toggleExpandCategory = (categoryName: string) => {
         setExpandedCategories((prevExpanded) =>
-        prevExpanded.includes(categoryName)
-            ? prevExpanded.filter((name) => name !== categoryName)
-            : [...prevExpanded, categoryName]
+            prevExpanded.includes(categoryName)
+                ? prevExpanded.filter((name) => name !== categoryName)
+                : [...prevExpanded, categoryName]
         );
     };
 
     return (
         <div className='table-container'>
             <table className="mi-clase-tabla">
-            <thead className="mi-clase-thead">
-                <tr>
-                <th className="mi-clase-th-1">Nombre</th>
-                <th className="mi-clase-th-2">Acciones</th>
-                </tr>
-            </thead>
-            <tbody className="mi-clase-tbody">
-                {data.map((row, rowIndex) => (
-                <React.Fragment key={rowIndex}>
-                    <tr className="mi-clase-tr">
-                        <td className="mi-clase-td-1">{row.Nombre}</td>
-                        <td className="mi-clase-td-2">
-                            <Actions
-                            id={1}
-                            actions={["desplegar", "editar", "eliminar", "agregar"]}
-                            onDesplegar={() => toggleExpandCategory(row.Nombre)}
-                            onEditar={() => onEditCategory(row.Nombre)}
-                            onEliminar={() => onDeleteCategory(row.Nombre)}
-                            onAgregar={() => onAddSubcategory(row.Nombre)}
-                            isExpanded={expandedCategories.includes(row.Nombre)}
-                            />
-                        </td>
+                <thead className="mi-clase-thead">
+                    <tr>
+                        <th className="mi-clase-th-1">Nombre</th>
+                        <th className="mi-clase-th-2">Acciones</th>
                     </tr>
-                    {expandedCategories.includes(row.Nombre) &&
-                        row.Subcategorias.map((sub, subIndex) => (
-                            <tr key={`${rowIndex}-${subIndex}`} className="mi-clase-tr">
-                                <td className="mi-clase-td-3">
-                                    {sub.denominacion}
-                                </td>
-                                <td className="mi-clase-td-4">
+                </thead>
+                <tbody className="mi-clase-tbody">
+                    {data.map((row, rowIndex) => (
+                        <React.Fragment key={rowIndex}>
+                            <tr className="mi-clase-tr">
+                                <td className="mi-clase-td-1">{row.Nombre}</td>
+                                <td className="mi-clase-td-2">
                                     <Actions
                                         id={1}
-                                        actions={["editar", "eliminar"]}
-                                        onEditar={() => onEditCategory(sub.denominacion)} // Pasar el nombre de la subcategoría.
-                                        onEliminar={() => onDeleteSubcategory(row.Nombre, sub.denominacion)} // Asociar con la categoría padre.
-                                        />
+                                        actions={["desplegar", "editar", "eliminar", "agregar"]}
+                                        onDesplegar={() => toggleExpandCategory(row.Nombre)}
+                                        onEditar={() => onEditCategory(row.Nombre)}
+                                        onEliminar={() => onDeleteCategory(row.Nombre)}
+                                        onAgregar={() => onAddSubcategory(row.Nombre)}
+                                        isExpanded={expandedCategories.includes(row.Nombre)}
+                                    />
                                 </td>
                             </tr>
-                        ))
-                    }
-
-                </React.Fragment>
-                ))}
-            </tbody>
+                            {expandedCategories.includes(row.Nombre) &&
+                                row.Subcategorias.map((sub, subIndex) => (
+                                    <tr key={`${rowIndex}-${subIndex}`} className="mi-clase-tr">
+                                        <td className="mi-clase-td-3">{sub.denominacion}</td>
+                                        <td className="mi-clase-td-4">
+                                            <Actions
+                                                id={1}
+                                                actions={["editar", "eliminar"]}
+                                                onEditar={() => onEditCategory(sub.denominacion)}
+                                                onEliminar={() => onDeleteSubcategory(row.Nombre, sub.denominacion)}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
+                        </React.Fragment>
+                    ))}
+                </tbody>
             </table>
         </div>
     );
