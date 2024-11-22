@@ -1,3 +1,4 @@
+import { ICreateProducto } from "../types/dtos/productos/ICreateProducto";
 import { IUpdateProducto } from "../types/dtos/productos/IUpdateProducto";
 
 const API_BASE_URL = "http://190.221.207.224:8090/articulos";
@@ -21,9 +22,9 @@ export const fetchArticulosBySucursal = async (sucursalId: number) => {
 };
 
 // Función para crear un artículo
-export const createArticulo = async (articulo: any) => {
+export const createArticulo = async (articulo: ICreateProducto) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/create`, {
+        const response = await fetch(`${API_BASE_URL}/articulo/create`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

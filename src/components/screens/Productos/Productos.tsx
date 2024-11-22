@@ -5,8 +5,9 @@ import Actions from "../../ui/Actions/actions";
 import CrearArticulo from "../../modals/CrearArticulo/CrearArticulo";
 import SideBarFunc from "../../../components/ui/SideBarr/SideBarFun/SideBarFun";
 import { fetchArticulosBySucursal, createArticulo, updateArticulo, deleteArticulo } from "../../../services/ProductoService";
-import { ICreateProducto } from "../../../types/dtos/productos/ICreateProducto";
-import { IUpdateProducto } from "../../../types/dtos/productos/IUpdateProducto"
+import { ICategorias } from "../../../types/ICategorias";
+import { IAlergenos } from "../../../types/IAlergenos";
+import { IImagen } from "../../../types/IImagen";
 
 export const Productos = () => {
     const columns = ["Nombre", "Precio", "Descripción", "Categoría", "Habilitado", "Acciones"];
@@ -66,22 +67,25 @@ export const Productos = () => {
         setIsProductViewOpen(false);
     };
 
-    const addProductToList = async (product: { Nombre: string; Precio: number; Descripción: string; Categoría: string; Habilitado: boolean; }) => {
+    const addProductToList = async (product: { Nombre: string; Precio: number; Descripción: string; Habilitado: boolean; Codigo: string; Imagenes: IImagen[]; IdCategoria: number; IdAlergenos: number[] }) => {
         try {
             const newProduct = await createArticulo({
                 denominacion: product.Nombre,
                 precioVenta: product.Precio,
                 descripcion: product.Descripción,
-                categoria: product.Categoría,
                 habilitado: product.Habilitado,
+                codigo: product.Codigo, 
+                imagenes: product.Imagenes, 
+                idCategoria: product.IdCategoria, 
+                idAlergenos: product.IdAlergenos, 
             });
-
+    
             setData((prevData) => [
                 ...prevData,
                 {
                     id: newProduct.id,
                     Nombre: newProduct.denominacion,
-                    Precio: newProduct.precioVenta,
+                    Precio: newProduct.precioVenta.toString(),
                     Descripción: newProduct.descripcion,
                     Categoría: newProduct.categoria?.nombre || "Sin categoría",
                     Habilitado: newProduct.habilitado,
