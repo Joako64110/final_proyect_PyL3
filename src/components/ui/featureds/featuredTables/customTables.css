@@ -59,7 +59,7 @@
 }
 
 .table-scroll-container {
-    max-height: 650px; /* Altura máxima visible aumentada */
+    max-height: 730px; /* Altura máxima visible aumentada */
     overflow-y: auto;  /* Habilita el scroll vertical */
     border: 1px solid #ddd; /* Opcional: para un borde en el contenedor */
     border-radius: 8px; /* Bordes redondeados opcionales */
