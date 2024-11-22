@@ -1,0 +1,43 @@
+.mi-clase-th-1 {
+    width: 50%;
+    padding-left: 4rem;
+    text-align: left;
+    font-size: 1.2rem;
+}
+
+.mi-clase-th-2 {
+    width: 50%;
+    text-align: right;
+    padding: 10px;
+    padding-right: 4rem;
+    font-size: 1.2rem;
+}
+
+.mi-clase-td-1{
+    border-bottom: 1px solid rgba(217, 217, 217, 1);
+    padding-left: 4rem;
+    font-weight:700;
+}
+
+.mi-clase-td-2{
+    text-align: right;
+    padding: 10px;
+    border-bottom: 1px solid rgba(217, 217, 217, 1);
+    padding-right: 2rem;
+    
+}
+
+.mi-clase-td-3{
+    text-align: left;
+    border-bottom: 1px solid rgba(217, 217, 217, 1);
+    padding-left: 7rem;
+    
+}
+
+.mi-clase-td-4{
+    text-align: right;
+    padding: 6px;
+    border-bottom: 1px solid rgba(217, 217, 217, 1);
+    padding-right: 4.4rem;
+    
+}
