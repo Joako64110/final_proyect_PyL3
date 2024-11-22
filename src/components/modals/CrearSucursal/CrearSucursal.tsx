@@ -1,3 +1,5 @@
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 import React, { useEffect, useState } from "react";
 import { ICreateSucursal } from "../../../types/dtos/sucursal/ICreateSucursal"; // Importa la interfaz ICreateSucursal
 import { getAllPais } from "../../../services/PaisService"; // Servicio para obtener países
@@ -40,6 +42,7 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
     const [selectedPais, setSelectedPais] = useState<number | null>(null);
     const [selectedProvincia, setSelectedProvincia] = useState<number | null>(null);
     const [logoFile, setLogoFile] = useState<File | null>(null); // Para manejar el archivo del logo
+    
 
 
     // Cargar los países al montar el componente
@@ -137,46 +140,57 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
         }
     };
 
-        ///--------- funcion para subir sin imagnenn-------------///
     const handleConfirm = async () => {
         try {
-            // Realizar el POST para crear la nueva sucursal
-            await sucursalesService.createSucursal(sucursalData);
-            onClose();  // Cerrar el modal
+            // Mostrar el mensaje de "Subiendo Sucursal"
+            Swal.fire({
+                title: 'Subiendo Sucursal',
+                text: 'Por favor espera...',
+                allowOutsideClick: false, // Evita que el usuario cierre la alerta accidentalmente
+                didOpen: () => {
+                    Swal.showLoading(); // Muestra el indicador de carga
+                },
+            });
+
+            let logoUrl = null;
     
-            // Llamar al callback para agregar la nueva sucursal
-            await onAddSucursal(sucursalData);
+            // Crear una instancia del servicio de imágenes con la URL base
+            const imageService = new ImageService(import.meta.env.VITE_URL_API);
+    
+            // Subir la imagen si existe un archivo seleccionado
+            if (logoFile) {
+                const uploadedImage = await imageService.uploadImage(logoFile); // Llama al método correctamente
+                logoUrl = uploadedImage.url; // Obtén la URL de la imagen subida
+            }
+    
+            // Crear la sucursal con la URL de la imagen, si está disponible
+            const newSucursalData = {
+                ...sucursalData,
+                logo: logoUrl,
+            };
+    
+            await sucursalesService.createSucursal(newSucursalData);
+
+            // Cerrar el mensaje de carga y mostrar éxito
+            Swal.fire({
+                icon: 'success',
+                title: 'Sucursal creada',
+                text: 'La sucursal se ha creado exitosamente.',
+            });
+
+
+            onClose(); // Cerrar el modal
+            onAddSucursal(newSucursalData); // Callback para agregar la nueva sucursal
         } catch (error) {
             console.error("Error al crear la sucursal:", error);
+            // Mostrar un mensaje de error en caso de fallo
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Ocurrió un error al crear la sucursal. Por favor, intenta nuevamente.',
+            });
         }
     };
-
-    ///--------- funcion para subir con imagnenn-------------///
-
-    // const handleConfirm = async () => {
-    //     try {
-    //         let logoUrl = null;
-
-    //         // Subir la imagen si existe un archivo seleccionado
-    //         if (logoFile) {
-    //             const formData = new FormData();
-    //             formData.append("image", logoFile);
-    //             logoUrl = await ImageService.uploadImage(formData);
-    //         }
-
-    //         // Crear la sucursal con la URL de la imagen, si está disponible
-    //         const newSucursalData = {
-    //             ...sucursalData,
-    //             logo: logoUrl,
-    //         };
-
-    //         await sucursalesService.createSucursal(newSucursalData);
-    //         onClose(); // Cerrar el modal
-    //         onAddSucursal(newSucursalData); // Callback para agregar la nueva sucursal
-    //         } catch (error) {
-    //         console.error("Error al crear la sucursal:", error);
-    //         }
-    // };
 
     return (
         <div className="modals">
