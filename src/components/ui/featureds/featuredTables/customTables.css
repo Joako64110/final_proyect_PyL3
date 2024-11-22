@@ -28,3 +28,64 @@
 .mi-clase-tr:hover {
     background-color: rgb(240, 240, 240);
 }
+
+.table-scroll-container {
+  max-height: 400px; /* Ajusta la altura máxima visible según sea necesario */
+  overflow-y: auto;  /* Habilita el scroll vertical */
+  border: 1px solid #ddd; /* Opcional: para un borde en el contenedor */
+}
+
+.mi-clase-tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mi-clase-thead {
+  background-color: #f4f4f4;
+}
+
+.mi-clase-th, .mi-clase-td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+.mi-clase-th {
+  font-weight: bold;
+}
+
+.mi-clase-tbody .mi-clase-tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+.table-scroll-container {
+    max-height: 650px; /* Altura máxima visible aumentada */
+    overflow-y: auto;  /* Habilita el scroll vertical */
+    border: 1px solid #ddd; /* Opcional: para un borde en el contenedor */
+    border-radius: 8px; /* Bordes redondeados opcionales */
+    padding: 5px; /* Opcional: Espaciado interno */
+  }
+  
+  .mi-clase-tabla {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .mi-clase-thead {
+    background-color: #f4f4f4;
+  }
+  
+  .mi-clase-th, .mi-clase-td {
+    padding: 14px; /* Aumenta un poco más el padding */
+    border: 1px solid #ccc;
+    text-align: left;
+  }
+  
+  .mi-clase-th {
+    font-weight: bold;
+  }
+  
+  .mi-clase-tbody .mi-clase-tr:nth-child(odd) {
+    background-color: #f9f9f9;
+  }
+  

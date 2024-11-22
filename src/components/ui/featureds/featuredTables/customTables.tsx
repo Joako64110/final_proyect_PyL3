@@ -1,6 +1,6 @@
-import './customTables.css'
+import './customTables.css';
 
-type RowData = { 
+type RowData = {
   [key: string]: string | number | boolean | JSX.Element; // Permitir JSX.Element como valor
 };
 
@@ -9,9 +9,9 @@ interface CustomTableProps {
   data: RowData[];   // Datos de la tabla
 }
 
-const CustomTable: React.FC<CustomTableProps> = ({ columns, data}) => {
+const CustomTable: React.FC<CustomTableProps> = ({ columns, data }) => {
   return (
-    <div className='table-container'>
+    <div className="table-scroll-container"> {/* Contenedor para el scroll */}
       <table className="mi-clase-tabla">
         <thead className="mi-clase-thead">
           <tr>
@@ -35,3 +35,4 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data}) => {
 };
 
 export default CustomTable;
+
