@@ -14,17 +14,23 @@ export const MostrarEmpresa: React.FC<MostrarEmpresaProps> = ({ empresa, onClose
                 <div className="card-body-em">
                     <h5 className="card-title-em">Empresa</h5>
                     <div className="cardContent-em">
-                        <p className="card-text">Nombre: {empresa.nombre}</p>
-                        <p className="card-text">Razón Social: {empresa.razonSocial}</p>
-                        <p className="card-text">CUIT: {empresa.cuit}</p>
+                        <p className="card-text"><b>Nombre:</b> {empresa.nombre}</p>
+                        <p className="card-text"><b>Razón Social:</b> {empresa.razonSocial}</p>
+                        <p className="card-text"><b>CUIT:</b> {empresa.cuit}</p>
 
                         <div className="logo">
-                            <p>Logo:</p>
-                            <img
-                                src=""
-                                alt={`Logo de ${empresa.nombre}`}
-                                style={{ width: "100px", height: "100px" }}
-                            />
+                            {empresa.logo ? (
+                                <div>
+                                    <p><b>Logo:</b></p>
+                                    <img
+                                        src={empresa.logo} // Usa la URL del logo de la empresa
+                                        alt={`Logo de ${empresa.nombre}`}
+                                        style={{ width: "100px", height: "100px" }}
+                                    />
+                                </div>
+                            ) : (
+                                <p><b>Logo:</b> No disponible</p>
+                            )}
                         </div>
 
                         <button
@@ -41,3 +47,5 @@ export const MostrarEmpresa: React.FC<MostrarEmpresaProps> = ({ empresa, onClose
         </div>
     );
 };
+
+export default MostrarEmpresa;
