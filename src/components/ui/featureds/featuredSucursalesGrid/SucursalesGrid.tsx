@@ -43,13 +43,15 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
         }
     }, [empresaId]);
 
-    // Efecto para filtrar las sucursales en base al término de búsqueda
+    // **2. Filtrar sucursales basado en el searchTerm**
     useEffect(() => {
         if (searchTerm.trim() === '') {
             setFilteredSucursales(sucursales); // Sin filtro
         } else {
             const filtered = sucursales.filter((sucursal) =>
-                sucursal.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+                sucursal.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                sucursal.domicilio.calle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                sucursal.domicilio.localidad.nombre.toLowerCase().includes(searchTerm.toLowerCase())
             );
             setFilteredSucursales(filtered);
         }
@@ -112,7 +114,16 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
                             <h3>{sucursal.nombre}</h3>
                         </Card.Title>
                         <div className={styles.containerImgSucPage}>
-                            <Card.Img />
+                            {/* Mostrar el logo si está disponible */}
+                            {sucursal.logo ? (
+                                <img
+                                    src={sucursal.logo} 
+                                    alt={`Logo de ${sucursal.nombre}`} 
+                                    style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                                />
+                            ) : (
+                                <p>No disponible</p>
+                            )}
                         </div>
                         <div className={styles.containerTextSucPage}>
                             <p>
@@ -126,10 +137,10 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
                             </p>
                             <Actions
                                 id={sucursal.id}
-                                actions={['abrirSuc', 'editar', 'ver']}
+                                actions={['abrirSuc', /*'editar'*/ 'ver']}
                                 onAbrirSuc={() => handleAbrirSuc(sucursal.id)}
                                 onVer={() => handleVer(sucursal)}
-                                onEditar={() => console.log('Editar')}
+                                // onEditar={() => console.log('Editar')}
                             />
                         </div>
                     </div>

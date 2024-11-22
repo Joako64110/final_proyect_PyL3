@@ -3,7 +3,14 @@
     border: solid 1px rgba(217, 217, 217, 1);
     height: 100%;
     border-radius: 8px;
+    overflow: auto;
+
 }
+
+.table-container::-webkit-scrollbar {
+    display: none;
+}
+
 .mi-clase-tabla {
     width: 100%; 
     color: black; 

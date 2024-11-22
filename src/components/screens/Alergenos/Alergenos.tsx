@@ -35,8 +35,7 @@ export const Alergenos = () => {
                         Acciones: (
                             <Actions
                                 id={allergen.id}
-                                actions={["ver", "editar", "eliminar"]}
-                                onVer={() => console.log("Ver", allergen.denominacion)}
+                                actions={["editar", "eliminar"]}
                                 onEditar={() => openEditModal(allergen.denominacion)}
                                 onEliminar={() => deleteAllergen(allergen.id)}
                             />
@@ -75,8 +74,7 @@ export const Alergenos = () => {
                     Acciones: (
                         <Actions
                             id={createdAllergen.id}
-                            actions={["ver", "editar", "eliminar"]}
-                            onVer={() => console.log("Ver", createdAllergen.denominacion)}
+                            actions={["editar", "eliminar"]}
                             onEditar={() => openEditModal(createdAllergen.denominacion)}
                             onEliminar={() => deleteAllergen(createdAllergen.id)}
                         />
@@ -124,13 +122,12 @@ export const Alergenos = () => {
 
     const deleteAllergen = async (id: number) => {
         try {
-            // Eliminar el alérgeno del estado local
+            // Primero eliminar el alérgeno del estado local
             setData((prevData) => prevData.filter((item) => item.id !== id));
-            // Llamar al servicio para eliminar el alérgeno desde el backend
+            // Luego eliminarlo en el backend
             await allergensService.deleteAllergen(id);
         } catch (error) {
             console.error("Error al eliminar el alérgeno:", error);
-            // Si ocurre un error, puedes restaurar el estado local si es necesario
         }
     };
 
