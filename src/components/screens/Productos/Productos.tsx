@@ -5,9 +5,9 @@ import Actions from "../../ui/Actions/actions";
 import CrearArticulo from "../../modals/CrearArticulo/CrearArticulo";
 import SideBarFunc from "../../../components/ui/SideBarr/SideBarFun/SideBarFun";
 import { fetchArticulosBySucursal, createArticulo, updateArticulo, deleteArticulo } from "../../../services/ProductoService";
-import { ICategorias } from "../../../types/ICategorias";
-import { IAlergenos } from "../../../types/IAlergenos";
 import { IImagen } from "../../../types/IImagen";
+import sucursalesService from "../../../services/SucursalService";
+
 
 export const Productos = () => {
     const columns = ["Nombre", "Precio", "Descripción", "Categoría", "Habilitado", "Acciones"];
@@ -17,12 +17,22 @@ export const Productos = () => {
     const [editingProduct, setEditingProduct] = useState<any>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [viewingProduct, setViewingProduct] = useState<any>(null);
-    const sucursalId = 1;
+    const [sucursalNombre, setSucursalNombre] = useState<string>("");
+
 
     useEffect(() => {
         const fetchArticulos = async () => {
+            const sucursalId = localStorage.getItem("idSucursal");
+            if (!sucursalId) {
+                console.error("No se encontró el idSucursal en el localStorage.");
+                return;
+            }
+
             try {
-                const articulos = await fetchArticulosBySucursal(sucursalId);
+                const articulos = await fetchArticulosBySucursal(parseInt(sucursalId, 10));
+                if (articulos.length === 0) {
+                    console.log("Aún no hay artículos en esta sucursal.");
+                }
                 const formattedData = articulos.map((articulo: any) => ({
                     id: articulo.id,
                     Nombre: articulo.denominacion,
@@ -47,7 +57,27 @@ export const Productos = () => {
         };
 
         fetchArticulos();
-    }, [sucursalId]);
+    }, []);
+
+    useEffect(() => {
+            const fetchSucursalNombre = async () => {
+            const idSucursal = localStorage.getItem("idSucursal"); // Recuperar el idSucursal
+            if (!idSucursal) {
+                console.error("idSucursal no encontrado en el localStorage");
+                return;
+            }
+        
+            try {
+                // Llama a la función getSucursalById para obtener los datos de la sucursal
+                const sucursal = await sucursalesService.getSucursalById(Number(idSucursal));
+                setSucursalNombre(sucursal.nombre); // Actualiza el estado con el nombre de la sucursal
+            } catch (error) {
+                console.error("Error al obtener la sucursal:", error);
+            }
+        };
+    
+        fetchSucursalNombre();
+    }, []); 
 
     const handleAddProduct = () => {
         setEditingProduct(null);
@@ -74,12 +104,12 @@ export const Productos = () => {
                 precioVenta: product.Precio,
                 descripcion: product.Descripción,
                 habilitado: product.Habilitado,
-                codigo: product.Codigo, 
-                imagenes: product.Imagenes, 
-                idCategoria: product.IdCategoria, 
-                idAlergenos: product.IdAlergenos, 
+                codigo: product.Codigo,
+                imagenes: product.Imagenes,
+                idCategoria: product.IdCategoria,
+                idAlergenos: product.IdAlergenos,
             });
-    
+
             setData((prevData) => [
                 ...prevData,
                 {
@@ -113,8 +143,11 @@ export const Productos = () => {
     const handleUpdateProduct = async (id: number, updatedProduct: any) => {
         try {
             const updatedArticulo = await updateArticulo(id, updatedProduct);
-            const articulos = await fetchArticulosBySucursal(sucursalId);
-            setData(articulos);
+            const sucursalId = localStorage.getItem("idSucursal");
+            if (sucursalId) {
+                const articulos = await fetchArticulosBySucursal(parseInt(sucursalId, 10));
+                setData(articulos);
+            }
         } catch (error) {
             console.error("Error al actualizar el artículo:", error);
         }
@@ -141,15 +174,18 @@ export const Productos = () => {
             <SideBarFunc />
             <div className="featured">
                 <TopBar
-                    nombre="Masco Mida - Palmares"
+                    nombre={sucursalNombre}
                     placeholder="Filtrar..."
                     onAddBranch={handleAddProduct}
                     tareaBoton="Agregar Artículo"
                     setSearchQuery={setSearchQuery}
                 />
 
-                <CustomTable columns={columns} data={filteredData} />
-
+                {filteredData.length > 0 ? (
+                    <CustomTable columns={columns} data={filteredData} />
+                ) : (
+                    <h3 style={{ textAlign: "center", marginTop: "20px" }}>Aún no hay artículos</h3>
+                )}
                 {isArticuloOpen && (
                     <CrearArticulo
                         onClose={closeArticuloModal}
