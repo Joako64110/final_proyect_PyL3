@@ -1,0 +1,10 @@
+.icons-actions{
+    display: inline-flex;
+    gap: .8rem;
+}
+
+.icono-accion {
+    font-size: 1.6rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}

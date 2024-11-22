@@ -1,0 +1,33 @@
+.listaEmpresas {
+    background-color: rgba(56, 56, 56, 1);
+    width: 14rem;
+    border-radius: 0.4rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    gap: 10px;
+    padding: 15px;
+    align-items: center;
+}
+
+.listaEmpresas::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+
+.listaEmpresas h3 {
+    color: aliceblue;
+    text-decoration: underline;
+}
+
+.listaEmpresas button {
+    font-size: 1.2rem;
+    width: 100%;
+    font-weight: 600;
+    background-color: rgba(135, 176, 241, 1);
+    color: black;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 2px 2px 6px black;
+}  
