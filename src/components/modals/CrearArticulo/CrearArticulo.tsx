@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
 import "./CrearArticulo.css";
-import categoriaService from "../../../services/CategoriaService"; // Importamos el servicio de categorías
+import CategoriaService from "../../../services/CategoriaService"; // Importamos el servicio de categorías
+import { IImagen } from "../../../types/IImagen";
 
 interface CrearArticuloProps {
     onClose: () => void;
     onAddProduct: (product: {
         Nombre: string;
-        Precio: string;
+        Precio: number;
         Descripción: string;
-        Categoría: string;
         Habilitado: boolean;
+        Codigo: string;
+        Imagenes: IImagen[];
+        IdCategoria: number;
+        IdAlergenos: number[]
     }) => Promise<void>;
     onUpdateProduct: (id: number, updatedProduct: any) => void;
     editingProduct: any;
@@ -22,11 +26,10 @@ const CrearArticulo: React.FC<CrearArticuloProps> = ({
     editingProduct,
 }) => {
     const [nombre, setNombre] = useState<string>(editingProduct?.Nombre || "");
-    const [precio, setPrecio] = useState<string>(editingProduct?.Precio || "");
+    const [precio, setPrecio] = useState<number>(editingProduct?.Precio || 0);
     const [descripcion, setDescripcion] = useState<string>(editingProduct?.Descripción || "");
-    const [categoria, setCategoria] = useState<string>(editingProduct?.Categoría || "");
-    const [categorias, setCategorias] = useState<{ id: number; nombre: string }[]>([]); // Estado para almacenar las categorías
-    const [alergenos, setAlergenos] = useState<string>(editingProduct?.Alergenos || "");
+    const [categorias, setCategorias] = useState<{ id: number; nombre: string}[]>([]); 
+    const [alergenos, setAlergenos] = useState<number[]>(editingProduct?.Alergenos || "");
     const [habilitado, setHabilitado] = useState<boolean>(editingProduct?.Habilitado || false);
     const [codigo, setCodigo] = useState<string>(editingProduct?.Codigo || ""); 
     const [imagen, setImagen] = useState<any>(null);
@@ -36,7 +39,7 @@ const CrearArticulo: React.FC<CrearArticuloProps> = ({
             setNombre(editingProduct.Nombre || "");
             setPrecio(editingProduct.Precio || "");
             setDescripcion(editingProduct.Descripción || "");
-            setCategoria(editingProduct.Categoría || "");
+            setCategorias(editingProduct.Categoría || "");
             setAlergenos(editingProduct.Alergenos || "");
             setHabilitado(editingProduct.Habilitado || false);
             setCodigo(editingProduct.Codigo || ""); 
@@ -47,11 +50,11 @@ const CrearArticulo: React.FC<CrearArticuloProps> = ({
     useEffect(() => {
         const fetchCategorias = async () => {
             try {
-                const categoriasFromApi = await categoriaService.getAll(); // Obtiene las categorías desde la API
+                const categoriasFromApi = await CategoriaService.getAll(); // Obtiene las categorías desde la API
                 const categoriasFormatted = categoriasFromApi.map((categoria) => ({
                     id: categoria.id, // O la propiedad correspondiente según tu API
-                    nombre: categoria.denominacion, // Asegúrate de usar la propiedad correcta de tu modelo
                 }));
+                console.log(categoriasFormatted)
                 setCategorias(categoriasFormatted); // Establece el estado con las categorías formateadas
             } catch (error) {
                 console.error('Error al cargar las categorías:', error);
@@ -75,10 +78,11 @@ const CrearArticulo: React.FC<CrearArticuloProps> = ({
             Nombre: nombre,
             Precio: precio,
             Descripción: descripcion,
-            Categoría: categoria,
-            Alergenos: alergenos,
             Habilitado: habilitado,
-            Codigo: codigo, 
+            Codigo: codigo,
+            Imagenes: imagen ? [] : [],
+            IdCategoria: categorias.id,
+            IdAlergenos: alergenos,
         };
 
         if (editingProduct) {
@@ -104,7 +108,7 @@ const CrearArticulo: React.FC<CrearArticuloProps> = ({
                         required
                     />
                     {/* Select dinámico para categorías */}
-                    <select value={categoria} onChange={(e) => setCategoria(e.target.value)} required>
+                    <select value={categorias} onChange={(e) => setCategoria(e.target.value)} required>
                         <option value="">Selecciona una categoría</option>
                         {categorias.map((cat) => (
                             <option key={cat.id} value={cat.nombre}>

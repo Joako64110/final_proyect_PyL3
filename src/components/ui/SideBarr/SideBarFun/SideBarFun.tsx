@@ -33,7 +33,7 @@ const SideBarFuncionalidad: React.FC = () => {
                 </button>
             </Link>
             <div className={styles["cards-funcionalidad"]}>
-                <Link to="/categorias/allCategoriasPorSucursal/1" className={getLinkClass("/Categorias")}>
+                <Link to={`/categorias/allCategoriasPorSucursal/${paramsNumber}`} className={getLinkClass(`/categorias/allCategoriasPorSucursal/${paramsNumber}`)}>
                     {" "}
                     <p> Categorias </p>
                 </Link>
