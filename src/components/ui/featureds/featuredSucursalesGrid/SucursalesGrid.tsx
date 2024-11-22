@@ -80,9 +80,10 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
     }, [empresaId, previousSucursales]);
 
     const handleAbrirSuc = (id: number) => {
-        navigate(`/categorias/allCategoriasPorSucursal/${id}`);
+        localStorage.setItem("idSucursal", id.toString()); // Guardar el idSucursal en localStorage
+        console.log("idSucursal almacenado:", id); // Imprimir en consola
+        navigate(`/categorias/allCategoriasPorSucursal/${id}`); // Navegar a la ruta
     };
-
     const handleVer = (sucursal: ISucursal) => {
         setSelectedSucursal(sucursal);
         setModalVisible(true);

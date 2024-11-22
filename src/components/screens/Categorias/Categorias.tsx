@@ -8,6 +8,9 @@ import CategoriaTable from '../../ui/featureds/featuredCategoriaTable/CategoriaT
 import CategoriaService from '../../../services/CategoriaService';
 import { ICategorias } from '../../../types/ICategorias';
 import { useParams } from 'react-router-dom';
+import sucursalesService from "../../../services/SucursalService";
+
+
 
 interface Category {
   id: number;
@@ -26,12 +29,21 @@ export const Categorias = () => {
   const [expandedCategories, setExpandedCategories] = useState<Array<string>>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const params= useParams()
+  const [sucursalNombre, setSucursalNombre] = useState<string>("");
+
+
   
   // Cargar categorías al montar el componente
   useEffect(() => {
     const fetchCategories = async () => {
+      const idSucursal = localStorage.getItem("idSucursal"); // Recuperar el idSucursal
+      if (!idSucursal) {
+        console.error("idSucursal no encontrado en el localStorage");
+        return;
+      }
+
       try {
-        const categoriasPadre = await CategoriaService.getAllCategoriasPadrePorSucursal(parseInt(params.id as string));
+        const categoriasPadre = await CategoriaService.getAllCategoriasPadrePorSucursal(parseInt(idSucursal));
         setData(categoriasPadre.map((categoria) => ({
           id: categoria.id,
           denominacion: categoria.denominacion,
@@ -42,7 +54,7 @@ export const Categorias = () => {
               actions={["desplegar", "editar", "eliminar", "agregar"]}
               onDesplegar={() => {
                 if (categoria.subCategorias.length === 0) {
-                  fetchSubcategories(categoria.id, categoria.denominacion, parseInt(params.id as string));
+                  fetchSubcategories(categoria.id, categoria.denominacion, parseInt(idSucursal));
                 } else {
                   toggleExpandCategory(categoria.denominacion);
                 }
@@ -57,9 +69,29 @@ export const Categorias = () => {
         console.error('Error al cargar las categorías padre:', error);
       }
     };
-  
+
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    const fetchSucursalNombre = async () => {
+      const idSucursal = localStorage.getItem("idSucursal"); // Recuperar el idSucursal
+      if (!idSucursal) {
+        console.error("idSucursal no encontrado en el localStorage");
+        return;
+      }
+
+      try {
+        // Llama a la función getSucursalById para obtener los datos de la sucursal
+        const sucursal = await sucursalesService.getSucursalById(Number(idSucursal));
+        setSucursalNombre(sucursal.nombre); // Actualiza el estado con el nombre de la sucursal
+      } catch (error) {
+        console.error("Error al obtener la sucursal:", error);
+      }
+    };
+
+    fetchSucursalNombre();
+  }, []); 
 
   const fetchSubcategories = async (parentId: number, parentName: string, idSucursal: number) => {
     try {
@@ -228,10 +260,10 @@ export const Categorias = () => {
       <SideBarFunc />
       <div className="featured">
         <TopBar
-          nombre="Masco Mida - Palmares"
+          nombre={sucursalNombre}
           placeholder="Buscar..."
           onAddBranch={() => setIsCategoriaPadreOpen(true)}
-          tareaBoton="Agregar Sucursal"
+          tareaBoton="Agregar Categoria"
           setSearchQuery={setSearchTerm}
          />
         <CategoriaTable

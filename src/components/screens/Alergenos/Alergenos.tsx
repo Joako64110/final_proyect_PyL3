@@ -5,6 +5,8 @@ import TopBar from '../../ui/topBar/topBar';
 import CrearAlergeno from "../../modals/CrearAlergeno/CrearAlergeno";
 import SideBarFunc from '../../ui/SideBarr/SideBarFun/SideBarFun';
 import { AlergenoService } from '../../../services/AlergenoService';
+import sucursalesService from "../../../services/SucursalService";
+
 
 interface Allergen {
     id: number;
@@ -23,6 +25,8 @@ export const Alergenos = () => {
         allergen.Nombre.toLowerCase().includes(searchQuery.toLowerCase())
     );
     const allergensService = new AlergenoService('http://190.221.207.224:8090/alergenos');
+    const [sucursalNombre, setSucursalNombre] = useState<string>("");
+
 
     useEffect(() => {
         const fetchAllergens = async () => {
@@ -49,6 +53,26 @@ export const Alergenos = () => {
 
         fetchAllergens();
     });
+
+    useEffect(() => {
+        const fetchSucursalNombre = async () => {
+        const idSucursal = localStorage.getItem("idSucursal"); // Recuperar el idSucursal
+        if (!idSucursal) {
+            console.error("idSucursal no encontrado en el localStorage");
+            return;
+        }
+    
+        try {
+            // Llama a la función getSucursalById para obtener los datos de la sucursal
+            const sucursal = await sucursalesService.getSucursalById(Number(idSucursal));
+            setSucursalNombre(sucursal.nombre); // Actualiza el estado con el nombre de la sucursal
+        } catch (error) {
+            console.error("Error al obtener la sucursal:", error);
+        }
+    };
+
+    fetchSucursalNombre();
+}, []); 
 
     const handleAddAllergen = () => {
         setIsAlergenoOpen(true);
@@ -136,7 +160,7 @@ export const Alergenos = () => {
             <SideBarFunc />
             <div className="featured">
             <TopBar
-                nombre="Masco Mida - Palmares"
+                nombre={sucursalNombre}
                 placeholder="Buscar..."
                 onAddBranch={handleAddAllergen}
                 tareaBoton="Agregar un Alergeno"

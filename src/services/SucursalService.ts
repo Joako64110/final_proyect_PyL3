@@ -60,6 +60,30 @@ class SucursalesService extends BackendClient<ISucursal> {
     const sucursales = await response.json();
     return sucursales as ISucursal[];
   }
+
+    // Método para obtener una sucursal por ID
+
+  async getSucursalById(id: number): Promise<ISucursal> {
+    try {
+      const response = await fetch(`${this.baseUrl}/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorDetails = await response.text();
+        throw new Error(`Error al obtener la sucursal: ${response.status} - ${errorDetails}`);
+      }
+
+      const sucursal = await response.json();
+      return sucursal as ISucursal;
+    } catch (error) {
+      console.error("Error al obtener la sucursal:", error);
+      throw error;
+    }
+  }
 }
 
 // Exportamos una instancia del servicio
