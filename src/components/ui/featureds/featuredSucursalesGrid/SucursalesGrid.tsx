@@ -104,7 +104,7 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
     return (
         <div className={styles.containerSucPage}>
             {filteredSucursales.length === 0 ? (
-                <p style={{ fontWeight: 'bold', textAlign: 'center', marginTop: '2rem' }}>
+                <p style={{ position: "absolute", fontWeight: "bold", marginLeft: "30%", marginTop: '2rem' }}>
                     No se encontraron sucursales...
                 </p>
             ) : (
@@ -114,7 +114,16 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
                             <h3>{sucursal.nombre}</h3>
                         </Card.Title>
                         <div className={styles.containerImgSucPage}>
-                            <Card.Img />
+                            {/* Mostrar el logo si está disponible */}
+                            {sucursal.logo ? (
+                                <img
+                                    src={sucursal.logo} 
+                                    alt={`Logo de ${sucursal.nombre}`} 
+                                    style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                                />
+                            ) : (
+                                <p>No disponible</p>
+                            )}
                         </div>
                         <div className={styles.containerTextSucPage}>
                             <p>
@@ -128,10 +137,10 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
                             </p>
                             <Actions
                                 id={sucursal.id}
-                                actions={['abrirSuc', 'editar', 'ver']}
+                                actions={['abrirSuc', /*'editar'*/ 'ver']}
                                 onAbrirSuc={() => handleAbrirSuc(sucursal.id)}
                                 onVer={() => handleVer(sucursal)}
-                                onEditar={() => console.log('Editar')}
+                                // onEditar={() => console.log('Editar')}
                             />
                         </div>
                     </div>
