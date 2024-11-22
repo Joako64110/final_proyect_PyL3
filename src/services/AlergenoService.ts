@@ -39,19 +39,21 @@ export class AlergenoService extends BackendClient<IAlergenos | ICreateAlergeno 
 		return await response.json();
 	}
 
-	async deleteAllergen(id: number) {
-		const response = await fetch(`${this.baseUrl}/${id}`, {
-			method: 'DELETE',
-		});
-	
-		// Verifica la respuesta del servidor
-		if (!response.ok) {
-			const errorMessage = await response.text();  // Captura el mensaje de error de la respuesta
-			console.error("Error al eliminar el alérgeno:", errorMessage);
-			throw new Error('Error al eliminar el alérgeno');
-		}
-	
-		// Si la respuesta es exitosa, puedes intentar obtener el JSON o manejar la respuesta según lo que devuelva la API
-		return response.json();  // O, si no hay respuesta JSON, simplemente puedes retornar algo diferente
-	}
+	async deleteAlergeno(id: number): Promise<void> {
+        try {
+            const response = await fetch(`${this.baseUrl}/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                console.error(`Error al eliminar el alérgeno con ID ${id}:`, response.statusText);
+                throw new Error(`Error al eliminar el alérgeno: ${response.status} ${response.statusText}`);
+            }
+
+            console.log(`Alérgeno con ID ${id} eliminado exitosamente.`);
+        } catch (error) {
+            console.error(`Error en la solicitud DELETE para el alérgeno con ID ${id}:`, error);
+            throw error;
+        }
+    }
 }

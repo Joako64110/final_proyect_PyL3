@@ -5,6 +5,7 @@ import { getProvinciasByPais } from "../../../services/ProvinciaService"; // Ser
 import { getLocalidadesByProvincia } from "../../../services/LocalidadService"; // Servicio para obtener localidades
 import './CrearSucursal.css';
 import sucursalesService from "../../../services/SucursalService";
+import { ImageService } from "../../../services/ImageService";
 
 interface ModalSucursalProps {
     onClose: () => void;
@@ -38,6 +39,8 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
     const [localidades, setLocalidades] = useState<any[]>([]);
     const [selectedPais, setSelectedPais] = useState<number | null>(null);
     const [selectedProvincia, setSelectedProvincia] = useState<number | null>(null);
+    const [logoFile, setLogoFile] = useState<File | null>(null); // Para manejar el archivo del logo
+
 
     // Cargar los países al montar el componente
     useEffect(() => {
@@ -130,17 +133,11 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setSucursalData((prevState) => ({
-                    ...prevState,
-                    logo: reader.result as string, // Guarda la imagen como base64
-                }));
-            };
-            reader.readAsDataURL(file); // Convierte la imagen a base64
+          setLogoFile(file); // Guarda el archivo seleccionado
         }
     };
 
+        ///--------- funcion para subir sin imagnenn-------------///
     const handleConfirm = async () => {
         try {
             // Realizar el POST para crear la nueva sucursal
@@ -153,6 +150,33 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
             console.error("Error al crear la sucursal:", error);
         }
     };
+
+    ///--------- funcion para subir con imagnenn-------------///
+
+    // const handleConfirm = async () => {
+    //     try {
+    //         let logoUrl = null;
+
+    //         // Subir la imagen si existe un archivo seleccionado
+    //         if (logoFile) {
+    //             const formData = new FormData();
+    //             formData.append("image", logoFile);
+    //             logoUrl = await ImageService.uploadImage(formData);
+    //         }
+
+    //         // Crear la sucursal con la URL de la imagen, si está disponible
+    //         const newSucursalData = {
+    //             ...sucursalData,
+    //             logo: logoUrl,
+    //         };
+
+    //         await sucursalesService.createSucursal(newSucursalData);
+    //         onClose(); // Cerrar el modal
+    //         onAddSucursal(newSucursalData); // Callback para agregar la nueva sucursal
+    //         } catch (error) {
+    //         console.error("Error al crear la sucursal:", error);
+    //         }
+    // };
 
     return (
         <div className="modals">

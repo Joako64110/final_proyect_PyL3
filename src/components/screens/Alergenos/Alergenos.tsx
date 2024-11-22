@@ -37,7 +37,7 @@ export const Alergenos = () => {
                                 id={allergen.id}
                                 actions={["editar", "eliminar"]}
                                 onEditar={() => openEditModal(allergen.denominacion)}
-                                onEliminar={() => deleteAllergen(allergen.id)}
+                                onEliminar={() => deleteAllergen(allergen.id)} // Llama a la función deleteAllergen
                             />
                         ),
                     }))
@@ -125,7 +125,7 @@ export const Alergenos = () => {
             // Primero eliminar el alérgeno del estado local
             setData((prevData) => prevData.filter((item) => item.id !== id));
             // Luego eliminarlo en el backend
-            await allergensService.deleteAllergen(id);
+            await allergensService.deleteAlergeno(id);
         } catch (error) {
             console.error("Error al eliminar el alérgeno:", error);
         }
