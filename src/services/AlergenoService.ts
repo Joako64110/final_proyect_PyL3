@@ -46,13 +46,10 @@ export class AlergenoService extends BackendClient<IAlergenos | ICreateAlergeno 
             });
 
             if (!response.ok) {
-                console.error(`Error al eliminar el alérgeno con ID ${id}:`, response.statusText);
                 throw new Error(`Error al eliminar el alérgeno: ${response.status} ${response.statusText}`);
             }
 
-            console.log(`Alérgeno con ID ${id} eliminado exitosamente.`);
         } catch (error) {
-            console.error(`Error en la solicitud DELETE para el alérgeno con ID ${id}:`, error);
             throw error;
         }
     }

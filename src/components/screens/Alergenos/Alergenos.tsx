@@ -6,6 +6,7 @@ import CrearAlergeno from "../../modals/CrearAlergeno/CrearAlergeno";
 import SideBarFunc from '../../ui/SideBarr/SideBarFun/SideBarFun';
 import { AlergenoService } from '../../../services/AlergenoService';
 import sucursalesService from "../../../services/SucursalService";
+import Swal from 'sweetalert2';
 
 
 interface Allergen {
@@ -146,19 +147,39 @@ export const Alergenos = () => {
 
     const deleteAllergen = async (id: number) => {
         try {
-            // Primero eliminar el alérgeno del estado local
-            setData((prevData) => prevData.filter((item) => item.id !== id));
-            // Luego eliminarlo en el backend
+            // Intentar eliminar en el backend
             await allergensService.deleteAlergeno(id);
-        } catch (error) {
-            console.error("Error al eliminar el alérgeno:", error);
+    
+            // Si se elimina exitosamente, actualizar el estado local
+            setData((prevData) => prevData.filter((item) => item.id !== id));
+    
+            // Mostrar mensaje de éxito opcionalmente
+            Swal.fire({
+                icon: "success",
+                title: "Eliminado",
+                text: "El alérgeno se eliminó correctamente.",
+                timer: 2000,
+                showConfirmButton: false,
+            });
+        } catch (error: any) {
+            // Mostrar siempre el mensaje de error
+            Swal.fire({
+                icon: "error",
+                title: "No se puede eliminar",
+                text: "El alérgeno está asociado a un artículo y no se puede eliminar.",
+                confirmButtonText: "Entendido",
+            });
+    
         }
     };
+    
+    
+    
 
     return (
         <div className="container-screen">
             <SideBarFunc />
-            <div className="featured">
+            <div className="featured">  
             <TopBar
                 nombre={sucursalNombre}
                 placeholder="Buscar..."
