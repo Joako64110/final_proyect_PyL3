@@ -4,7 +4,7 @@ import styles from "./SideBarFun.module.css";
 import Actions from "../../Actions/actions";
 import { Link, useLocation } from "react-router-dom";
 
-const SideBarFuncionalidad: React.FC = () => {
+const SideBarFun: React.FC = () => {
     const location = useLocation(); // Obtén la ubicación actual
 
     const getLinkClass = (path: string) => {
@@ -54,5 +54,5 @@ const SideBarFuncionalidad: React.FC = () => {
     );
 };
 
-export default SideBarFuncionalidad;
+export default SideBarFun;
 

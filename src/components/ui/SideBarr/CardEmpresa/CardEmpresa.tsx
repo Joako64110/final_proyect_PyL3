@@ -47,10 +47,15 @@ export const CardEmpresa: React.FC<Props> = ({ empresa, onSelect, isSeleccionada
         }
     };
 
+    const handleSelectEmpresa = () => {
+        localStorage.setItem('idEmpresa', String(empresa.id)); // Guardamos el idEmpresa en localStorage
+        onSelect(); // Llamamos a la función onSelect que viene del componente padre
+    };
+
     return (
         <div
             className={`${styles.tarjetaEmpresa} ${isSeleccionada ? styles.selected : ''}`}
-            onClick={onSelect} // Solo se ejecuta cuando se hace clic fuera de los íconos
+            onClick={handleSelectEmpresa} // Guardamos el id de la empresa seleccionada en localStorage
         >
             <p>{empresa.nombre}</p>
             <Actions
@@ -80,6 +85,3 @@ export const CardEmpresa: React.FC<Props> = ({ empresa, onSelect, isSeleccionada
 };
 
 export default CardEmpresa;
-
-
-

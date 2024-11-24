@@ -1,14 +1,14 @@
-
 import React, { useState, useEffect } from 'react';
 import './CrearCategoriaPadre.css';
 
-interface PopupFormProps {
+interface CrearCategoriaPadreProps {
+    initialValue: string;
     onClose: () => void;
-    onSubmit: (categoryName: string) => void;
-    initialValue?: string;
+    onSubmit: (categoryName: string, idCategoriaPadre: number | null) => void; // Acepta dos parámetros
+    idCategoriaPadre?: number | null; // Si es necesario, puedes pasar el idCategoriaPadre aquí
 }
 
-const CrearCategoriaPadre: React.FC<PopupFormProps> = ({ onClose, onSubmit, initialValue = '' }) => {
+const CrearCategoriaPadre: React.FC<CrearCategoriaPadreProps> = ({ onClose, onSubmit, initialValue = '', idCategoriaPadre = null }) => {
     const [categoryName, setCategoryName] = useState(initialValue);
 
     useEffect(() => {
@@ -17,7 +17,8 @@ const CrearCategoriaPadre: React.FC<PopupFormProps> = ({ onClose, onSubmit, init
 
     const handleSubmit = () => {
         if (categoryName.trim()) {
-            onSubmit(categoryName);
+            console.log("Datos que se enviarán al confirmar:", categoryName);
+            onSubmit(categoryName, idCategoriaPadre); // Pasar ambos parámetros
             onClose();
         } else {
             alert("El nombre de la categoría no puede estar vacío.");
@@ -26,7 +27,7 @@ const CrearCategoriaPadre: React.FC<PopupFormProps> = ({ onClose, onSubmit, init
 
     return (
         <div className="modal-overlayCategoriaPadre">
-            <div className="categoria-padre"> 
+            <div className="categoria-padre">
                 <h2>{initialValue ? "Editar Categoría" : "Crear Categoría"}</h2>
                 <label>Ingrese una denominación:</label>
                 <input

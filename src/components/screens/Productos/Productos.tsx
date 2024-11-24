@@ -17,7 +17,7 @@ export const Productos = () => {
         Precio: number;
         Descripción: string;
         Categoría: string;
-        Habilitado: string;  // Cambio aquí a string
+        Habilitado: string;
         Acciones: JSX.Element;
     }>>([]);
     const [isArticuloOpen, setIsArticuloOpen] = useState(false);

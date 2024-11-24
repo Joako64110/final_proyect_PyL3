@@ -1,14 +1,21 @@
-// CrearSubcategoria.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './CrearSubcategoria.css';
 
 interface PopupFormProps {
   onClose: () => void;
   onSubmit: (subcategoryName: string) => void;
+  initialValue?: string; // Agregamos una propiedad opcional para el valor inicial
 }
 
-const CrearSubcategoria: React.FC<PopupFormProps> = ({ onClose, onSubmit }) => {
-  const [subcategoryName, setSubcategoryName] = useState('');
+const CrearSubcategoria: React.FC<PopupFormProps> = ({ onClose, onSubmit, initialValue }) => {
+  const [subcategoryName, setSubcategoryName] = useState(initialValue || ''); // Usamos el initialValue si está presente
+
+  useEffect(() => {
+    // Si `initialValue` cambia, actualizamos el nombre de la subcategoría
+    if (initialValue !== undefined) {
+      setSubcategoryName(initialValue);
+    }
+  }, [initialValue]);
 
   const handleSubmit = () => {
     if (subcategoryName.trim()) {
@@ -22,7 +29,7 @@ const CrearSubcategoria: React.FC<PopupFormProps> = ({ onClose, onSubmit }) => {
   return (
     <div className="modal-overlaySubCategoria">
       <div className="modal-contentSubCategoria">
-        <h2>Crear una subcategoría</h2>
+        <h2>{initialValue ? 'Editar subcategoría' : 'Crear una subcategoría'}</h2>
         <label>Ingrese una denominación:</label>
         <input
           type="text"

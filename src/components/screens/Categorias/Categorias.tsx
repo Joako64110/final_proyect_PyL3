@@ -264,8 +264,7 @@ export const Categorias = () => {
           placeholder="Buscar..."
           onAddBranch={() => setIsCategoriaPadreOpen(true)}
           tareaBoton="Agregar Categoria"
-          setSearchQuery={setSearchTerm}
-         />
+          setSearchQuery={setSearchTerm}/>
         <CategoriaTable
           data={data.map(({ denominacion, subCategorias }) => ({
             Nombre: denominacion,
