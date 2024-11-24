@@ -8,6 +8,7 @@ import { getLocalidadesByProvincia } from "../../../services/LocalidadService"; 
 import './CrearSucursal.css';
 import sucursalesService from "../../../services/SucursalService";
 import { ImageService } from "../../../services/ImageService";
+import "./CrearSucursal.css"
 
 interface ModalSucursalProps {
     onClose: () => void;
