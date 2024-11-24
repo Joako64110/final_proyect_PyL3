@@ -24,7 +24,7 @@ export const fetchArticulosBySucursal = async (sucursalId: number) => {
 // Función para crear un artículo
 export const createArticulo = async (articulo: ICreateProducto) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/articulo/create`, {
+        const response = await fetch(`${API_BASE_URL}/create`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

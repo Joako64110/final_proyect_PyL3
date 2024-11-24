@@ -1,164 +1,234 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./CrearArticulo.css";
-import CategoriaService from "../../../services/CategoriaService"; // Importamos el servicio de categorías
-import { IImagen } from "../../../types/IImagen";
+import { ICategorias } from "../../../types/ICategorias";
+import { IAlergenos } from "../../../types/IAlergenos";
+import categoriaService from "../../../services/CategoriaService";
+import { AlergenoService } from "../../../services/AlergenoService";
+import { ImageService } from "../../../services/ImageService";
+import { ICreateProducto } from "../../../types/dtos/productos/ICreateProducto";
+import { createArticulo } from "../../../services/ProductoService";
+import Swal from "sweetalert2";
 
 interface CrearArticuloProps {
     onClose: () => void;
-    onAddProduct: (product: {
-        Nombre: string;
-        Precio: number;
-        Descripción: string;
-        Habilitado: boolean;
-        Codigo: string;
-        Imagenes: IImagen[];
-        IdCategoria: number;
-        IdAlergenos: number[]
-    }) => Promise<void>;
-    onUpdateProduct: (id: number, updatedProduct: any) => void;
-    editingProduct: any;
+    onProductCreated: (newProduct: any) => void; // Nueva prop
 }
 
-const CrearArticulo: React.FC<CrearArticuloProps> = ({
-    onClose,
-    onAddProduct,
-    onUpdateProduct,
-    editingProduct,
-}) => {
-    const [nombre, setNombre] = useState<string>(editingProduct?.Nombre || "");
-    const [precio, setPrecio] = useState<number>(editingProduct?.Precio || 0);
-    const [descripcion, setDescripcion] = useState<string>(editingProduct?.Descripción || "");
-    const [categorias, setCategorias] = useState<{ id: number; nombre: string}[]>([]); 
-    const [alergenos, setAlergenos] = useState<number[]>(editingProduct?.Alergenos || "");
-    const [habilitado, setHabilitado] = useState<boolean>(editingProduct?.Habilitado || false);
-    const [codigo, setCodigo] = useState<string>(editingProduct?.Codigo || ""); 
-    const [imagen, setImagen] = useState<any>(null);
+const CrearArticulo: React.FC<CrearArticuloProps> = ({ onClose, onProductCreated }) => {
+    const [denominacion, setDenominacion] = useState("");
+    const [categoria, setCategoria] = useState("");
+    const [alergenos, setAlergenos] = useState("");
+    const [precioVenta, setPrecioVenta] = useState("");
+    const [codigo, setCodigo] = useState("");
+    const [habilitado, setHabilitado] = useState(false);
+    const [descripcion, setDescripcion] = useState("");
+    const [imagen, setImagen] = useState<File | null>(null);
+    const [categorias, setCategorias] = useState<ICategorias[]>([]);
+    const [alergenosDisponibles, setAlergenosDisponibles] = useState<IAlergenos[]>([]);
+    const alergenosService = new AlergenoService("http://190.221.207.224:8090/alergenos");
+    const imageService = new ImageService("http://190.221.207.224:8090");
 
-    useEffect(() => {
-        if (editingProduct) {
-            setNombre(editingProduct.Nombre || "");
-            setPrecio(editingProduct.Precio || "");
-            setDescripcion(editingProduct.Descripción || "");
-            setCategorias(editingProduct.Categoría || "");
-            setAlergenos(editingProduct.Alergenos || "");
-            setHabilitado(editingProduct.Habilitado || false);
-            setCodigo(editingProduct.Codigo || ""); 
-        }
-    }, [editingProduct]);
-
-    // Efecto para cargar categorías desde la API
-    useEffect(() => {
-        const fetchCategorias = async () => {
-            try {
-                const categoriasFromApi = await CategoriaService.getAll(); // Obtiene las categorías desde la API
-                const categoriasFormatted = categoriasFromApi.map((categoria) => ({
-                    id: categoria.id, // O la propiedad correspondiente según tu API
-                }));
-                console.log(categoriasFormatted)
-                setCategorias(categoriasFormatted); // Establece el estado con las categorías formateadas
-            } catch (error) {
-                console.error('Error al cargar las categorías:', error);
-            }
-        };
-    
-        fetchCategorias();
-    }, []);
-    
-
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            setImagen(URL.createObjectURL(e.target.files[0]));
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setImagen(e.target.files[0]);
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    useEffect(() => {
+        const idSucursal = localStorage.getItem("idSucursal");
 
-        const product = {
-            Nombre: nombre,
-            Precio: precio,
-            Descripción: descripcion,
-            Habilitado: habilitado,
-            Codigo: codigo,
-            Imagenes: imagen ? [] : [],
-            IdCategoria: categorias.id,
-            IdAlergenos: alergenos,
-        };
-
-        if (editingProduct) {
-            onUpdateProduct(editingProduct.id, product);
-        } else {
-            await onAddProduct(product);
+        if (!idSucursal) {
+            console.error("No se encontró el idSucursal en el localStorage.");
+            return;
         }
 
-        onClose();
+        const fetchCategoriasPadre = async () => {
+            try {
+                const categoriasPadre = await categoriaService.getAllCategoriasPadrePorSucursal(Number(idSucursal));
+                setCategorias(categoriasPadre);
+            } catch (error) {
+                console.error("Error al cargar categorías padre:", error);
+            }
+        };
+
+        const fetchAlergenos = async () => {
+            try {
+                const alergenos = await alergenosService.getAllAllergens();
+                setAlergenosDisponibles(alergenos);
+            } catch (error) {
+                console.error("Error al cargar alérgenos:", error);
+            }
+        };
+
+        fetchCategoriasPadre();
+        fetchAlergenos();
+    }, []);
+
+    const handleConfirm = async () => {
+        try {
+            Swal.fire({
+                title: "Creando artículo...",
+                text: "Estamos procesando tu solicitud.",
+                icon: "info",
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            let imagenSubida = null;
+            if (imagen) {
+                const imageService = new ImageService("http://190.221.207.224:8090");
+                imagenSubida = await imageService.uploadImage(imagen);
+            }
+
+            const imagenesConExtension = imagenSubida
+                ? [{
+                    name: imagenSubida.name,
+                    url: `${imagenSubida.url}.jpg`
+                }]
+                : [];
+
+            const formData = {
+                denominacion,
+                precioVenta: parseFloat(precioVenta),
+                descripcion,
+                habilitado,
+                codigo,
+                imagenes: imagenesConExtension,
+                idCategoria: Number(categoria),
+                idAlergenos: alergenos ? [Number(alergenos)] : [], // Si no hay alérgenos seleccionados, enviar un arreglo vacío
+            };
+
+            const newProduct = await createArticulo(formData);
+
+            Swal.fire({
+                title: "¡Éxito!",
+                text: "El artículo se ha creado correctamente.",
+                icon: "success",
+                confirmButtonText: "OK",
+            });
+
+            onProductCreated(newProduct); // Llamada a la función prop
+
+            onClose();
+        } catch (error) {
+            Swal.fire({
+                title: "Error",
+                text: "Hubo un problema al crear el artículo. Por favor, inténtalo de nuevo.",
+                icon: "error",
+                confirmButtonText: "Cerrar",
+            });
+        }
     };
 
     return (
-        <div className="modal-overlayCrearArticulo">
-            <div className="modal-contentCrearArticulo">
-                <h2>{editingProduct ? "Actualizar" : "Crear"} un artículo</h2>
-                <form onSubmit={handleSubmit}>
-                    <input
-                        type="text"
-                        placeholder="Ingrese una denominación"
-                        value={nombre}
-                        onChange={(e) => setNombre(e.target.value)}
-                        className="inputCrearArticulo"
-                        required
-                    />
-                    {/* Select dinámico para categorías */}
-                    <select value={categorias} onChange={(e) => setCategoria(e.target.value)} required>
-                        <option value="">Selecciona una categoría</option>
-                        {categorias.map((cat) => (
-                            <option key={cat.id} value={cat.nombre}>
-                                {cat.nombre}
-                            </option>
-                        ))}
-                    </select>
-                    <select value={alergenos} onChange={(e) => setAlergenos(e.target.value)} required>
-                        <option value="">Selecciona un alérgeno</option>
-                        <option value="Alergeno 1">Alérgeno 1</option>
-                        <option value="Alergeno 2">Alérgeno 2</option>
-                        <option value="Alergeno 3">Alérgeno 3</option>
-                    </select>
-                    <input
-                        type="text"
-                        placeholder="Ingresa un precio de venta"
-                        value={precio}
-                        onChange={(e) => setPrecio(e.target.value)}
-                        className="inputCrearArticulo"
-                        required
-                    />
-                    <input
-                        type="text"
-                        placeholder="Ingresa un código"
-                        value={codigo} 
-                        onChange={(e) => setCodigo(e.target.value)}
-                        className="inputCrearArticuloCodigo"
-                    />
-                    <textarea
-                        placeholder="Ingrese una descripción"
-                        value={descripcion}
-                        onChange={(e) => setDescripcion(e.target.value)}
-                    />
-                    <div className="label-check">
-                        <input
-                            type="checkbox"
-                            checked={habilitado}
-                            onChange={(e) => setHabilitado(e.target.checked)}
-                        />
-                        <label>Habilitado</label>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageChange}
-                            className="inputImagen"
-                        />
+        <div className="modals-Art">
+            <div className="card-Art">
+                <h5 className="card-title-art">Crear un artículo</h5>
+                <div className="card-body-Art">
+                    <div className="containerPrincipal-art">
+                        <div className="contenido1">
+                            <div className="cardConten">
+                                <input
+                                    className="form"
+                                    type="text"
+                                    value={denominacion}
+                                    onChange={(e) => setDenominacion(e.target.value)}
+                                    placeholder="Ingrese una denominación"
+                                />
+                            </div>
+
+                            <div className="cardConten">
+                                <select
+                                    className="form"
+                                    value={categoria}
+                                    onChange={(e) => setCategoria(e.target.value)}
+                                >
+                                    <option value="">Seleccione una categoría</option>
+                                    {categorias.map((cat) => (
+                                        <option key={cat.id} value={cat.id}>
+                                            {cat.denominacion}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="cardConten">
+                                <select
+                                    className="form"
+                                    value={alergenos}
+                                    onChange={(e) => setAlergenos(e.target.value)}
+                                >
+                                    <option value="">Seleccione un alérgeno</option>
+                                    {alergenosDisponibles.map((alergenos) => (
+                                        <option key={alergenos.id} value={alergenos.id}>
+                                            {alergenos.denominacion}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="cardConten">
+                                <input
+                                    className="form"
+                                    type="number"
+                                    value={precioVenta}
+                                    onChange={(e) => setPrecioVenta(e.target.value)}
+                                    placeholder="Ingresa un precio de venta"
+                                />
+                            </div>
+
+                            <div className="cardConten">
+                                <input
+                                    className="form"
+                                    type="text"
+                                    value={codigo}
+                                    onChange={(e) => setCodigo(e.target.value)}
+                                    placeholder="Ingresa un código"
+                                />
+                            </div>
+
+                            <div className="cardConten">
+                                <label>Habilitado</label>
+                                <input
+                                    type="checkbox"
+                                    checked={habilitado}
+                                    onChange={(e) => setHabilitado(e.target.checked)}
+                                />
+                            </div>
+                        </div>
+                        <div className="content2">
+                            <div className="cardContent-2">
+                                <textarea
+                                    className="form-2"
+                                    value={descripcion}
+                                    onChange={(e) => setDescripcion(e.target.value)}
+                                    placeholder="Ingrese una descripción..."
+                                />
+                            </div>
+
+                            <div className="cardContent-2">
+                                <input type="file" onChange={handleImageUpload} />
+                            </div>
+                        </div>
                     </div>
-                    <button type="submit" className="confirm">{editingProduct ? "Actualizar" : "Confirmar"}</button>
-                    <button type="button" className="cancel" onClick={onClose}>Cancelar</button>
-                </form>
+
+                    <div className="buttons-CS">
+                        <button
+                            onClick={handleConfirm}
+                            style={{ backgroundColor: "rgba(44, 44, 44, 1)", color: "aliceblue", width: "30%" }}
+                        >
+                            Confirmar
+                        </button>
+                        <button
+                            onClick={onClose}
+                            style={{ backgroundColor: "rgba(236, 34, 31, 1)", color: "aliceblue", width: "30%" }}
+                        >
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );

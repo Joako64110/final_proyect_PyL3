@@ -25,20 +25,20 @@
 
 .card-title-CE{
     font-size:2rem;
-    margin-top: 1rem;
+    margin-top: 0.2rem;
 }
 
 .card-body-CE{
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 10px;
 }
 
 .mb-3-main-CE{
     display: flex;
     flex-direction: column;
     gap: 20px;
-    border: solid 1px grey;
+    border: 1px solid #ccc;
     border-radius: 5px;
     padding: 10px;
     align-items: center;

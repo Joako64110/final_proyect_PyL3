@@ -5,20 +5,27 @@ import Actions from "../../ui/Actions/actions";
 import CrearArticulo from "../../modals/CrearArticulo/CrearArticulo";
 import SideBarFunc from "../../../components/ui/SideBarr/SideBarFun/SideBarFun";
 import { fetchArticulosBySucursal, createArticulo, updateArticulo, deleteArticulo } from "../../../services/ProductoService";
-import { IImagen } from "../../../types/IImagen";
 import sucursalesService from "../../../services/SucursalService";
-
+import Swal from "sweetalert2";
+import { MostrarProducto } from "../../modals/MostrarProducto/MostrarProducto";
 
 export const Productos = () => {
     const columns = ["Nombre", "Precio", "Descripción", "Categoría", "Habilitado", "Acciones"];
-    const [data, setData] = useState<Array<{ id: number; Nombre: string; Precio: number; Descripción: string; Categoría: string; Habilitado: boolean; Acciones: JSX.Element; }>>([]);
+    const [data, setData] = useState<Array<{
+        id: number;
+        Nombre: string;
+        Precio: number;
+        Descripción: string;
+        Categoría: string;
+        Habilitado: string;  // Cambio aquí a string
+        Acciones: JSX.Element;
+    }>>([]);
     const [isArticuloOpen, setIsArticuloOpen] = useState(false);
-    const [isProductViewOpen, setIsProductViewOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState<any>(null);
     const [searchQuery, setSearchQuery] = useState("");
-    const [viewingProduct, setViewingProduct] = useState<any>(null);
     const [sucursalNombre, setSucursalNombre] = useState<string>("");
-
+    const [isProductViewOpen, setIsProductViewOpen] = useState(false); // No es necesario, pero se usa para manejar si el modal está abierto
+    const [selectedProduct, setSelectedProduct] = useState<any>(null); // Guardamos el producto seleccionado para pasarlo al modal
 
     useEffect(() => {
         const fetchArticulos = async () => {
@@ -38,13 +45,13 @@ export const Productos = () => {
                     Nombre: articulo.denominacion,
                     Precio: articulo.precioVenta,
                     Descripción: articulo.descripcion,
-                    Categoría: articulo.categoria?.nombre || "Sin categoría",
-                    Habilitado: articulo.habilitado,
+                    Categoría: articulo.categoria?.denominacion || "Sin categoría",
+                    Habilitado: articulo.habilitado ? "Sí" : "No",  // Convertimos a string aquí
                     Acciones: (
                         <Actions
                             id={articulo.id}
                             actions={["ver", "editar", "eliminar"]}
-                            onVer={() => handleViewProduct(articulo)}
+                            onVer={() => handleViewProduct(articulo)} // Aquí llamamos la función handleViewProduct
                             onEditar={() => handleEditProduct(articulo)}
                             onEliminar={() => handleDeleteProduct(articulo.id)}
                         />
@@ -60,7 +67,7 @@ export const Productos = () => {
     }, []);
 
     useEffect(() => {
-            const fetchSucursalNombre = async () => {
+        const fetchSucursalNombre = async () => {
             const idSucursal = localStorage.getItem("idSucursal"); // Recuperar el idSucursal
             if (!idSucursal) {
                 console.error("idSucursal no encontrado en el localStorage");
@@ -89,50 +96,35 @@ export const Productos = () => {
     };
 
     const handleViewProduct = (product: any) => {
-        setViewingProduct(product);
-        setIsProductViewOpen(true);
+        setSelectedProduct(product); // Guardamos el producto seleccionado en el estado
+        setIsProductViewOpen(true); // Abrimos el modal
     };
 
     const closeProductViewModal = () => {
-        setIsProductViewOpen(false);
+        setIsProductViewOpen(false); // Cerramos el modal
     };
 
-    const addProductToList = async (product: { Nombre: string; Precio: number; Descripción: string; Habilitado: boolean; Codigo: string; Imagenes: IImagen[]; IdCategoria: number; IdAlergenos: number[] }) => {
-        try {
-            const newProduct = await createArticulo({
-                denominacion: product.Nombre,
-                precioVenta: product.Precio,
-                descripcion: product.Descripción,
-                habilitado: product.Habilitado,
-                codigo: product.Codigo,
-                imagenes: product.Imagenes,
-                idCategoria: product.IdCategoria,
-                idAlergenos: product.IdAlergenos,
-            });
-
-            setData((prevData) => [
-                ...prevData,
-                {
-                    id: newProduct.id,
-                    Nombre: newProduct.denominacion,
-                    Precio: newProduct.precioVenta.toString(),
-                    Descripción: newProduct.descripcion,
-                    Categoría: newProduct.categoria?.nombre || "Sin categoría",
-                    Habilitado: newProduct.habilitado,
-                    Acciones: (
-                        <Actions
-                            id={newProduct.id}
-                            actions={["ver", "editar", "eliminar"]}
-                            onVer={() => handleViewProduct(newProduct)}
-                            onEditar={() => handleEditProduct(newProduct)}
-                            onEliminar={() => handleDeleteProduct(newProduct.id)}
-                        />
-                    ),
-                },
-            ]);
-        } catch (error) {
-            console.error("Error al agregar el producto:", error);
-        }
+    const addNewProductToList = (newProduct: any) => {
+        setData((prevData) => [
+            ...prevData,
+            {
+                id: newProduct.id,
+                Nombre: newProduct.denominacion,
+                Precio: newProduct.precioVenta.toString(),
+                Descripción: newProduct.descripcion,
+                Categoría: newProduct.categoria?.denominacion || "Sin categoría",
+                Habilitado: newProduct.habilitado ? "Sí" : "No", // Aquí también convertimos a string
+                Acciones: (
+                    <Actions
+                        id={newProduct.id}
+                        actions={["ver", "editar", "eliminar"]}
+                        onVer={() => handleViewProduct(newProduct)}
+                        onEditar={() => handleEditProduct(newProduct)}
+                        onEliminar={() => handleDeleteProduct(newProduct.id)}
+                    />
+                ),
+            },
+        ]);
     };
 
     const handleEditProduct = (product: any) => {
@@ -154,13 +146,26 @@ export const Productos = () => {
     };
 
     const handleDeleteProduct = async (id: number) => {
-        const confirmation = window.confirm("¿Estás seguro de que deseas eliminar este producto?");
-        if (confirmation) {
+        // Usamos SweetAlert2 para mostrar el modal de confirmación
+        const result = await Swal.fire({
+            title: "¿Estás seguro de eliminar este producto?",
+            text: "¡Esta acción no se puede deshacer!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Eliminar",
+            cancelButtonText: "Cancelar",
+        });
+
+        if (result.isConfirmed) {
             try {
                 await deleteArticulo(id);
                 setData((prevData) => prevData.filter((producto) => producto.id !== id));
+                Swal.fire("Eliminado", "El producto ha sido eliminado.", "success");  // Notificación de éxito
             } catch (error) {
                 console.error("Error al eliminar el artículo:", error);
+                Swal.fire("Error", "Hubo un problema al eliminar el producto.", "error");  // Notificación de error
             }
         }
     };
@@ -187,25 +192,11 @@ export const Productos = () => {
                     <h3 style={{ textAlign: "center", marginTop: "20px" }}>Aún no hay artículos</h3>
                 )}
                 {isArticuloOpen && (
-                    <CrearArticulo
-                        onClose={closeArticuloModal}
-                        onAddProduct={addProductToList}
-                        onUpdateProduct={handleUpdateProduct}
-                        editingProduct={editingProduct}
-                    />
+                    <CrearArticulo onClose={closeArticuloModal} onProductCreated={addNewProductToList} />
                 )}
 
-                {isProductViewOpen && viewingProduct && (
-                    <div className="view-product-modal">
-                        <div className="modal-content">
-                            <h2>{viewingProduct.Nombre}</h2>
-                            <p><strong>Precio:</strong> {viewingProduct.Precio}</p>
-                            <p><strong>Descripción:</strong> {viewingProduct.Descripción}</p>
-                            <p><strong>Categoría:</strong> {viewingProduct.Categoría}</p>
-                            <p><strong>Habilitado:</strong> {viewingProduct.Habilitado ? "Sí" : "No"}</p>
-                            <button onClick={closeProductViewModal}>Cerrar</button>
-                        </div>
-                    </div>
+                {isProductViewOpen && selectedProduct && (
+                    <MostrarProducto producto={selectedProduct} onClose={closeProductViewModal} />
                 )}
             </div>
         </div>
