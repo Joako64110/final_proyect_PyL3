@@ -1,85 +1,87 @@
 import React, { useState } from 'react';
+import { ICategorias } from '../../../../types/ICategorias'; // Ajusta la ruta según tu estructura
 import Actions from '../../Actions/actions';
-import './CategoriaTable.css'
-import { ICategorias } from '../../../../types/ICategorias';
+import "./CategoriaTable.css";
 
 interface CategoriaTableProps {
-    data: Array<{
-        Nombre: string;
-        Subcategorias: ICategorias[];
-        Acciones: JSX.Element;
-    }>;
-    onAddSubcategory: (parentCategoryName: string) => void;
-    onEditCategory: (categoryName: string) => void;
-    onDeleteCategory: (categoryName: string) => void;
-    onDeleteSubcategory: (categoryName: string, subcategoryName: string) => void;
+    categorias: ICategorias[];
+    onEditCategory: (categoria: ICategorias) => void;  // Acepta un objeto ICategorias completo
+    onDeleteCategory: (id: number) => void;
+    onAddSubcategory: (categoria: ICategorias) => void;
+    onEditSubcategory: (categoria: string, subcategoria: string) => void;
 }
 
 const CategoriaTable: React.FC<CategoriaTableProps> = ({
-    data,
-    onAddSubcategory,
+    categorias,
     onEditCategory,
     onDeleteCategory,
-    onDeleteSubcategory,
-    }) => {
-    const [expandedCategories, setExpandedCategories] = useState<Array<string>>([]);
+    onAddSubcategory,
+    onEditSubcategory,
+}) => {
+    const [expandedCategories, setExpandedCategories] = useState<number[]>([]); // Usamos el id de la categoría
 
-    const toggleExpandCategory = (categoryName: string) => {
-        setExpandedCategories((prevExpanded) =>
-        prevExpanded.includes(categoryName)
-            ? prevExpanded.filter((name) => name !== categoryName)
-            : [...prevExpanded, categoryName]
+    const toggleExpandCategory = (categoryId: number) => {
+        setExpandedCategories((prev) =>
+            prev.includes(categoryId)
+                ? prev.filter((id) => id !== categoryId)
+                : [...prev, categoryId]
         );
     };
 
-    return (
-        <div className='table-container'>
-            <table className="mi-clase-tabla">
-            <thead className="mi-clase-thead">
-                <tr>
-                <th className="mi-clase-th-1">Nombre</th>
-                <th className="mi-clase-th-2">Acciones</th>
-                </tr>
-            </thead>
-            <tbody className="mi-clase-tbody">
-                {data.map((row, rowIndex) => (
-                <React.Fragment key={rowIndex}>
-                    <tr className="mi-clase-tr">
-                        <td className="mi-clase-td-1">{row.Nombre}</td>
-                        <td className="mi-clase-td-2">
-                            <Actions
-                            id={1}
-                            actions={["desplegar", "editar", "eliminar", "agregar"]}
-                            onDesplegar={() => toggleExpandCategory(row.Nombre)}
-                            onEditar={() => onEditCategory(row.Nombre)}
-                            onEliminar={() => onDeleteCategory(row.Nombre)}
-                            onAgregar={() => onAddSubcategory(row.Nombre)}
-                            isExpanded={expandedCategories.includes(row.Nombre)}
-                            />
-                        </td>
-                    </tr>
-                    {expandedCategories.includes(row.Nombre) &&
-                        row.Subcategorias.map((sub, subIndex) => (
-                            <tr key={`${rowIndex}-${subIndex}`} className="mi-clase-tr">
-                                <td className="mi-clase-td-3">
-                                    {sub.denominacion}
-                                </td>
-                                <td className="mi-clase-td-4">
-                                    <Actions
-                                        id={1}
-                                        actions={["editar", "eliminar"]}
-                                        onEditar={() => onEditCategory(sub.denominacion)} // Pasar el nombre de la subcategoría.
-                                        onEliminar={() => onDeleteSubcategory(row.Nombre, sub.denominacion)} // Asociar con la categoría padre.
-                                        />
-                                </td>
-                            </tr>
-                        ))
-                    }
+    const handleEditClick = (categoria: ICategorias) => {
+        onEditCategory(categoria); // Pasa el objeto ICategorias completo
+    };
 
-                </React.Fragment>
-                ))}
-            </tbody>
-            </table>
+    return (
+        <div className="table-container">
+            {categorias.length === 0 ? (
+                // Si no hay categorías, mostrar este mensaje
+                <h3 style={{textAlign:"center", marginTop:"20px"}}>Aún no hay categorías</h3>
+            ) : (
+                <table className="mi-clase-tabla">
+                    <thead className="mi-clase-thead">
+                        <tr>
+                            <th className="mi-clase-th-1">Nombre</th>
+                            <th className="mi-clase-th-2">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody className="mi-clase-tbody">
+                        {categorias.map((categoria) => (
+                            <React.Fragment key={categoria.id}>
+                                {/* Fila de la categoría */}
+                                <tr className="mi-clase-tr">
+                                    <td className="mi-clase-td-1">{categoria.denominacion}</td>
+                                    <td className="mi-clase-td-2">
+                                        <Actions
+                                            id={categoria.id}
+                                            actions={["desplegar", "editar", "eliminar", "agregar"]}
+                                            onDesplegar={() => toggleExpandCategory(categoria.id)}
+                                            onEditar={() => handleEditClick(categoria)} // Pasar el objeto completo de la categoría
+                                            onEliminar={() => onDeleteCategory(categoria.id)}
+                                            onAgregar={() => onAddSubcategory(categoria)}
+                                            isExpanded={expandedCategories.includes(categoria.id)}
+                                        />
+                                    </td>
+                                </tr>
+
+                                {/* Subcategorías desplegadas */}
+                                {expandedCategories.includes(categoria.id) && categoria.subCategorias.map((subcategoria) => (
+                                    <tr key={subcategoria.id}>
+                                        <td className="mi-clase-td-3">-{subcategoria.denominacion}</td>
+                                        <td className="mi-clase-td-4">
+                                            <Actions
+                                                id={subcategoria.id}
+                                                actions={["editar"]}
+                                                onEditar={() => onEditSubcategory(categoria.denominacion, subcategoria.denominacion)}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </React.Fragment>
+                        ))}
+                    </tbody>
+                </table>
+            )}
         </div>
     );
 };
