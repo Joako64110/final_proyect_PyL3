@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import CustomTable from "../../ui/featureds/featuredTables/customTables";
+import CustomTable from "../../ui/featureds/Tables/customTables";
 import TopBar from "../../ui/topBar/topBar";
 import Actions from "../../ui/Actions/actions";
 import CrearArticulo from "../../modals/CrearArticulo/CrearArticulo";

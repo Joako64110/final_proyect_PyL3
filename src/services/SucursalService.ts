@@ -36,7 +36,7 @@ class SucursalesService extends BackendClient<ISucursal> {
 
   // Método para actualizar una sucursal existente
   async updateSucursal(id: number, data: IUpdateSucursal): Promise<ISucursal> {
-    const response = await fetch(`${this.baseUrl}/${id}`, {
+    const response = await fetch(`${this.baseUrl}/update/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import SucursalesGrid from '../../ui/featureds/featuredSucursalesGrid/SucursalesGrid';
+import SucursalesGrid from '../../ui/featureds/SucursalesGrid/SucursalesGrid';
 import TopBar from '../../ui/topBar/topBar';
 import { CrearSucursal } from '../../modals/CrearSucursal/CrearSucursal';
 import '../screen.css';
 import SideBar from '../../ui/SideBarr/SideBarHome/SideBar';
 import empresaService from '../../../services/EmpresaService';
 import { ISucursal } from '../../../types/ISucursal';
+import { EditarSucursal } from '../../modals/EditarSucursal/EditarSucursal';
 
 export const Home: React.FC = () => {
     const [empresaId, setEmpresaId] = useState<number | null>(null);

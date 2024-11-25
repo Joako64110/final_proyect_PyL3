@@ -35,8 +35,6 @@ const CrearAlergeno: React.FC<PopupFormProps> = ({ onClose, onCreate, initialVal
                     value={alergenoName}
                     onChange={(e) => setAlergenoName(e.target.value)}
                 />
-                <button className="confirm">Ingresar una Imagen</button>
-                <br />
                 <button onClick={handleSubmit} className="confirm">Confirmar</button>
                 <button onClick={onClose} className="cancel">Cancelar</button>
             </div>

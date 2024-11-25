@@ -5,6 +5,8 @@ import { getProvinciasByPais } from "../../../services/ProvinciaService";
 import { getLocalidadesByProvincia } from "../../../services/LocalidadService";
 import sucursalesService from "../../../services/SucursalService";
 import { ISucursal } from "../../../types/ISucursal";
+import "./EditarSucursal.css"
+
 
 interface EditarSucursalProps {
     sucursal: ISucursal; // Asegúrate de que el tipo sea ISucursal
@@ -15,34 +17,37 @@ interface EditarSucursalProps {
 export const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursal, onClose, onUpdateSucursal }) => {
     const [sucursalData, setSucursalData] = useState<IUpdateSucursal>({
         id: sucursal.id,
-        nombre: "",
-        horarioApertura: "",
-        horarioCierre: "",
+        nombre: sucursal.nombre,
+        horarioApertura: sucursal.horarioApertura,
+        horarioCierre: sucursal.horarioCierre,
         domicilio: {
-            id: 0,
-            calle: "",
-            numero: 0,
-            cp: 0,
-            piso: 0,
-            nroDpto: 0,
-            idLocalidad: 0,
+            id: sucursal.domicilio.id,
+            calle: sucursal.domicilio.calle,
+            numero: sucursal.domicilio.numero,
+            cp: sucursal.domicilio.cp,
+            piso: sucursal.domicilio.piso || 0,
+            nroDpto: sucursal.domicilio.nroDpto || 0,
+            idLocalidad: sucursal.domicilio.localidad.id,
         },
-        idEmpresa: 0,
-        logo: null,
-        categorias: [], // Inicializa correctamente el arreglo de categorías
-        esCasaMatriz: false,
-        eliminado: false,
-        latitud: 0,
-        longitud: 0,
+        idEmpresa: sucursal.empresa.id,
+        logo: sucursal.logo || null,
+        categorias: sucursal.categorias || [],
+        esCasaMatriz: sucursal.esCasaMatriz,
+        eliminado: sucursal.eliminado,
+        latitud: sucursal.latitud || 0,
+        longitud: sucursal.longitud || 0,
     });
 
     const [paises, setPaises] = useState<any[]>([]);
     const [provincias, setProvincias] = useState<any[]>([]);
     const [localidades, setLocalidades] = useState<any[]>([]);
-    const [selectedPais, setSelectedPais] = useState<number | null>(null);
-    const [selectedProvincia, setSelectedProvincia] = useState<number | null>(null);
+    const [selectedPais, setSelectedPais] = useState<number | null>(
+        sucursal.domicilio.localidad.provincia.pais.id
+    );
+    const [selectedProvincia, setSelectedProvincia] = useState<number | null>(
+        sucursal.domicilio.localidad.provincia.id
+    );
 
-    // Cargar los países al montar el componente
     useEffect(() => {
         const fetchPaises = async () => {
             try {
@@ -55,73 +60,74 @@ export const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursal, onClos
         fetchPaises();
     }, []);
 
-    // Cargar provincias cuando se selecciona un país
     useEffect(() => {
-        const fetchProvincias = async () => {
-            if (selectedPais !== null) {
+        if (selectedPais !== null) {
+            const fetchProvincias = async () => {
                 try {
-                    const provinciasResponse = await getProvinciasByPais(selectedPais);
-                    setProvincias(provinciasResponse);
-                    setSelectedProvincia(null);
+                    const provincias = await getProvinciasByPais(selectedPais);
+                    setProvincias(provincias);
                 } catch (error) {
                     console.error("Error al cargar provincias:", error);
-                    setProvincias([]);
                 }
-            }
-        };
-
-        fetchProvincias();
+            };
+            fetchProvincias();
+        }
     }, [selectedPais]);
 
-    // Cargar localidades cuando se selecciona una provincia
     useEffect(() => {
-        const fetchLocalidades = async () => {
-            if (selectedProvincia !== null) {
+        if (selectedProvincia !== null) {
+            const fetchLocalidades = async () => {
                 try {
                     const localidades = await getLocalidadesByProvincia(selectedProvincia);
                     setLocalidades(localidades);
                 } catch (error) {
                     console.error("Error al cargar localidades:", error);
                 }
-            }
-        };
-
-        fetchLocalidades();
+            };
+            fetchLocalidades();
+        }
     }, [selectedProvincia]);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
-        if (name in sucursalData.domicilio) {
-            setSucursalData({
-                ...sucursalData,
-                domicilio: { ...sucursalData.domicilio, [name]: value },
-            });
-        } else {
-            setSucursalData({ ...sucursalData, [name]: value });
-        }
+        setSucursalData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const handleDomicilioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setSucursalData((prev) => ({
+            ...prev,
+            domicilio: {
+                ...prev.domicilio,
+                [name]: name === "numero" || name === "cp" ? parseInt(value) : value,
+            },
+        }));
     };
 
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = event.target;
-        if (name === "localidad") {
-            setSucursalData({
-                ...sucursalData,
-                domicilio: { ...sucursalData.domicilio, idLocalidad: parseInt(value) },
-            });
-        }
-    };
-
-    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setSucursalData((prevState) => ({
-                    ...prevState,
-                    logo: reader.result as string,
-                }));
-            };
-            reader.readAsDataURL(file);
+        if (name === "pais") {
+            setSelectedPais(parseInt(value));
+            setSucursalData((prev) => ({
+                ...prev,
+                domicilio: {
+                    ...prev.domicilio,
+                    idLocalidad: 0, // Reiniciar localidad
+                },
+            }));
+        } else if (name === "provincia") {
+            setSelectedProvincia(parseInt(value));
+        } else if (name === "localidad") {
+            setSucursalData((prev) => ({
+                ...prev,
+                domicilio: {
+                    ...prev.domicilio,
+                    idLocalidad: parseInt(value),
+                },
+            }));
         }
     };
 
@@ -136,12 +142,12 @@ export const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursal, onClos
     };
 
     return (
-        <div className="modals">
-            <div className="card-sucursal">
-                <div className="card-body">
+        <div className="modals-ed">
+            <div className="card-sucursal-ed">
+                <div className="card-body-ed">
                     <h5 className="card-title">Editar Sucursal</h5>
-                    <div className="container-sucursal">
-                        <div className="grid-container">
+                    <div className="container-sucursal-ed">
+                        <div className="grid-container-ed">
                             <input
                                 name="nombre"
                                 placeholder="Nombre de la sucursal"
@@ -165,8 +171,8 @@ export const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursal, onClos
                             />
                             <select
                                 name="pais"
-                                onChange={(e) => setSelectedPais(parseInt(e.target.value))}
                                 value={selectedPais ?? ""}
+                                onChange={handleSelectChange}
                                 className="form-control"
                             >
                                 <option value="">Seleccionar país</option>
@@ -176,22 +182,62 @@ export const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursal, onClos
                                     </option>
                                 ))}
                             </select>
-                            {/* Aquí agregarás el resto del formulario de provincias, localidades, y más */}
+                            <select
+                                name="provincia"
+                                value={selectedProvincia ?? ""}
+                                onChange={handleSelectChange}
+                                className="form-control"
+                            >
+                                <option value="">Seleccionar provincia</option>
+                                {provincias.map((provincia) => (
+                                    <option key={provincia.id} value={provincia.id}>
+                                        {provincia.nombre}
+                                    </option>
+                                ))}
+                            </select>
+                            <select
+                                name="localidad"
+                                value={sucursalData.domicilio.idLocalidad ?? ""}
+                                onChange={handleSelectChange}
+                                className="form-control"
+                            >
+                                <option value="">Seleccionar localidad</option>
+                                {localidades.map((localidad) => (
+                                    <option key={localidad.id} value={localidad.id}>
+                                        {localidad.nombre}
+                                    </option>
+                                ))}
+                            </select>
+                            <input
+                                name="calle"
+                                placeholder="Calle"
+                                value={sucursalData.domicilio.calle}
+                                onChange={handleDomicilioChange}
+                                className="form-control"
+                            />
+                            <input
+                                name="numero"
+                                placeholder="Número de la calle"
+                                type="number"
+                                value={sucursalData.domicilio.numero}
+                                onChange={handleDomicilioChange}
+                                className="form-control"
+                            />
+                            <input
+                                name="cp"
+                                placeholder="Código Postal"
+                                type="number"
+                                value={sucursalData.domicilio.cp}
+                                onChange={handleDomicilioChange}
+                                className="form-control"
+                            />
                         </div>
                     </div>
                     <div className="buttons-CS">
-                        <button
-                            type="button"
-                            className="btn btn-dark"
-                            onClick={handleConfirm}
-                        >
+                        <button type="button" className="btn btn-dark" onClick={handleConfirm}>
                             Confirmar
                         </button>
-                        <button
-                            type="button"
-                            className="btn btn-danger"
-                            onClick={onClose}
-                        >
+                        <button type="button" className="btn btn-danger" onClick={onClose}>
                             Cancelar
                         </button>
                     </div>
