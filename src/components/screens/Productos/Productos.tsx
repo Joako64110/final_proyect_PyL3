@@ -34,7 +34,7 @@ export const Productos = () => {
                 console.error("No se encontró el idSucursal en el localStorage.");
                 return;
             }
-
+    
             try {
                 const articulos = await fetchArticulosBySucursal(parseInt(sucursalId, 10));
                 if (articulos.length === 0) {
@@ -46,12 +46,12 @@ export const Productos = () => {
                     Precio: articulo.precioVenta,
                     Descripción: articulo.descripcion,
                     Categoría: articulo.categoria?.denominacion || "Sin categoría",
-                    Habilitado: articulo.habilitado ? "Sí" : "No",  // Convertimos a string aquí
+                    Habilitado: articulo.habilitado ? "Sí" : "No",
                     Acciones: (
                         <Actions
                             id={articulo.id}
                             actions={["ver", "editar", "eliminar"]}
-                            onVer={() => handleViewProduct(articulo)} // Aquí llamamos la función handleViewProduct
+                            onVer={() => handleViewProduct(articulo)} 
                             onEditar={() => handleEditProduct(articulo)}
                             onEliminar={() => handleDeleteProduct(articulo.id)}
                         />
@@ -62,7 +62,7 @@ export const Productos = () => {
                 console.error("Error al obtener los artículos:", error);
             }
         };
-
+    
         fetchArticulos();
     }, []);
 
@@ -104,6 +104,68 @@ export const Productos = () => {
         setIsProductViewOpen(false); // Cerramos el modal
     };
 
+    const fetchArticulos = async () => {
+        const sucursalId = localStorage.getItem("idSucursal");
+        if (!sucursalId) {
+            console.error("No se encontró el idSucursal en el localStorage.");
+            return;
+        }
+
+        try {
+            const articulos = await fetchArticulosBySucursal(parseInt(sucursalId, 10));
+            if (articulos.length === 0) {
+                console.log("Aún no hay artículos en esta sucursal.");
+            }
+            const formattedData = articulos.map((articulo: any) => ({
+                id: articulo.id,
+                Nombre: articulo.denominacion,
+                Precio: articulo.precioVenta,
+                Descripción: articulo.descripcion,
+                Categoría: articulo.categoria?.denominacion || "Sin categoría",
+                Habilitado: articulo.habilitado ? "Sí" : "No",
+                Acciones: (
+                    <Actions
+                        id={articulo.id}
+                        actions={["ver", "editar", "eliminar"]}
+                        onVer={() => handleViewProduct(articulo)} 
+                        onEditar={() => handleEditProduct(articulo)}
+                        onEliminar={() => handleDeleteProduct(articulo.id)}
+                    />
+                ),
+            }));
+            setData(formattedData);
+        } catch (error) {
+            console.error("Error al obtener los artículos:", error);
+        }
+    };
+
+    fetchArticulos();
+
+    const handleUpdateProduct = async (updatedProduct: any) => {
+        try {
+            if (!updatedProduct.id) {
+                throw new Error("El producto actualizado no contiene un ID.");
+            }
+    
+            // Actualizamos el producto en la base de datos
+            const updatedArticulo = await updateArticulo(updatedProduct.id, updatedProduct);
+    
+            // Verificamos que la API haya respondido correctamente
+            console.log("Producto actualizado desde la API:", updatedArticulo);
+    
+            // Llamamos a fetchArticulos para obtener los productos actualizados desde la API
+            await fetchArticulos(); // Cambia fetchProducts() por fetchArticulos()
+    
+            // Cierra el modal después de la actualización
+            closeArticuloModal();
+    
+            // Registro de éxito en la consola
+            console.log("El artículo ha sido actualizado correctamente:", updatedArticulo);
+    
+        } catch (error) {
+        }
+    };
+    
     const addNewProductToList = (newProduct: any) => {
         setData((prevData) => [
             ...prevData,
@@ -113,7 +175,7 @@ export const Productos = () => {
                 Precio: newProduct.precioVenta.toString(),
                 Descripción: newProduct.descripcion,
                 Categoría: newProduct.categoria?.denominacion || "Sin categoría",
-                Habilitado: newProduct.habilitado ? "Sí" : "No", // Aquí también convertimos a string
+                Habilitado: newProduct.habilitado ? "Sí" : "No",
                 Acciones: (
                     <Actions
                         id={newProduct.id}
@@ -125,6 +187,7 @@ export const Productos = () => {
                 ),
             },
         ]);
+        closeArticuloModal(); // Cierra el modal después de agregar el producto
     };
 
     const handleEditProduct = (product: any) => {
@@ -132,21 +195,7 @@ export const Productos = () => {
         setIsArticuloOpen(true);
     };
 
-    const handleUpdateProduct = async (id: number, updatedProduct: any) => {
-        try {
-            const updatedArticulo = await updateArticulo(id, updatedProduct);
-            const sucursalId = localStorage.getItem("idSucursal");
-            if (sucursalId) {
-                const articulos = await fetchArticulosBySucursal(parseInt(sucursalId, 10));
-                setData(articulos);
-            }
-        } catch (error) {
-            console.error("Error al actualizar el artículo:", error);
-        }
-    };
-
     const handleDeleteProduct = async (id: number) => {
-        // Usamos SweetAlert2 para mostrar el modal de confirmación
         const result = await Swal.fire({
             title: "¿Estás seguro de eliminar este producto?",
             text: "¡Esta acción no se puede deshacer!",
@@ -157,15 +206,15 @@ export const Productos = () => {
             confirmButtonText: "Eliminar",
             cancelButtonText: "Cancelar",
         });
-
+    
         if (result.isConfirmed) {
             try {
                 await deleteArticulo(id);
                 setData((prevData) => prevData.filter((producto) => producto.id !== id));
-                Swal.fire("Eliminado", "El producto ha sido eliminado.", "success");  // Notificación de éxito
+                Swal.fire("Eliminado", "El producto ha sido eliminado.", "success");
             } catch (error) {
                 console.error("Error al eliminar el artículo:", error);
-                Swal.fire("Error", "Hubo un problema al eliminar el producto.", "error");  // Notificación de error
+                Swal.fire("Error", "Hubo un problema al eliminar el producto.", "error");
             }
         }
     };
@@ -192,10 +241,15 @@ export const Productos = () => {
                     <h3 style={{ textAlign: "center", marginTop: "20px" }}>Aún no hay artículos</h3>
                 )}
                 {isArticuloOpen && (
-                    <CrearArticulo onClose={closeArticuloModal} onProductCreated={addNewProductToList} />
+                    <CrearArticulo
+                        onClose={closeArticuloModal}
+                        onProductCreated={addNewProductToList}
+                        title={editingProduct ? "Editar Artículo" : "Crear Artículo"}
+                        editingProduct={editingProduct}
+                        onUpdateProduct={handleUpdateProduct} // Pasamos la función de actualización aquí
+                    />
                 )}
-
-                {isProductViewOpen && selectedProduct && (
+                                {isProductViewOpen && selectedProduct && (
                     <MostrarProducto producto={selectedProduct} onClose={closeProductViewModal} />
                 )}
             </div>

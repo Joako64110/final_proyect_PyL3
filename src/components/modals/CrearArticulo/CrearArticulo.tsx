@@ -5,16 +5,19 @@ import { IAlergenos } from "../../../types/IAlergenos";
 import categoriaService from "../../../services/CategoriaService";
 import { AlergenoService } from "../../../services/AlergenoService";
 import { ImageService } from "../../../services/ImageService";
-import { ICreateProducto } from "../../../types/dtos/productos/ICreateProducto";
-import { createArticulo } from "../../../services/ProductoService";
+import { createArticulo, updateArticulo } from "../../../services/ProductoService";
 import Swal from "sweetalert2";
+import { IUpdateProducto } from "../../../types/dtos/productos/IUpdateProducto";
 
 interface CrearArticuloProps {
     onClose: () => void;
-    onProductCreated: (newProduct: any) => void; // Nueva prop
+    onProductCreated: (newProduct: any) => void; 
+    title: string; 
+    editingProduct?: any; 
+    onUpdateProduct: (updatedProduct: any) => void; 
 }
 
-const CrearArticulo: React.FC<CrearArticuloProps> = ({ onClose, onProductCreated }) => {
+const CrearArticulo: React.FC<CrearArticuloProps> = ({ onClose, onProductCreated, title, editingProduct, onUpdateProduct   }) => {
     const [denominacion, setDenominacion] = useState("");
     const [categoria, setCategoria] = useState("");
     const [alergenos, setAlergenos] = useState("");
@@ -33,6 +36,18 @@ const CrearArticulo: React.FC<CrearArticuloProps> = ({ onClose, onProductCreated
             setImagen(e.target.files[0]);
         }
     };
+
+    useEffect(() => {
+        if (editingProduct) {
+            setDenominacion(editingProduct.denominacion || "");
+            setCategoria(editingProduct.categoria?.id || "");
+            setAlergenos(editingProduct.alergenos?.map((a: any) => a.id.toString()) || []);
+            setPrecioVenta(editingProduct.precioVenta?.toString() || "");
+            setCodigo(editingProduct.codigo || "");
+            setHabilitado(editingProduct.habilitado || false);
+            setDescripcion(editingProduct.descripcion || "");
+        }
+    }, [editingProduct]);
 
     useEffect(() => {
         const idSucursal = localStorage.getItem("idSucursal");
@@ -67,65 +82,88 @@ const CrearArticulo: React.FC<CrearArticuloProps> = ({ onClose, onProductCreated
     const handleConfirm = async () => {
         try {
             Swal.fire({
-                title: "Creando artículo...",
+                title: title.includes("Editar") ? "Actualizando artículo..." : "Creando artículo...",
                 text: "Estamos procesando tu solicitud.",
                 icon: "info",
                 allowOutsideClick: false,
                 didOpen: () => {
                     Swal.showLoading();
-                }
+                },
             });
 
             let imagenSubida = null;
             if (imagen) {
-                const imageService = new ImageService("http://190.221.207.224:8090");
                 imagenSubida = await imageService.uploadImage(imagen);
             }
 
+            // Formato de imágenes para la API
             const imagenesConExtension = imagenSubida
-                ? [{
-                    name: imagenSubida.name,
-                    url: `${imagenSubida.url}.jpg`
-                }]
-                : [];
+                ? [
+                    {
+                        id: 0, // ID temporal, la API puede manejarlo
+                        eliminado: false,
+                        name: imagenSubida.name,
+                        url: imagenSubida.url,
+                    },
+                ]
+                : editingProduct?.imagenes || []; // Usar las imágenes existentes en edición
 
-            const formData = {
+            // Preparar el objeto para la API con el orden correcto de los campos
+            const formData: IUpdateProducto = {
+                id: editingProduct?.id || 0,
+                eliminado: editingProduct?.eliminado || false,
                 denominacion,
                 precioVenta: parseFloat(precioVenta),
-                descripcion,
+                descripcion, // Sin asignar `null`
                 habilitado,
                 codigo,
-                imagenes: imagenesConExtension,
                 idCategoria: Number(categoria),
-                idAlergenos: alergenos ? [Number(alergenos)] : [], // Si no hay alérgenos seleccionados, enviar un arreglo vacío
+                idAlergenos: alergenos ? [Number(alergenos)] : [], // Asegurarse de mapear los IDs
+                imagenes: imagenesConExtension,  // Asegurarse de incluir el campo imagenes
             };
 
-            const newProduct = await createArticulo(formData);
+            console.log("Datos a enviar al servidor:", formData);
+
+            let updatedProduct;
+
+            if (editingProduct) {
+                // Editar artículo existente
+                updatedProduct = await updateArticulo(editingProduct.id, formData);
+                onUpdateProduct(updatedProduct); // Llamada al callback de actualización
+            } else {
+                // Crear nuevo artículo
+                updatedProduct = await createArticulo(formData);
+            }
 
             Swal.fire({
                 title: "¡Éxito!",
-                text: "El artículo se ha creado correctamente.",
+                text: title.includes("Editar")
+                    ? "El artículo se ha actualizado correctamente."
+                    : "El artículo se ha creado correctamente.",
                 icon: "success",
                 confirmButtonText: "OK",
             });
 
-            onProductCreated(newProduct); // Llamada a la función prop
-
+            onProductCreated(updatedProduct);
             onClose();
         } catch (error) {
             Swal.fire({
                 title: "Error",
-                text: "Hubo un problema al crear el artículo. Por favor, inténtalo de nuevo.",
+                text: title.includes("Editar")
+                    ? "Hubo un problema al actualizar el artículo. Por favor, inténtalo de nuevo."
+                    : "Hubo un problema al crear el artículo. Por favor, inténtalo de nuevo.",
                 icon: "error",
                 confirmButtonText: "Cerrar",
             });
         }
     };
+    
+    
 
     return (
         <div className="modals-Art">
             <div className="card-Art">
-                <h5 className="card-title-art">Crear un artículo</h5>
+                <h5 className="card-title-art">{title}</h5>
                 <div className="card-body-Art">
                     <div className="containerPrincipal-art">
                         <div className="contenido1">
@@ -208,9 +246,12 @@ const CrearArticulo: React.FC<CrearArticuloProps> = ({ onClose, onProductCreated
                                 />
                             </div>
 
-                            <div className="cardContent-2">
-                                <input type="file" onChange={handleImageUpload} />
-                            </div>
+                            {/* Solo mostrar el campo de imagen cuando no se está editando */}
+                            {!editingProduct && (
+                                <div className="cardContent-2">
+                                    <input type="file" onChange={handleImageUpload} />
+                                </div>
+                            )}
                         </div>
                     </div>
 
