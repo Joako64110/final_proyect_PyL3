@@ -4,13 +4,12 @@ import './CrearAlergeno.css';
 interface PopupFormProps {
     onClose: () => void;
     onCreate: (alergenoName: string) => void;
-    initialValue?: string; // Propiedad opcional para manejar valores iniciales
+    initialValue?: string;
 }
 
 const CrearAlergeno: React.FC<PopupFormProps> = ({ onClose, onCreate, initialValue = '' }) => {
     const [alergenoName, setAlergenoName] = useState(initialValue);
 
-    // Actualiza el estado si el valor inicial cambia
     useEffect(() => {
         setAlergenoName(initialValue);
     }, [initialValue]);
@@ -20,7 +19,7 @@ const CrearAlergeno: React.FC<PopupFormProps> = ({ onClose, onCreate, initialVal
             alert('El nombre del alérgeno no puede estar vacío.');
             return;
         }
-        onCreate(alergenoName); // Llama a la función onCreate pasando el nombre del alérgeno
+        onCreate(alergenoName); 
         onClose();
     };
 

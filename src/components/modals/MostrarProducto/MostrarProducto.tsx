@@ -1,5 +1,5 @@
 import React from 'react';
-import { IProductos } from "../../../types/IProductos";  // Asegúrate de tener la interfaz para Producto
+import { IProductos } from "../../../types/IProductos"; 
 import './MostrarProducto.css';
 
 interface MostrarProductoProps {
@@ -8,10 +8,8 @@ interface MostrarProductoProps {
 }
 
 export const MostrarProducto: React.FC<MostrarProductoProps> = ({ producto, onClose }) => {
-    // Desestructuramos el objeto producto, con un valor por defecto vacío en caso de que no exista
     const { denominacion, descripcion, precioVenta, categoria, imagenes, habilitado } = producto || {};
 
-    // Verificamos que la propiedad imagenes exista y tenga al menos un elemento
     const imagenUrl = imagenes && imagenes.length > 0 ? imagenes[0]?.url : ''; 
 
     return (
@@ -45,7 +43,7 @@ export const MostrarProducto: React.FC<MostrarProductoProps> = ({ producto, onCl
                             type="button"
                             className="btn btn-dark"
                             style={{ width: "7rem" }}
-                            onClick={onClose} // Cierra el modal al hacer clic en el botón
+                            onClick={onClose}
                         >
                             Cerrar
                         </button>

@@ -18,9 +18,8 @@ const Categoria = () => {
     const [isCategoriaPadreOpen, setIsCategoriaPadreOpen] = useState(false);
     const [sucursalNombre, setSucursalNombre] = useState<string>("");
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [categoriaAEditar, setCategoriaAEditar] = useState<ICategorias | null>(null); // Para editar categoría
-    const [isSubcategoriaOpen, setIsSubcategoriaOpen] = useState(false); // Estado para la subcategoría
-
+    const [categoriaAEditar, setCategoriaAEditar] = useState<ICategorias | null>(null);
+    const [isSubcategoriaOpen, setIsSubcategoriaOpen] = useState(false);
 
     const idSucursal = localStorage.getItem('idSucursal');
 
@@ -80,14 +79,13 @@ const Categoria = () => {
         const newCategoria: ICreateCategoria = {
             denominacion: categoryName,
             idEmpresa: Number(idEmpresa),
-            idCategoriaPadre: idCategoriaPadre, // Se usa el idCategoriaPadre proporcionado
+            idCategoriaPadre: idCategoriaPadre,
         };
     
         try {
             const createdCategory = await CategoriaService.create(newCategoria);    
             setCategorias((prevCategorias) => {
                 if (idCategoriaPadre) {
-                    // Si es una subcategoría, encuentra la categoría padre y agrega la subcategoría
                     return prevCategorias.map((categoria) =>
                         categoria.id === idCategoriaPadre
                             ? {
@@ -97,7 +95,6 @@ const Categoria = () => {
                             : categoria
                     );
                 } else {
-                    // Si es una categoría padre, simplemente agréguela
                     return [...prevCategorias, createdCategory];
                 }
             });
@@ -106,8 +103,6 @@ const Categoria = () => {
             setError('Hubo un error al crear la categoría. Por favor, intenta de nuevo.');
         }
     };
-    
-    
 
     const handleEditCategory = async (categoryName: string) => {
         if (!categoriaAEditar) {
@@ -122,14 +117,13 @@ const Categoria = () => {
             return;
         }
     
-        // Asegúrate de que idSucursales contiene solo los IDs de las sucursales
         const idSucursales = categoriaAEditar.sucursales ? categoriaAEditar.sucursales.map(sucursal => sucursal.id) : [];
     
         const updatedCategoria: IUpdateCategoria = {
             id: categoriaAEditar.id,
             denominacion: categoryName,
             eliminado: categoriaAEditar.eliminado,
-            idSucursales: idSucursales, // Aquí aseguramos que se mantengan los ID de las sucursales
+            idSucursales: idSucursales,
             idCategoriaPadre: null,
         };
         
@@ -146,63 +140,51 @@ const Categoria = () => {
         }
     };
 
-    // Abre el modal para crear una nueva categoría
     const openCreateModal = () => {
-        setCategoriaAEditar(null); // Restablece a null cuando se quiere crear
-        setIsCategoriaPadreOpen(true); // Abre el modal en modo creación
+        setCategoriaAEditar(null);
+        setIsCategoriaPadreOpen(true);
     };
 
-
-    // Abre el modal para editar una categoría
     const openEditModal = (categoria: ICategorias) => {
-        setCategoriaAEditar(categoria); // Establece la categoría a editar
-        setIsCategoriaPadreOpen(true); // Abre el modal en modo edición
+        setCategoriaAEditar(categoria);
+        setIsCategoriaPadreOpen(true);
     };
 
-    // Abre el modal para crear una subcategoría
     const openSubcategoriaModal = (categoriaPadre: ICategorias) => {
-        setCategoriaAEditar(categoriaPadre);  // Establece la categoría a editar (padre)
-        setIsSubcategoriaOpen(true); // Abre el modal en modo subcategoría
+        setCategoriaAEditar(categoriaPadre);
+        setIsSubcategoriaOpen(true);
     };
 
-    // Y cuando crees la subcategoría, pasa el idCategoriaPadre
     const handleCreateSubcategoria = (subcategoryName: string) => {
         if (!categoriaAEditar) {
             console.error("No se ha seleccionado una categoría padre");
             return;
         }
     
-        handleCreateCategory(subcategoryName, categoriaAEditar.id);  // Pasa el idCategoriaPadre
-        setIsSubcategoriaOpen(false); // Cierra el modal después de crearla
+        handleCreateCategory(subcategoryName, categoriaAEditar.id);
+        setIsSubcategoriaOpen(false);
     };
 
     const handleDeleteCategory = async (id: number) => {
         try {
-            // Usamos SweetAlert2 para mostrar el modal de confirmación
             const result = await Swal.fire({
                 title: "¿Estás seguro de eliminar esta categoría?",
                 text: "¡Esta acción no se puede deshacer!",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonColor: "#d33", // Color del botón de confirmación
-                cancelButtonColor: "#3085d6", // Color del botón de cancelación
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
                 confirmButtonText: "Eliminar",
                 cancelButtonText: "Cancelar",
             });
     
             if (result.isConfirmed) {
-                // Llama a la función delete para eliminar la categoría usando su id
                 await CategoriaService.delete(id);
-    
-                // Actualiza el estado de las categorías, eliminando la categoría
                 setCategorias(prevCategorias => prevCategorias.filter(categoria => categoria.id !== id));
-    
-                // Notificación de éxito
                 Swal.fire("Eliminado", "La categoría ha sido eliminada.", "success");
             }
         } catch (error) {
             console.error("Error al eliminar la categoría:", error);
-            // Notificación de error si algo sale mal
             Swal.fire("Error", "Hubo un problema al eliminar la categoría.", "error");
         }
     };
@@ -227,20 +209,18 @@ const Categoria = () => {
                 />
             </div>
 
-            {/* Modal para crear o editar categoría */}
             {isCategoriaPadreOpen && (
                 <CrearCategoriaPadre
-                    initialValue={categoriaAEditar?.denominacion || ''} // Pasa el valor de la categoría a editar
+                    initialValue={categoriaAEditar?.denominacion || ''}
                     onClose={() => setIsCategoriaPadreOpen(false)}
-                    onSubmit={categoriaAEditar ? handleEditCategory : handleCreateCategory} // Verifica si se está editando o creando
+                    onSubmit={categoriaAEditar ? handleEditCategory : handleCreateCategory}
                 />
             )}
 
-            {/* Modal para crear subcategoría */}
             {isSubcategoriaOpen && (
                 <CrearSubcategoria
                     onClose={() => setIsSubcategoriaOpen(false)}
-                    onSubmit={handleCreateSubcategoria} // Llama a la función para crear la subcategoría
+                    onSubmit={handleCreateSubcategoria}
                 />
             )}
         </div>

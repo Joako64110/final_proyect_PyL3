@@ -1,10 +1,10 @@
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import React, { useEffect, useState } from "react";
-import { ICreateSucursal } from "../../../types/dtos/sucursal/ICreateSucursal"; // Importa la interfaz ICreateSucursal
-import { getAllPais } from "../../../services/PaisService"; // Servicio para obtener países
-import { getProvinciasByPais } from "../../../services/ProvinciaService"; // Servicio para obtener provincias
-import { getLocalidadesByProvincia } from "../../../services/LocalidadService"; // Servicio para obtener localidades
+import { ICreateSucursal } from "../../../types/dtos/sucursal/ICreateSucursal"; 
+import { getAllPais } from "../../../services/PaisService";
+import { getProvinciasByPais } from "../../../services/ProvinciaService"; 
+import { getLocalidadesByProvincia } from "../../../services/LocalidadService";
 import './CrearSucursal.css';
 import sucursalesService from "../../../services/SucursalService";
 import { ImageService } from "../../../services/ImageService";
@@ -34,7 +34,7 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
             idLocalidad: 0,
         },
         idEmpresa: idEmpresa, 
-        logo: null, // Aquí guardamos la imagen (logo)
+        logo: null, 
     });
 
     const [paises, setPaises] = useState<any[]>([]);
@@ -42,11 +42,10 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
     const [localidades, setLocalidades] = useState<any[]>([]);
     const [selectedPais, setSelectedPais] = useState<number | null>(null);
     const [selectedProvincia, setSelectedProvincia] = useState<number | null>(null);
-    const [logoFile, setLogoFile] = useState<File | null>(null); // Para manejar el archivo del logo
+    const [logoFile, setLogoFile] = useState<File | null>(null);
     
 
 
-    // Cargar los países al montar el componente
     useEffect(() => {
         const fetchPaises = async () => {
             try {
@@ -59,7 +58,6 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
         fetchPaises();
     }, []);
 
-    // Cargar provincias cuando se selecciona un país
     useEffect(() => {
         const fetchProvincias = async () => {
             if (selectedPais !== null) {
@@ -77,7 +75,6 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
         fetchProvincias();
     }, [selectedPais]);
 
-    // Cargar localidades cuando se selecciona una provincia
     useEffect(() => {
         const fetchLocalidades = async () => {
             if (selectedProvincia !== null) {
@@ -93,20 +90,17 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
         fetchLocalidades();
     }, [selectedProvincia]);
 
-    // Manejador para inputs (como nombre, horario, etc.)
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
     
-        // Si el campo es 'calle', lo tratamos como texto
         if (name === "calle") {
             setSucursalData({
                 ...sucursalData,
                 domicilio: { ...sucursalData.domicilio, calle: value },
             });
         } else if (name in sucursalData.domicilio) {
-            // Para otros campos numéricos, permitimos que '0' sea un valor válido
             const updatedValue = ["numero", "cp", "piso", "nroDpto"].includes(name)
-                ? (value === "" ? "" : parseInt(value)) // Permitimos '0' y otros números
+                ? (value === "" ? "" : parseInt(value)) 
                 : value;
     
             setSucursalData({
@@ -120,51 +114,45 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
         }
     };
 
-    // Manejador para selects (como país, provincia, localidad)
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = event.target;
         if (name === "localidad") {
             setSucursalData({
                 ...sucursalData,
-                domicilio: { ...sucursalData.domicilio, idLocalidad: parseInt(value) }, // Asignamos el idLocalidad
+                domicilio: { ...sucursalData.domicilio, idLocalidad: parseInt(value) },
             });
         } else {
             setSucursalData({ ...sucursalData, [name]: value });
         }
     };
 
-    // Manejador para la imagen (logo)
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
-          setLogoFile(file); // Guarda el archivo seleccionado
+            setLogoFile(file);
         }
     };
 
     const handleConfirm = async () => {
         try {
-            // Mostrar el mensaje de "Subiendo Sucursal"
             Swal.fire({
                 title: 'Subiendo Sucursal',
                 text: 'Por favor espera...',
-                allowOutsideClick: false, // Evita que el usuario cierre la alerta accidentalmente
+                allowOutsideClick: false,
                 didOpen: () => {
-                    Swal.showLoading(); // Muestra el indicador de carga
+                    Swal.showLoading(); 
                 },
             });
 
             let logoUrl = null;
     
-            // Crear una instancia del servicio de imágenes con la URL base
             const imageService = new ImageService(import.meta.env.VITE_URL_API);
     
-            // Subir la imagen si existe un archivo seleccionado
             if (logoFile) {
-                const uploadedImage = await imageService.uploadImage(logoFile); // Llama al método correctamente
-                logoUrl = uploadedImage.url; // Obtén la URL de la imagen subida
+                const uploadedImage = await imageService.uploadImage(logoFile); 
+                logoUrl = uploadedImage.url; 
             }
     
-            // Crear la sucursal con la URL de la imagen, si está disponible
             const newSucursalData = {
                 ...sucursalData,
                 logo: logoUrl,
@@ -172,7 +160,6 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
     
             await sucursalesService.createSucursal(newSucursalData);
 
-            // Cerrar el mensaje de carga y mostrar éxito
             Swal.fire({
                 icon: 'success',
                 title: 'Sucursal creada',
@@ -180,11 +167,10 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
             });
 
 
-            onClose(); // Cerrar el modal
-            onAddSucursal(newSucursalData); // Callback para agregar la nueva sucursal
+            onClose(); 
+            onAddSucursal(newSucursalData); 
         } catch (error) {
             console.error("Error al crear la sucursal:", error);
-            // Mostrar un mensaje de error en caso de fallo
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -201,7 +187,6 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
                     <div className="container-sucursal">
                         <div className="grid-container">
 
-                            {/* Campos de texto */}
                             <input
                                 name="nombre"
                                 placeholder="Nombre de la sucursal"
@@ -223,7 +208,6 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
                                 onChange={handleInputChange}
                                 className="form-control"
                             />
-                            {/* Selección de País */}
                             <select
                                 name="pais"
                                 onChange={(e) => setSelectedPais(parseInt(e.target.value))}
@@ -238,7 +222,6 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
                                 ))}
                             </select>
 
-                            {/* Selección de Provincia */}
                             <select
                                 name="provincia"
                                 onChange={(e) => setSelectedProvincia(parseInt(e.target.value))}
@@ -258,7 +241,6 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
                                 )}
                             </select>
 
-                            {/* Selección de Localidad */}
                             <select
                                 name="localidad"
                                 onChange={handleSelectChange}
@@ -274,7 +256,6 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
                                 ))}
                             </select>
 
-                            {/* Campos numéricos */}
                             <div className="form-group">
                                 <input
                                     id="latitud"
@@ -304,7 +285,7 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
                                 id="calle"
                                 name="calle"
                                 placeholder="Calle"
-                                value={sucursalData.domicilio.calle || ""}  // Asegúrate de que nunca sea NaN
+                                value={sucursalData.domicilio.calle || ""} 
                                 onChange={handleInputChange}
                                 className="form-control"
                             />
@@ -371,7 +352,6 @@ export const CrearSucursal: React.FC<ModalSucursalProps> = ({ onClose, onAddSucu
                                 </label>
                             </div>
 
-                            {/* Campo de Imagen (Logo) */}
                             <div className="form-group">
                                 <input
                                     type="file"

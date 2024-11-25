@@ -24,9 +24,8 @@ export const Productos = () => {
     const [editingProduct, setEditingProduct] = useState<any>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [sucursalNombre, setSucursalNombre] = useState<string>("");
-    const [isProductViewOpen, setIsProductViewOpen] = useState(false); // No es necesario, pero se usa para manejar si el modal está abierto
-    const [selectedProduct, setSelectedProduct] = useState<any>(null); // Guardamos el producto seleccionado para pasarlo al modal
-
+    const [isProductViewOpen, setIsProductViewOpen] = useState(false); 
+    const [selectedProduct, setSelectedProduct] = useState<any>(null);
     useEffect(() => {
         const fetchArticulos = async () => {
             const sucursalId = localStorage.getItem("idSucursal");
@@ -68,16 +67,15 @@ export const Productos = () => {
 
     useEffect(() => {
         const fetchSucursalNombre = async () => {
-            const idSucursal = localStorage.getItem("idSucursal"); // Recuperar el idSucursal
+            const idSucursal = localStorage.getItem("idSucursal");
             if (!idSucursal) {
                 console.error("idSucursal no encontrado en el localStorage");
                 return;
             }
         
             try {
-                // Llama a la función getSucursalById para obtener los datos de la sucursal
                 const sucursal = await sucursalesService.getSucursalById(Number(idSucursal));
-                setSucursalNombre(sucursal.nombre); // Actualiza el estado con el nombre de la sucursal
+                setSucursalNombre(sucursal.nombre); 
             } catch (error) {
                 console.error("Error al obtener la sucursal:", error);
             }
@@ -96,12 +94,12 @@ export const Productos = () => {
     };
 
     const handleViewProduct = (product: any) => {
-        setSelectedProduct(product); // Guardamos el producto seleccionado en el estado
-        setIsProductViewOpen(true); // Abrimos el modal
+        setSelectedProduct(product); 
+        setIsProductViewOpen(true); 
     };
 
     const closeProductViewModal = () => {
-        setIsProductViewOpen(false); // Cerramos el modal
+        setIsProductViewOpen(false); 
     };
 
     const fetchArticulos = async () => {
@@ -114,7 +112,6 @@ export const Productos = () => {
         try {
             const articulos = await fetchArticulosBySucursal(parseInt(sucursalId, 10));
             if (articulos.length === 0) {
-                console.log("Aún no hay artículos en esta sucursal.");
             }
             const formattedData = articulos.map((articulo: any) => ({
                 id: articulo.id,
@@ -147,20 +144,12 @@ export const Productos = () => {
                 throw new Error("El producto actualizado no contiene un ID.");
             }
     
-            // Actualizamos el producto en la base de datos
             const updatedArticulo = await updateArticulo(updatedProduct.id, updatedProduct);
+        
+            await fetchArticulos();
     
-            // Verificamos que la API haya respondido correctamente
-            console.log("Producto actualizado desde la API:", updatedArticulo);
-    
-            // Llamamos a fetchArticulos para obtener los productos actualizados desde la API
-            await fetchArticulos(); // Cambia fetchProducts() por fetchArticulos()
-    
-            // Cierra el modal después de la actualización
             closeArticuloModal();
     
-            // Registro de éxito en la consola
-            console.log("El artículo ha sido actualizado correctamente:", updatedArticulo);
     
         } catch (error) {
         }
@@ -187,7 +176,7 @@ export const Productos = () => {
                 ),
             },
         ]);
-        closeArticuloModal(); // Cierra el modal después de agregar el producto
+        closeArticuloModal();
     };
 
     const handleEditProduct = (product: any) => {

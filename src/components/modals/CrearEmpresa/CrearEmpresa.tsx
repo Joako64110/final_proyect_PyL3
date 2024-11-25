@@ -1,23 +1,22 @@
 import { IEmpresa } from "../../../types/IEmpresa";
 import { ICreateEmpresaDto } from "../../../types/dtos/empresa/ICreateEmpresaDto";
-import empresaService from "../../../services/EmpresaService"; // Importar el servicio
+import empresaService from "../../../services/EmpresaService";
 import { useState } from "react";
 import './CrearEmpresa.css';
 
 interface CrearEmpresaProps {
-    mode: "crear" | "editar"; // Añadimos el modo de la acción (crear o editar)
-    empresaData?: IEmpresa; // Datos de empresa si estamos en modo edición
+    mode: "crear" | "editar";
+    empresaData?: IEmpresa; 
     onClose: () => void;
-    onConfirm: (empresa: IEmpresa | ICreateEmpresaDto) => void; // Cambiar el tipo de `onConfirm` para aceptar tanto IEmpresa como ICreateEmpresaDto
+    onConfirm: (empresa: IEmpresa | ICreateEmpresaDto) => void; 
 }
 
 export const CrearEmpresa: React.FC<CrearEmpresaProps> = ({ mode, empresaData, onClose, onConfirm }) => {
-    const [nombre, setNombre] = useState<string>(empresaData?.nombre || ""); // Prellena los campos si estamos en modo edición
+    const [nombre, setNombre] = useState<string>(empresaData?.nombre || ""); 
     const [razonSocial, setRazonSocial] = useState<string>(empresaData?.razonSocial || "");
     const [cuit, setCuit] = useState<number | null>(empresaData?.cuit || null);
     const [fileName, setFileName] = useState<string>(empresaData?.logo || "");
 
-    // Función para manejar la confirmación
     const handleConfirmClick = async () => {
         const nuevaEmpresa: ICreateEmpresaDto = {
             nombre,
@@ -28,15 +27,13 @@ export const CrearEmpresa: React.FC<CrearEmpresaProps> = ({ mode, empresaData, o
 
         if (mode === "crear") {
             try {
-                // Llamar al método create del servicio para crear la empresa
                 const empresaCreada = await empresaService.create(nuevaEmpresa);
-                onConfirm(empresaCreada); // Llamamos a onConfirm con la empresa creada
+                onConfirm(empresaCreada);
             } catch (error) {
                 console.error("Error al crear la empresa:", error);
                 alert("Hubo un error al crear la empresa");
             }
         } else if (mode === "editar" && empresaData) {
-            // Si estamos en modo edición, creamos el objeto de empresa con los datos editados
             const empresaEditada: IEmpresa = {
                 ...empresaData,
                 nombre,
@@ -46,16 +43,15 @@ export const CrearEmpresa: React.FC<CrearEmpresaProps> = ({ mode, empresaData, o
             };
 
             try {
-                // Llamar al método update del servicio para editar la empresa
                 await empresaService.update(empresaData.id, empresaEditada);
-                onConfirm(empresaEditada); // Llamamos a onConfirm con la empresa editada
+                onConfirm(empresaEditada); 
             } catch (error) {
                 console.error("Error al actualizar la empresa:", error);
                 alert("Hubo un error al actualizar la empresa");
             }
         }
 
-        onClose(); // Cerrar el modal después de la confirmación
+        onClose();
     };
 
     return (

@@ -23,7 +23,7 @@ export const MostrarEmpresa: React.FC<MostrarEmpresaProps> = ({ empresa, onClose
                                 <div>
                                     <p><b>Logo:</b></p>
                                     <img
-                                        src={empresa.logo} // Usa la URL del logo de la empresa
+                                        src={empresa.logo}
                                         alt={`Logo de ${empresa.nombre}`}
                                         style={{ width: "100px", height: "100px" }}
                                     />
@@ -37,7 +37,7 @@ export const MostrarEmpresa: React.FC<MostrarEmpresaProps> = ({ empresa, onClose
                             type="button"
                             className="btn btn-dark"
                             style={{ width: "7rem" }}
-                            onClick={onClose} // Cierra el modal al hacer clic en el botón
+                            onClick={onClose} 
                         >
                             Cerrar
                         </button>

@@ -11,13 +11,13 @@ import { IUpdateProducto } from "../../../types/dtos/productos/IUpdateProducto";
 
 interface CrearArticuloProps {
     onClose: () => void;
-    onProductCreated: (newProduct: any) => void; 
-    title: string; 
-    editingProduct?: any; 
-    onUpdateProduct: (updatedProduct: any) => void; 
+    onProductCreated: (newProduct: any) => void;
+    title: string;
+    editingProduct?: any;
+    onUpdateProduct: (updatedProduct: any) => void;
 }
 
-const CrearArticulo: React.FC<CrearArticuloProps> = ({ onClose, onProductCreated, title, editingProduct, onUpdateProduct   }) => {
+const CrearArticulo: React.FC<CrearArticuloProps> = ({ onClose, onProductCreated, title, editingProduct, onUpdateProduct }) => {
     const [denominacion, setDenominacion] = useState("");
     const [categoria, setCategoria] = useState("");
     const [alergenos, setAlergenos] = useState("");
@@ -96,30 +96,28 @@ const CrearArticulo: React.FC<CrearArticuloProps> = ({ onClose, onProductCreated
                 imagenSubida = await imageService.uploadImage(imagen);
             }
 
-            // Formato de imágenes para la API
             const imagenesConExtension = imagenSubida
                 ? [
                     {
-                        id: 0, // ID temporal, la API puede manejarlo
+                        id: 0,
                         eliminado: false,
                         name: imagenSubida.name,
                         url: imagenSubida.url,
                     },
                 ]
-                : editingProduct?.imagenes || []; // Usar las imágenes existentes en edición
+                : editingProduct?.imagenes || [];
 
-            // Preparar el objeto para la API con el orden correcto de los campos
             const formData: IUpdateProducto = {
                 id: editingProduct?.id || 0,
                 eliminado: editingProduct?.eliminado || false,
                 denominacion,
                 precioVenta: parseFloat(precioVenta),
-                descripcion, // Sin asignar `null`
+                descripcion,
                 habilitado,
                 codigo,
                 idCategoria: Number(categoria),
-                idAlergenos: alergenos ? [Number(alergenos)] : [], // Asegurarse de mapear los IDs
-                imagenes: imagenesConExtension,  // Asegurarse de incluir el campo imagenes
+                idAlergenos: alergenos ? [Number(alergenos)] : [],
+                imagenes: imagenesConExtension,
             };
 
             console.log("Datos a enviar al servidor:", formData);
@@ -127,11 +125,9 @@ const CrearArticulo: React.FC<CrearArticuloProps> = ({ onClose, onProductCreated
             let updatedProduct;
 
             if (editingProduct) {
-                // Editar artículo existente
                 updatedProduct = await updateArticulo(editingProduct.id, formData);
-                onUpdateProduct(updatedProduct); // Llamada al callback de actualización
+                onUpdateProduct(updatedProduct);
             } else {
-                // Crear nuevo artículo
                 updatedProduct = await createArticulo(formData);
             }
 
@@ -157,8 +153,6 @@ const CrearArticulo: React.FC<CrearArticuloProps> = ({ onClose, onProductCreated
             });
         }
     };
-    
-    
 
     return (
         <div className="modals-Art">
@@ -246,7 +240,6 @@ const CrearArticulo: React.FC<CrearArticuloProps> = ({ onClose, onProductCreated
                                 />
                             </div>
 
-                            {/* Solo mostrar el campo de imagen cuando no se está editando */}
                             {!editingProduct && (
                                 <div className="cardContent-2">
                                     <input type="file" onChange={handleImageUpload} />

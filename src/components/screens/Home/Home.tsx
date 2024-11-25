@@ -6,7 +6,6 @@ import '../screen.css';
 import SideBar from '../../ui/SideBarr/SideBarHome/SideBar';
 import empresaService from '../../../services/EmpresaService';
 import { ISucursal } from '../../../types/ISucursal';
-import { EditarSucursal } from '../../modals/EditarSucursal/EditarSucursal';
 
 export const Home: React.FC = () => {
     const [empresaId, setEmpresaId] = useState<number | null>(null);
@@ -16,7 +15,6 @@ export const Home: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState<string>('');
 
 
-    // Función para manejar la selección de una empresa desde el SideBar
     const handleSelectEmpresa = (empresaId: number) => {
         setEmpresaId(empresaId);
     };
@@ -39,16 +37,14 @@ export const Home: React.FC = () => {
     }, [empresaId]);
 
 
-    // Función para abrir el modal
     const handleAddBranch = () => {
         if (empresaId) {
-            setIsModalOpen(true); // Abre el modal solo si hay una empresa seleccionada
+            setIsModalOpen(true);
         }
     };
 
-    // Función para cerrar el modal
     const handleCloseModal = () => {
-        setIsModalOpen(false); // Establece isModalOpen en false para cerrar el modal
+        setIsModalOpen(false);
     };
 
     const handleAddSucursal = () => {
@@ -62,21 +58,20 @@ export const Home: React.FC = () => {
             <TopBar
                 nombre={empresaNombre || 'Seleccione una empresa'}
                 placeholder="Buscar..."
-                onAddBranch={handleAddBranch} // Función para abrir el modal
-                tareaBoton="Agregar Sucursal" // Texto del botón
-                setSearchQuery={setSearchTerm} // Actualiza el estado de búsqueda
+                onAddBranch={handleAddBranch} 
+                tareaBoton="Agregar Sucursal" 
+                setSearchQuery={setSearchTerm} 
             />
                 {empresaId && <SucursalesGrid 
                                 empresaId={empresaId}
-                                onAddSucursal={handleAddSucursal} // Pasa la función de actualización
-                                searchTerm={searchTerm} // Nueva prop
+                                onAddSucursal={handleAddSucursal}
+                                searchTerm={searchTerm} 
                                 />}
-                {/* Renderiza el modal solo cuando isModalOpen es true */}
                 {isModalOpen && empresaId && (
                     <CrearSucursal
                         idEmpresa={empresaId}
-                        onClose={handleCloseModal} // Se pasa handleCloseModal como prop
-                        onAddSucursal={handleAddSucursal} // Cierra el modal tras agregar sucursal
+                        onClose={handleCloseModal}
+                        onAddSucursal={handleAddSucursal} 
                     />
                 )}
             </div>

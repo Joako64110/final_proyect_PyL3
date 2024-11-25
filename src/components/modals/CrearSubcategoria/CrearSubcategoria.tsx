@@ -4,14 +4,13 @@ import './CrearSubcategoria.css';
 interface PopupFormProps {
   onClose: () => void;
   onSubmit: (subcategoryName: string) => void;
-  initialValue?: string; // Agregamos una propiedad opcional para el valor inicial
+  initialValue?: string;
 }
 
 const CrearSubcategoria: React.FC<PopupFormProps> = ({ onClose, onSubmit, initialValue }) => {
-  const [subcategoryName, setSubcategoryName] = useState(initialValue || ''); // Usamos el initialValue si está presente
+  const [subcategoryName, setSubcategoryName] = useState(initialValue || '');
 
   useEffect(() => {
-    // Si `initialValue` cambia, actualizamos el nombre de la subcategoría
     if (initialValue !== undefined) {
       setSubcategoryName(initialValue);
     }
@@ -22,7 +21,7 @@ const CrearSubcategoria: React.FC<PopupFormProps> = ({ onClose, onSubmit, initia
       onSubmit(subcategoryName);
       onClose();
     } else {
-      alert("El nombre de la subcategoría no puede estar vacío."); // Mensaje de alerta si el nombre está vacío
+      alert("El nombre de la subcategoría no puede estar vacío.");
     }
   };
 

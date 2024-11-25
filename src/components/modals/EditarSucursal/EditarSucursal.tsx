@@ -9,9 +9,9 @@ import "./EditarSucursal.css"
 
 
 interface EditarSucursalProps {
-    sucursal: ISucursal; // Asegúrate de que el tipo sea ISucursal
+    sucursal: ISucursal; 
     onClose: () => void;
-    onUpdateSucursal: (updatedSucursal: IUpdateSucursal) => void; // Asegúrate de que onUpdateSucursal reciba un IUpdateSucursal
+    onUpdateSucursal: (updatedSucursal: IUpdateSucursal) => void; 
 }
 
 export const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursal, onClose, onUpdateSucursal }) => {

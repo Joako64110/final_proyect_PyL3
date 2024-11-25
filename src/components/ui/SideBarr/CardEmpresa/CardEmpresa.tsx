@@ -19,12 +19,10 @@ export const CardEmpresa: React.FC<Props> = ({ empresa, onSelect, isSeleccionada
     const [isModalVerVisible, setIsModalVerVisible] = useState<boolean>(false);
     const [isModalEditarVisible, setIsModalEditarVisible] = useState<boolean>(false);
 
-    // Función para manejar clic en "ver", pasando el id de la empresa
     const handleVerClick = (id: number) => {
         setIsModalVerVisible(true);
     };
 
-    // Función para manejar clic en "editar", pasando el id de la empresa
     const handleEditarClick = (id: number) => {
         setIsModalEditarVisible(true);
     };
@@ -48,21 +46,21 @@ export const CardEmpresa: React.FC<Props> = ({ empresa, onSelect, isSeleccionada
     };
 
     const handleSelectEmpresa = () => {
-        localStorage.setItem('idEmpresa', String(empresa.id)); // Guardamos el idEmpresa en localStorage
-        onSelect(); // Llamamos a la función onSelect que viene del componente padre
+        localStorage.setItem('idEmpresa', String(empresa.id));
+        onSelect();
     };
 
     return (
         <div
             className={`${styles.tarjetaEmpresa} ${isSeleccionada ? styles.selected : ''}`}
-            onClick={handleSelectEmpresa} // Guardamos el id de la empresa seleccionada en localStorage
+            onClick={handleSelectEmpresa}
         >
             <p>{empresa.nombre}</p>
             <Actions
                 id={empresa.id}
                 actions={["ver", "editar"]}
-                onVer={() => handleVerClick(empresa.id)} // Pasamos el id de la empresa al hacer clic en "ver"
-                onEditar={() => handleEditarClick(empresa.id)} // Pasamos el id de la empresa al hacer clic en "editar"
+                onVer={() => handleVerClick(empresa.id)}
+                onEditar={() => handleEditarClick(empresa.id)}
             />
 
             {isModalVerVisible && (

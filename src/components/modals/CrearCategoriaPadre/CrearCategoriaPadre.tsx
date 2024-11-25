@@ -4,8 +4,8 @@ import './CrearCategoriaPadre.css';
 interface CrearCategoriaPadreProps {
     initialValue: string;
     onClose: () => void;
-    onSubmit: (categoryName: string, idCategoriaPadre: number | null) => void; // Acepta dos parámetros
-    idCategoriaPadre?: number | null; // Si es necesario, puedes pasar el idCategoriaPadre aquí
+    onSubmit: (categoryName: string, idCategoriaPadre: number | null) => void; 
+    idCategoriaPadre?: number | null; 
 }
 
 const CrearCategoriaPadre: React.FC<CrearCategoriaPadreProps> = ({ onClose, onSubmit, initialValue = '', idCategoriaPadre = null }) => {
@@ -18,7 +18,7 @@ const CrearCategoriaPadre: React.FC<CrearCategoriaPadreProps> = ({ onClose, onSu
     const handleSubmit = () => {
         if (categoryName.trim()) {
             console.log("Datos que se enviarán al confirmar:", categoryName);
-            onSubmit(categoryName, idCategoriaPadre); // Pasar ambos parámetros
+            onSubmit(categoryName, idCategoriaPadre); 
             onClose();
         } else {
             alert("El nombre de la categoría no puede estar vacío.");

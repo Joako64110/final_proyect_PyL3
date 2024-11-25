@@ -5,7 +5,7 @@ import Actions from "../../Actions/actions";
 import { Link, useLocation } from "react-router-dom";
 
 const SideBarFun: React.FC = () => {
-    const location = useLocation(); // Obtén la ubicación actual
+    const location = useLocation();
 
     const getLinkClass = (path: string) => {
         return location.pathname === path
@@ -16,7 +16,6 @@ const SideBarFun: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
 
     const handleVolverAEmpresas = () => {
-        console.log("Volver a Empresas");
     };
 
     // Recuperar el idSucursal desde el localStorage

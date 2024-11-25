@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { ICategorias } from '../../../../types/ICategorias'; // Ajusta la ruta según tu estructura
+import { ICategorias } from '../../../../types/ICategorias'; 
 import Actions from '../../Actions/actions';
 import "./CategoriaTable.css";
 
 interface CategoriaTableProps {
     categorias: ICategorias[];
-    onEditCategory: (categoria: ICategorias) => void;  // Acepta un objeto ICategorias completo
+    onEditCategory: (categoria: ICategorias) => void;  
     onDeleteCategory: (id: number) => void;
     onAddSubcategory: (categoria: ICategorias) => void;
     onEditSubcategory: (categoria: string, subcategoria: string) => void;
@@ -18,7 +18,7 @@ const CategoriaTable: React.FC<CategoriaTableProps> = ({
     onAddSubcategory,
     onEditSubcategory,
 }) => {
-    const [expandedCategories, setExpandedCategories] = useState<number[]>([]); // Usamos el id de la categoría
+    const [expandedCategories, setExpandedCategories] = useState<number[]>([]);
 
     const toggleExpandCategory = (categoryId: number) => {
         setExpandedCategories((prev) =>
@@ -29,13 +29,12 @@ const CategoriaTable: React.FC<CategoriaTableProps> = ({
     };
 
     const handleEditClick = (categoria: ICategorias) => {
-        onEditCategory(categoria); // Pasa el objeto ICategorias completo
+        onEditCategory(categoria);
     };
 
     return (
         <div className="table-container">
             {categorias.length === 0 ? (
-                // Si no hay categorías, mostrar este mensaje
                 <h3 style={{textAlign:"center", marginTop:"20px"}}>Aún no hay categorías</h3>
             ) : (
                 <table className="mi-clase-tabla">
@@ -48,7 +47,6 @@ const CategoriaTable: React.FC<CategoriaTableProps> = ({
                     <tbody className="mi-clase-tbody">
                         {categorias.map((categoria) => (
                             <React.Fragment key={categoria.id}>
-                                {/* Fila de la categoría */}
                                 <tr className="mi-clase-tr">
                                     <td className="mi-clase-td-1">{categoria.denominacion}</td>
                                     <td className="mi-clase-td-2">
@@ -64,7 +62,6 @@ const CategoriaTable: React.FC<CategoriaTableProps> = ({
                                     </td>
                                 </tr>
 
-                                {/* Subcategorías desplegadas */}
                                 {expandedCategories.includes(categoria.id) && categoria.subCategorias.map((subcategoria) => (
                                     <tr key={subcategoria.id}>
                                         <td className="mi-clase-td-3">-{subcategoria.denominacion}</td>

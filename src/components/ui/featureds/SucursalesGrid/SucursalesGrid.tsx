@@ -10,10 +10,9 @@ import { IUpdateSucursal } from '../../../../types/dtos/sucursal/IUpdateSucursal
 import { EditarSucursal } from '../../../modals/EditarSucursal/EditarSucursal';
 
 interface SucursalesGridProps {
-    empresaId: number; // Recibe solo el ID de la empresa
-    onAddSucursal: (newSucursal: ISucursal) => void; // Recibe la función como prop
-    searchTerm: string; // Nueva prop
-
+    empresaId: number;
+    onAddSucursal: (newSucursal: ISucursal) => void;
+    searchTerm: string;
 }
 
 const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }) => {
@@ -21,12 +20,10 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
     const [loading, setLoading] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedSucursal, setSelectedSucursal] = useState<ISucursal | null>(null);
-    const [previousSucursales, setPreviousSucursales] = useState<ISucursal[]>([]); // Para comparación de cambios
+    const [previousSucursales, setPreviousSucursales] = useState<ISucursal[]>([]);
     const [filteredSucursales, setFilteredSucursales] = useState<ISucursal[]>([]);
     const [editModalVisible, setEditModalVisible] = useState(false);
     const [sucursalAEditar, setSucursalAEditar] = useState<ISucursal | null>(null);
-
-    
 
     const navigate = useNavigate();
 
@@ -34,8 +31,8 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
         const fetchSucursales = async () => {
             setLoading(true);
             try {
-                const data = await sucursalesService.getByEmpresaId(empresaId); // Se hace la llamada usando el ID de la empresa
-                setSucursales(data); // Se guardan las sucursales
+                const data = await sucursalesService.getByEmpresaId(empresaId);
+                setSucursales(data);
             } catch (error) {
                 console.error('Error al obtener las sucursales:', error);
             } finally {
@@ -44,14 +41,13 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
         };
 
         if (empresaId) {
-            fetchSucursales(); // Llama solo si hay un ID de empresa válido
+            fetchSucursales();
         }
     }, [empresaId]);
 
-    // **2. Filtrar sucursales basado en el searchTerm**
     useEffect(() => {
         if (searchTerm.trim() === '') {
-            setFilteredSucursales(sucursales); // Sin filtro
+            setFilteredSucursales(sucursales);
         } else {
             const filtered = sucursales.filter((sucursal) =>
                 sucursal.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -66,14 +62,13 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
         const intervalId = setInterval(async () => {
             if (empresaId) {
                 try {
-                    const data = await sucursalesService.getByEmpresaId(empresaId); // Obtener las sucursales
+                    const data = await sucursalesService.getByEmpresaId(empresaId);
                     const currentIds = data.map(sucursal => sucursal.id);
                     const previousIds = previousSucursales.map(sucursal => sucursal.id);
 
-                    // Solo actualizamos si hay un cambio en los IDs de las sucursales
                     if (JSON.stringify(currentIds) !== JSON.stringify(previousIds)) {
-                        setSucursales(data); // Actualizar las sucursales
-                        setPreviousSucursales(data); 
+                        setSucursales(data);
+                        setPreviousSucursales(data);
                     }
                 } catch (error) {
                     console.error('Error al obtener las sucursales:', error);
@@ -85,9 +80,10 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
     }, [empresaId, previousSucursales]);
 
     const handleAbrirSuc = (id: number) => {
-        localStorage.setItem("idSucursal", id.toString()); // Guardar el idSucursal en localStorage
-        navigate(`/categorias/allCategoriasPorSucursal/${id}`); // Navegar a la ruta
+        localStorage.setItem("idSucursal", id.toString());
+        navigate(`/categorias/allCategoriasPorSucursal/${id}`);
     };
+    
     const handleVer = (sucursal: ISucursal) => {
         setSelectedSucursal(sucursal);
         setModalVisible(true);
@@ -107,8 +103,8 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
     }
 
     const handleEditar = (sucursal: ISucursal) => {
-        setSucursalAEditar(sucursal); // Almacena la sucursal seleccionada
-        setEditModalVisible(true); // Muestra el modal
+        setSucursalAEditar(sucursal);
+        setEditModalVisible(true);
     };
 
     const handleCloseEditModal = () => {
@@ -119,7 +115,6 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
     const handleUpdateSucursal = async (updatedSucursal: IUpdateSucursal) => {
         setSucursales(prevSucursales =>
             prevSucursales.map(sucursal => {
-                // Actualizamos solo la sucursal que tiene el mismo ID
                 if (sucursal.id === updatedSucursal.id) {
                     return {
                         ...sucursal,
@@ -135,7 +130,6 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
             })
         );
     
-        // Recarga las sucursales desde la API después de la actualización
         try {
             const updatedSucursales = await sucursalesService.getByEmpresaId(empresaId);
             setSucursales(updatedSucursales);
@@ -143,7 +137,6 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
             console.error('Error al recargar las sucursales:', error);
         }
     };
-    
 
     return (
         <div className={styles.containerSucPage}>
@@ -158,7 +151,6 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
                             <h3>{sucursal.nombre}</h3>
                         </Card.Title>
                         <div className={styles.containerImgSucPage}>
-                            {/* Mostrar el logo si está disponible */}
                             {sucursal.logo ? (
                                 <img
                                     src={sucursal.logo} 
@@ -184,8 +176,8 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
                                 actions={['abrirSuc', 'editar', 'ver']}
                                 onAbrirSuc={() => handleAbrirSuc(sucursal.id)}
                                 onVer={() => handleVer(sucursal)}
-                                onEditar={() => handleEditar(sucursal)} // Llama a la función handleEditar
-                                />
+                                onEditar={() => handleEditar(sucursal)}
+                            />
                         </div>
                     </div>
                 ))
@@ -196,9 +188,9 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
 
             {editModalVisible && sucursalAEditar && (
                 <EditarSucursal
-                    sucursal={sucursalAEditar} // Pasa la sucursal seleccionada
-                    onClose={handleCloseEditModal} // Función para cerrar el modal
-                    onUpdateSucursal={handleUpdateSucursal} // Actualizar la lista tras la edición
+                    sucursal={sucursalAEditar}
+                    onClose={handleCloseEditModal}
+                    onUpdateSucursal={handleUpdateSucursal}
                 />
             )}
         </div>
@@ -206,8 +198,3 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
 };
 
 export default SucursalesGrid;
-
-
-
-
-

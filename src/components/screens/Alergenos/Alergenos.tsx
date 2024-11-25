@@ -42,7 +42,7 @@ export const Alergenos = () => {
                                 id={allergen.id}
                                 actions={["editar", "eliminar"]}
                                 onEditar={() => openEditModal(allergen.denominacion)}
-                                onEliminar={() => deleteAllergen(allergen.id)} // Llama a la función deleteAllergen
+                                onEliminar={() => deleteAllergen(allergen.id)} 
                             />
                         ),
                     }))
@@ -57,16 +57,15 @@ export const Alergenos = () => {
 
     useEffect(() => {
         const fetchSucursalNombre = async () => {
-        const idSucursal = localStorage.getItem("idSucursal"); // Recuperar el idSucursal
+        const idSucursal = localStorage.getItem("idSucursal");
         if (!idSucursal) {
             console.error("idSucursal no encontrado en el localStorage");
             return;
         }
     
         try {
-            // Llama a la función getSucursalById para obtener los datos de la sucursal
             const sucursal = await sucursalesService.getSucursalById(Number(idSucursal));
-            setSucursalNombre(sucursal.nombre); // Actualiza el estado con el nombre de la sucursal
+            setSucursalNombre(sucursal.nombre); 
         } catch (error) {
             console.error("Error al obtener la sucursal:", error);
         }
@@ -147,13 +146,10 @@ export const Alergenos = () => {
 
     const deleteAllergen = async (id: number) => {
         try {
-            // Intentar eliminar en el backend
             await allergensService.deleteAlergeno(id);
     
-            // Si se elimina exitosamente, actualizar el estado local
             setData((prevData) => prevData.filter((item) => item.id !== id));
     
-            // Mostrar mensaje de éxito opcionalmente
             Swal.fire({
                 icon: "success",
                 title: "Eliminado",
@@ -162,7 +158,6 @@ export const Alergenos = () => {
                 showConfirmButton: false,
             });
         } catch (error: any) {
-            // Mostrar siempre el mensaje de error
             Swal.fire({
                 icon: "error",
                 title: "No se puede eliminar",
