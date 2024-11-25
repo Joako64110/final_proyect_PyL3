@@ -1,6 +1,5 @@
 import { Route, Routes} from "react-router-dom"
 import { Home } from "../components/screens/Home/Home"
-import { Categorias } from "../components/screens/Categorias/Categorias"
 import { Alergenos } from "../components/screens/Alergenos/Alergenos"
 import { Productos } from "../components/screens/Productos/Productos"
 import { Header } from "../components/ui/Header/Header"

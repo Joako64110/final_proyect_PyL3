@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import CategoriaService from '../../../services/CategoriaService';
 import { ICategorias } from '../../../types/ICategorias'; 
 import { ICreateCategoria } from '../../../types/dtos/categorias/ICreateCategoria';
-import CategoriaTable from '../../ui/featureds/featuredCategoriaTable/CategoriaTable';
+import CategoriaTable from '../../ui/featureds/CategoriaTable/CategoriaTable';
 import SideBarFun from '../../ui/SideBarr/SideBarFun/SideBarFun';
 import TopBar from '../../ui/topBar/topBar';
 import sucursalesService from '../../../services/SucursalService';

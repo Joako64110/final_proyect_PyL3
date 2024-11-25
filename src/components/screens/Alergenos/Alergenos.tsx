@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Actions from '../../ui/Actions/actions';
-import CustomTable from '../../ui/featureds/featuredTables/customTables';
+import CustomTable from '../../ui/featureds/Tables/customTables';
 import TopBar from '../../ui/topBar/topBar';
 import CrearAlergeno from "../../modals/CrearAlergeno/CrearAlergeno";
 import SideBarFunc from '../../ui/SideBarr/SideBarFun/SideBarFun';

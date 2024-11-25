@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { MostrarSucursal } from '../../../modals/MostrarSucursal/MostrarSucursal';
 import sucursalesService from '../../../../services/SucursalService';
 import { ISucursal } from '../../../../types/ISucursal';
+import { IUpdateSucursal } from '../../../../types/dtos/sucursal/IUpdateSucursal';
+import { EditarSucursal } from '../../../modals/EditarSucursal/EditarSucursal';
 
 interface SucursalesGridProps {
     empresaId: number; // Recibe solo el ID de la empresa
@@ -21,6 +23,9 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
     const [selectedSucursal, setSelectedSucursal] = useState<ISucursal | null>(null);
     const [previousSucursales, setPreviousSucursales] = useState<ISucursal[]>([]); // Para comparación de cambios
     const [filteredSucursales, setFilteredSucursales] = useState<ISucursal[]>([]);
+    const [editModalVisible, setEditModalVisible] = useState(false);
+    const [sucursalAEditar, setSucursalAEditar] = useState<ISucursal | null>(null);
+
     
 
     const navigate = useNavigate();
@@ -81,7 +86,6 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
 
     const handleAbrirSuc = (id: number) => {
         localStorage.setItem("idSucursal", id.toString()); // Guardar el idSucursal en localStorage
-        console.log("idSucursal almacenado:", id); // Imprimir en consola
         navigate(`/categorias/allCategoriasPorSucursal/${id}`); // Navegar a la ruta
     };
     const handleVer = (sucursal: ISucursal) => {
@@ -101,6 +105,45 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
     if (loading) {
         return <p style={{ textAlign: 'center', marginTop: '2rem' }}>Cargando sucursales...</p>;
     }
+
+    const handleEditar = (sucursal: ISucursal) => {
+        setSucursalAEditar(sucursal); // Almacena la sucursal seleccionada
+        setEditModalVisible(true); // Muestra el modal
+    };
+
+    const handleCloseEditModal = () => {
+        setEditModalVisible(false);
+        setSucursalAEditar(null);
+    };
+
+    const handleUpdateSucursal = async (updatedSucursal: IUpdateSucursal) => {
+        setSucursales(prevSucursales =>
+            prevSucursales.map(sucursal => {
+                // Actualizamos solo la sucursal que tiene el mismo ID
+                if (sucursal.id === updatedSucursal.id) {
+                    return {
+                        ...sucursal,
+                        nombre: updatedSucursal.nombre || sucursal.nombre,
+                        domicilio: {
+                            ...sucursal.domicilio,
+                            calle: updatedSucursal.domicilio.calle || sucursal.domicilio.calle,
+                            numero: updatedSucursal.domicilio.numero || sucursal.domicilio.numero,
+                        }
+                    };
+                }
+                return sucursal;
+            })
+        );
+    
+        // Recarga las sucursales desde la API después de la actualización
+        try {
+            const updatedSucursales = await sucursalesService.getByEmpresaId(empresaId);
+            setSucursales(updatedSucursales);
+        } catch (error) {
+            console.error('Error al recargar las sucursales:', error);
+        }
+    };
+    
 
     return (
         <div className={styles.containerSucPage}>
@@ -138,17 +181,25 @@ const SucursalesGrid: React.FC<SucursalesGridProps> = ({ empresaId, searchTerm }
                             </p>
                             <Actions
                                 id={sucursal.id}
-                                actions={['abrirSuc', /*'editar'*/ 'ver']}
+                                actions={['abrirSuc', 'editar', 'ver']}
                                 onAbrirSuc={() => handleAbrirSuc(sucursal.id)}
                                 onVer={() => handleVer(sucursal)}
-                                // onEditar={() => console.log('Editar')}
-                            />
+                                onEditar={() => handleEditar(sucursal)} // Llama a la función handleEditar
+                                />
                         </div>
                     </div>
                 ))
             )}
             {modalVisible && selectedSucursal && (
                 <MostrarSucursal sucursal={selectedSucursal} onClose={handleCloseModal} />
+            )}
+
+            {editModalVisible && sucursalAEditar && (
+                <EditarSucursal
+                    sucursal={sucursalAEditar} // Pasa la sucursal seleccionada
+                    onClose={handleCloseEditModal} // Función para cerrar el modal
+                    onUpdateSucursal={handleUpdateSucursal} // Actualizar la lista tras la edición
+                />
             )}
         </div>
     );
