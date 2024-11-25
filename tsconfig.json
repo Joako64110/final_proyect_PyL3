@@ -3,5 +3,13 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "es5",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true
+  }
 }
